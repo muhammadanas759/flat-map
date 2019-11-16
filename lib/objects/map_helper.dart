@@ -5,8 +5,10 @@ import 'dart:ui';
 
 import 'package:fluster/fluster.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import '../helpers/map_marker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import '../objects/map_marker.dart';
+
 
 /// In here we are encapsulating all the logic required to get marker icons from url images
 /// and to show clusters using the [Fluster] package.

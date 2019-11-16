@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:fluster/fluster.dart';
 import 'package:flutter/material.dart';
-import '../helpers/map_marker.dart';
-import '../helpers/map_helper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import '../objects/map_marker.dart';
+import '../objects/map_helper.dart';
+
 
 class HomePage extends StatefulWidget {
   @override

@@ -2,6 +2,7 @@ import 'package:fluster/fluster.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:meta/meta.dart';
 
+
 /// [Fluster] can only handle markers that conform to the [Clusterable] abstract class.
 /// 
 /// You can customize this class by adding more parameters that might be needed for
