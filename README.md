@@ -41,11 +41,23 @@ samples, guidance on mobile development, and a full API reference.
 
 ### Tutorials
 
-[API keys](https://codelabs.developers.google.com/codelabs/google-maps-in-flutter/#3) | 
+ | 
 [medium.com](https://medium.com/coletiv-stories/how-to-cluster-markers-on-flutter-google-maps-44620f607de3) | 
 [flutter_map_marker_cluster](https://pub.dev/packages/flutter_map_marker_cluster) | 
 [flutter_map](https://pub.dev/packages/flutter_map)
 
+### API keys
+
+FlatMapp requires Google Maps API key to get world map for visualisation purposes.
+Key is used once every time user opens application 
+ - checking localization and activating triggers should occur without API calls.
+
+[API keys](https://codelabs.developers.google.com/codelabs/google-maps-in-flutter/#3) | 
+[Google Maps API key pricing](https://cloud.google.com/maps-platform/pricing/)
+
+### Map usage
+
+[Put Google on the Map](https://codelabs.developers.google.com/codelabs/google-maps-in-flutter/#5)
 
 ### Technical details
     FlatApp current min SDKVersion (Android level) is 18.
