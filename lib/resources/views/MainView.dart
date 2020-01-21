@@ -1,11 +1,12 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:fluster/fluster.dart';
-import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../objects/map_marker.dart';
-import '../objects/map_helper.dart';
+import '../objects/map/map_marker.dart';
+import '../objects/map/map_helper.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -124,8 +125,17 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Markers and Clusters Example'),
+        title: Text('FlatMApp prototype'),
+        backgroundColor: Color(0xFF4CAF50),
+        actions: <Widget>[
+          new IconButton(
+            icon: new Icon(Icons.close),
+            onPressed: () =>
+                SystemChannels.platform.invokeMethod('SystemNavigator.pop'),
+          ),
+        ],
       ),
+
       body: Stack(
         children: <Widget>[
           // Google Map widget

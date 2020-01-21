@@ -96,12 +96,12 @@ packages:
     source: hosted
     version: "0.5.21+11"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.0+2"
+    version: "0.12.0+4"
   http_parser:
     dependency: transitive
     description:
@@ -151,6 +151,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0+1"
+  permission_handler:
+    dependency: "direct main"
+    description:
+      name: permission_handler
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.2.0+hotfix.2"
   petitparser:
     dependency: transitive
     description:
