@@ -25,6 +25,8 @@ Drawer sideBarMenu(context){
           leading: Icon(Icons.account_circle),
           title: Text('Profile'),
           onTap: () {
+            // Then close the drawer
+            Navigator.pop(context);
             // Navigate to the profile screen using a named route.
             Navigator.pushNamed(context, '/profile');
           },
@@ -33,6 +35,8 @@ Drawer sideBarMenu(context){
           leading: Icon(Icons.access_alarm),
           title: Text('Actions'),
           onTap: () {
+            // Then close the drawer
+            Navigator.pop(context);
             // Navigate to the profile screen using a named route.
             Navigator.pushNamed(context, '/actions');
           },
@@ -41,29 +45,29 @@ Drawer sideBarMenu(context){
           leading: Icon(Icons.language),
           title: Text('Community'),
           onTap: () {
-            // Navigate to the profile screen using a named route.
-            Navigator.pushNamed(context, '/community');
             // Then close the drawer
             Navigator.pop(context);
+            // Navigate to the profile screen using a named route.
+            Navigator.pushNamed(context, '/community');
           },
         ),
         ListTile(
           leading: Icon(Icons.settings_applications),
           title: Text('Settings'),
           onTap: () {
-            // Navigate to the profile screen using a named route.
-            Navigator.pushNamed(context, '/settings');
             // Then close the drawer
             Navigator.pop(context);
+            // Navigate to the profile screen using a named route.
+            Navigator.pushNamed(context, '/settings');
           },
         ),ListTile(
           leading: Icon(Icons.info_outline),
           title: Text('About'),
           onTap: () {
-            // Navigate to the profile screen using a named route.
-            Navigator.pushNamed(context, '/about');
             // Then close the drawer
             Navigator.pop(context);
+            // Navigate to the profile screen using a named route.
+            Navigator.pushNamed(context, '/about');
           },
         ),
       ],

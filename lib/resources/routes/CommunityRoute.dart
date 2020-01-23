@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../objects/widgets/side_bar_menu.dart';
+import '../objects/widgets/bottom_navigation_bar.dart';
+import '../objects/widgets/app_bar.dart';
 
 
 class CommunityRoute extends StatelessWidget {
@@ -9,17 +10,7 @@ class CommunityRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('FlatMApp prototype'),
-        backgroundColor: Color(0xFF4CAF50),
-        actions: <Widget>[
-          new IconButton(
-            icon: new Icon(Icons.close),
-            onPressed: () =>
-                SystemChannels.platform.invokeMethod('SystemNavigator.pop'),
-          ),
-        ],
-      ),
+      appBar: appBar(),
       body:
 
       // BODY
@@ -33,7 +24,11 @@ class CommunityRoute extends StatelessWidget {
       ),
 
       // SIDE PANEL MENU
-      drawer: sideBarMenu(context)
+      drawer: sideBarMenu(context),
+
+      // NAVIGATION BAR
+      floatingActionButton: navigationBarButton(context),
+
     );
   }
 }

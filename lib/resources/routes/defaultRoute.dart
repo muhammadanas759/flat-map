@@ -5,26 +5,26 @@ import '../objects/widgets/bottom_navigation_bar.dart';
 import '../objects/widgets/app_bar.dart';
 
 
-class ActionsRoute extends StatelessWidget {
+class DefaultRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
-      body:
+        body:
 
-      // BODY
-      Center(
-        child: RaisedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text('Go back!'),
+        // BODY
+        Center(
+          child: RaisedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Go back!'),
+          ),
         ),
-      ),
 
-      // SIDE PANEL MENU
-      drawer: sideBarMenu(context),
+        // SIDE PANEL MENU
+        drawer: sideBarMenu(context),
 
       // NAVIGATION BAR
       floatingActionButton: navigationBarButton(context),
