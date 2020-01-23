@@ -11,20 +11,20 @@ class DefaultRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
-        body:
+      body:
 
-        // BODY
-        Center(
-          child: RaisedButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('Go back!'),
-          ),
+      // BODY
+      Center(
+        child: RaisedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('Go back!'),
         ),
+      ),
 
-        // SIDE PANEL MENU
-        drawer: sideBarMenu(context),
+      // SIDE PANEL MENU
+      drawer: sideBarMenu(context),
 
       // NAVIGATION BAR
       floatingActionButton: navigationBarButton(context),
