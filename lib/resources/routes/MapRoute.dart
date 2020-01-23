@@ -8,13 +8,15 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../objects/map/map_marker.dart';
 import '../objects/map/map_helper.dart';
 
+import '../objects/widgets/side_bar_menu.dart';
 
-class HomePage extends StatefulWidget {
+
+class MapRoute extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _MapRouteState createState() => _MapRouteState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _MapRouteState extends State<MapRoute> {
   final Completer<GoogleMapController> _mapController = Completer();
 
   /// Set of displayed markers and cluster markers on the map
@@ -135,8 +137,10 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      body:
 
-      body: Stack(
+      // GOOGLE MAPS
+      Stack(
         children: <Widget>[
           // Google Map widget
           Opacity(
@@ -180,6 +184,9 @@ class _HomePageState extends State<HomePage> {
             ),
         ],
       ),
+
+      // SIDE PANEL MENU
+      drawer: sideBarMenu(context)
     );
   }
 }

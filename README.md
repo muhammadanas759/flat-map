@@ -39,6 +39,9 @@ samples, guidance on mobile development, and a full API reference.
 ### Tutorials
 
 Flutter app design: 
+
+[Cookbook](https://flutter.dev/docs/cookbook)
+
 [interface](https://flutter.dev/docs/development/ui/widgets-intro) | 
 [architecture](https://flutter.dev/docs/development/data-and-backend/state-mgmt/simple) |
 [testing](https://flutter.dev/docs/testing)
