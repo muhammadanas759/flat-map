@@ -1,15 +1,16 @@
-# flatmapp
+# FlatMapp
 
 Flutter geolocation manager. Choose actions and set their geolocation trigger.
 
 Previous versions:
-* 
+* **v0.0.1:** google map example created
 
-Current version:
-* **v0.1:** google map example created
+**Current version:**
+* **v0.0.2:** basic interface introduced
 
 Incoming version:
-* 
+* **v0.0.3:** basic geotrigger
+
 
 ## Getting Started
 
@@ -28,32 +29,41 @@ samples, guidance on mobile development, and a full API reference.
 
 * Download repository to your desired location. 
 * Flutter requires **Android Studio** for Android deployment. 
-    
-    Recommended IDLE to code is **Intellij IDEA**.
-    
+
+    Recommended IDLE to code is **Android Studio**.
+
 * Remember to install **Flutter** plugin, following [these instructions](https://flutter.dev/docs/get-started/install).
 * install packages required for this project with `flutter pub get`, run in **your project folder!**
 
     Any additional packages should be implemented in **pubspec.yaml file** and installed as written above.
 
-### Tutorials
+## Tutorials
 
 Flutter app design: 
+* [Cookbook](https://flutter.dev/docs/cookbook)
+* [interface](https://flutter.dev/docs/development/ui/widgets-intro)
+* [architecture](https://flutter.dev/docs/development/data-and-backend/state-mgmt/simple)
+* [testing](https://flutter.dev/docs/testing)
 
-[Cookbook](https://flutter.dev/docs/cookbook)
+Optimization: 
+* [app size](https://flutter.dev/docs/perf/app-size)
+* [performance](https://flutter.dev/docs/perf/rendering/best-practices)
 
-[interface](https://flutter.dev/docs/development/ui/widgets-intro) | 
-[architecture](https://flutter.dev/docs/development/data-and-backend/state-mgmt/simple) |
-[testing](https://flutter.dev/docs/testing)
-
-Optimization: [app size](https://flutter.dev/docs/perf/app-size) | [performance](https://flutter.dev/docs/perf/rendering/best-practices)
+Geotrigger: 
+* [Trigger readings only upon geolocation change instead of time interval](https://github.com/w3c/geolocation-sensor/issues/13)
+* [Geolocation and Geocoding, integrated with Maps](https://medium.com/swlh/working-with-geolocation-and-geocoding-in-flutter-and-integration-with-maps-16fb0bc35ede)
+* [Notifications triggered by GPS location](https://stackoverflow.com/questions/55439979/flutter-local-notifications-triggered-by-gps-location)
+* [Background geofencing](https://medium.com/flutter/executing-dart-in-the-background-with-flutter-plugins-and-geofencing-2b3e40a1a124)
 
 Google Maps: 
-[medium.com](https://medium.com/coletiv-stories/how-to-cluster-markers-on-flutter-google-maps-44620f607de3) | 
-[flutter_map_marker_cluster](https://pub.dev/packages/flutter_map_marker_cluster) | 
-[flutter_map](https://pub.dev/packages/flutter_map)
+* [How to cluster markers on Flutter Google Maps](https://medium.com/coletiv-stories/how-to-cluster-markers-on-flutter-google-maps-44620f607de3)
 
-### API keys
+Packages:
+* [flutter_map_marker_cluster](https://pub.dev/packages/flutter_map_marker_cluster)
+* [flutter_map](https://pub.dev/packages/flutter_map)
+* [geolocator](https://pub.dev/packages/geolocator)
+
+## API keys
 FlatMapp requires Google Maps API key to get world map for visualisation purposes.
 Key is used once every time user opens application 
  - checking localization and activating triggers should occur without API calls.
@@ -61,25 +71,55 @@ Key is used once every time user opens application
 [API keys](https://codelabs.developers.google.com/codelabs/google-maps-in-flutter/#3) | 
 [Google Maps API key pricing](https://cloud.google.com/maps-platform/pricing/)
 
-### Map usage
+## Map usage
 
 [Put Google on the Map](https://codelabs.developers.google.com/codelabs/google-maps-in-flutter/#5)
 
-### Technical details
+## Technical details
 * FlatMApp current min SDKVersion (Android level) is 18.
 * App main colour is `HEX: 4CAF50` or `RGBA: 76 175 80 100`.
 * Custom icons were created in [Android Asset Studio Launcher icon generator](https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html#foreground.type=clipart&foreground.clipart=location_on&foreground.space.trim=0&foreground.space.pad=0.3&foreColor=rgb(76%2C%20175%2C%2080)&backColor=rgb(255%2C%20255%2C%20255)&crop=0&backgroundShape=circle&effects=elevate&name=ic_launcher).
 * No custom icons for iOS are developed yet.
-* New screens (or views) should be operated by Navigator as in [this example](https://flutter.dev/docs/cookbook/navigation/navigation-basics).
+* New screens (or views) should be operated by Navigator as in [this example](https://flutter.dev/docs/cookbook/navigation/named-routes).
 
 ### Objects
+FlatMapp uses objects (classes) to define packages of functions.
 
-### Views
+Currently FlatMapp uses:
+* Map:
+
+    * GoogleMapsWidget - object operating map usage
+
+* Widgets:
+
+    * app_bar - app bar widget, common for all routes;
+    * bottom_navigation_bar - navigation bar button to return 
+    to the previous route, common for all routes;
+    * side_bar_menu - sidebar menu widget, operating access to all routes,
+    common for all routes;
+    * text_styles - styles for text used in application. 
+    Contains *header*, *bodyText* and *footer* styles.
+
+### Routes
+Routes are application views. Each new screen presented in the app 
+is another route.
+
+Currently FlatMapp uses 6 routes:
+
+1. MapRoute - main view with map;
+2. ProfileRoute - view of user profile;
+3. ActionsRoute - view of user-defined triggers;
+4. CommunityRoute - view of community-choice triggers;
+5. SettingsRoute - view of application settings;
+6. AboutRoute - about page, presenting basic information about team,
+license and application fundations; 
 
 ## Notes
 ### Design
+none
 
 ### Debugging notes
+none
 
 ### On reading Future values
 
@@ -130,3 +170,4 @@ someMethod() {
   });
 }
 ```
+---
