@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../objects/widgets/side_bar_menu.dart';
 import '../objects/widgets/bottom_navigation_bar.dart';
 import '../objects/widgets/app_bar.dart';
+import '../objects/widgets/text_styles.dart';
 
 
 class AboutRoute extends StatelessWidget {
@@ -21,10 +22,7 @@ class AboutRoute extends StatelessWidget {
             ListTile(
               title: Text(
                 'About',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                ),
+                style: header(),
               ),
               leading: Icon(Icons.info_outline),
             ),
@@ -33,9 +31,7 @@ class AboutRoute extends StatelessWidget {
                 'FlatMapp is an engineering project, aiming at creation of '
                 'geolocation manager, triggering user-defined actions in '
                 'declared geographical position.',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
+                style: bodyText(),
               ),
             ),
             ListTile(
@@ -44,18 +40,13 @@ class AboutRoute extends StatelessWidget {
                 'without user consent. All data gathered from application, such '
                 'as user settings, saved locations and custom triggers are '
                 'anonymized before gathering. ',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
+                style: bodyText(),
               ),
             ),
             ListTile(
               title: Text(
                 'FlatMapp Team @ 2020',
-                style: TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontSize: 12,
-                )
+                style: footer(),
               ),
             ),
           ],

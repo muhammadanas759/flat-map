@@ -20,7 +20,7 @@ class _MapRouteState extends State<MapRoute> {
       body:
 
       // GOOGLE MAPS
-      MapWidget(),
+      GoogleMapWidget(),
 
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),

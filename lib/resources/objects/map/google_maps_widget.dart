@@ -8,12 +8,12 @@ import 'utils/map_marker.dart';
 import 'utils/map_helper.dart';
 
 
-class MapWidget extends StatefulWidget {
+class GoogleMapWidget extends StatefulWidget {
   @override
-  _MapWidgetState createState() => _MapWidgetState();
+  _GoogleMapWidgetState createState() => _GoogleMapWidgetState();
 }
 
-class _MapWidgetState extends State<MapWidget> {
+class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   // ===========================================================================
   // -------------------- GOOGLE MAPS WIDGET SECTION ---------------------------
   final Completer<GoogleMapController> _mapController = Completer();
