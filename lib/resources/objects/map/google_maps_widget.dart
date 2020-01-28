@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-
 import 'package:fluster/fluster.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'utils/map_marker.dart';
 import 'utils/map_helper.dart';
+
+import '../widgets/text_styles.dart';
 
 
 class GoogleMapWidget extends StatefulWidget {
@@ -149,23 +150,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
         // Map markers loading indicator
         if (_areMarkersLoading)
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Card(
-                elevation: 2,
-                color: Colors.grey.withOpacity(0.9),
-                child: Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: Text(
-                    'Loading',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          textInfo('Loading')
       ],
     );
   }

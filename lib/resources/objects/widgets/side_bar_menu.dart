@@ -1,4 +1,19 @@
 import 'package:flutter/material.dart';
+import 'text_styles.dart';
+
+
+ListTile sideBarMenuElement(context, String name, Icon icon, String route){
+  return ListTile(
+    leading: icon,
+    title: Text(name, style: sideBarMenuStyle(),),
+    onTap: () {
+      // Then close the drawer
+      Navigator.pop(context);
+      // Navigate to the profile screen using a named route.
+      Navigator.pushNamed(context, route);
+    },
+  );
+}
 
 Drawer sideBarMenu(context){
   return Drawer(
@@ -21,55 +36,12 @@ Drawer sideBarMenu(context){
               padding: EdgeInsets.all(0.0)
           ),
         ),
-        ListTile(
-          leading: Icon(Icons.account_circle),
-          title: Text('Profile'),
-          onTap: () {
-            // Then close the drawer
-            Navigator.pop(context);
-            // Navigate to the profile screen using a named route.
-            Navigator.pushNamed(context, '/profile');
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.access_alarm),
-          title: Text('Actions'),
-          onTap: () {
-            // Then close the drawer
-            Navigator.pop(context);
-            // Navigate to the profile screen using a named route.
-            Navigator.pushNamed(context, '/actions');
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.language),
-          title: Text('Community'),
-          onTap: () {
-            // Then close the drawer
-            Navigator.pop(context);
-            // Navigate to the profile screen using a named route.
-            Navigator.pushNamed(context, '/community');
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.settings_applications),
-          title: Text('Settings'),
-          onTap: () {
-            // Then close the drawer
-            Navigator.pop(context);
-            // Navigate to the profile screen using a named route.
-            Navigator.pushNamed(context, '/settings');
-          },
-        ),ListTile(
-          leading: Icon(Icons.info_outline),
-          title: Text('About'),
-          onTap: () {
-            // Then close the drawer
-            Navigator.pop(context);
-            // Navigate to the profile screen using a named route.
-            Navigator.pushNamed(context, '/about');
-          },
-        ),
+        sideBarMenuElement(context, 'Map', Icon(Icons.location_on), '/map'),
+        sideBarMenuElement(context, 'Profile', Icon(Icons.account_circle), '/profile'),
+        sideBarMenuElement(context, 'Actions', Icon(Icons.access_alarm), '/actions'),
+        sideBarMenuElement(context, 'Community', Icon(Icons.language), '/community'),
+        sideBarMenuElement(context, 'Settings', Icon(Icons.settings_applications), '/settings'),
+        sideBarMenuElement(context, 'About', Icon(Icons.info_outline), '/about'),
       ],
     ),
   );

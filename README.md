@@ -116,7 +116,10 @@ license and application fundations;
 
 ## Notes
 ### Design
-none
+*preferences* package: 
+[libraries](https://pub.dev/documentation/preferences/latest/index.html) | 
+[example code](https://gitlab.com/redsolver/preferences/blob/master/example/lib/main.dart)
+  
 
 ### Debugging notes
 none

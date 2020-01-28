@@ -17,11 +17,17 @@ environment:
   sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
-  http: ^0.12.0+4
-  permission_handler: ^4.0.0
   flutter:
     sdk: flutter
 
+  # internet requests
+  http: ^0.12.0+4
+  # file saving
+  permission_handler: ^4.0.0
+  # easy settings route
+  preferences: ^5.0.2
+  # dynamic theme service
+  dynamic_theme: ^1.0.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2

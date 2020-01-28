@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:preferences/preferences.dart';
 
+import '../objects/widgets/text_styles.dart';
 import '../objects/map/google_maps_widget.dart';
 
 import '../objects/widgets/side_bar_menu.dart';
@@ -20,7 +22,9 @@ class _MapRouteState extends State<MapRoute> {
       body:
 
       // GOOGLE MAPS
-      GoogleMapWidget(),
+      PrefService.get('map_enabled') != true
+        ? textInfo('Map disabled' ?? '')
+        : GoogleMapWidget(),
 
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
@@ -33,22 +37,25 @@ class _MapRouteState extends State<MapRoute> {
       ),
 
       // NAVIGATION BAR
-      /*
-      bottomNavigationBar: BottomAppBar(
-        child: new Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Expanded(child: IconButton(icon: Icon(Icons.home)),),
-              Expanded(child: IconButton(icon: Icon(Icons.show_chart)),),
-              Expanded(child: new Text('')),
-              Expanded(child: IconButton(icon: Icon(Icons.tab)),),
-              Expanded(child: IconButton(icon: Icon(Icons.settings)),),
-            ],
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-       */
+      // bottomNavigationBar: createBottomAppBar,
+      //  floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
+
+  /*
+  BottomAppBar createBottomAppBar(){
+    return BottomAppBar(
+      child: new Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Expanded(child: IconButton(icon: Icon(Icons.home)),),
+          Expanded(child: IconButton(icon: Icon(Icons.show_chart)),),
+          Expanded(child: new Text('')),
+          Expanded(child: IconButton(icon: Icon(Icons.tab)),),
+          Expanded(child: IconButton(icon: Icon(Icons.settings)),),
+        ],
+      ),
+    );
+  }*/
 // =============================================================================
 }
