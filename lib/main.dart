@@ -9,13 +9,18 @@ import './resources/routes/CommunityRoute.dart';
 import './resources/routes/SettingsRoute.dart';
 import './resources/routes/AboutRoute.dart';
 
+
 String initScreen;
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await PrefService.init(prefix: 'pref_');
 
-  PrefService.setDefaultValues({'project_description': 'FlatMapp prototype'});
+  PrefService.setDefaultValues({
+    'project_description': 'FlatMapp prototype',
+    'start_page': 'Map',
+    'ui_theme': 'light',
+  });
 
   // get start page
   initScreen = PrefService.get('start_page');
@@ -59,4 +64,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
