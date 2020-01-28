@@ -45,6 +45,11 @@ class _SettingsRouteState extends State<SettingsRoute> {
 
 
       PreferenceTitle('Actions', style: header()),
+      SwitchPreference(
+        'Enable cloud save',
+        'cloud_enabled',
+        defaultVal: false,
+      ),
 
       PreferenceTitle('Community', style: header()),
       SwitchPreference(
