@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluster/fluster.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import 'package:flatmapp/resources/objects/data/icons_loader.dart';
 import 'utils/map_marker.dart';
 import 'utils/map_helper.dart';
 
