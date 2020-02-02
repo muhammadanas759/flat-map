@@ -92,6 +92,20 @@ Drawing documentation:
 FlatMapp uses objects (classes) to define packages of functions.
 
 Currently FlatMapp uses:
+* Loaders:
+
+    marker loader operates on JSON list of objects, as follows:
+    
+        [
+          {"position": [41.147125, -8.611249], "icon": "home"},
+          {"position": [41.145599, -8.610691], "icon": "pointer"},
+          {"position": [41.145645, -8.614761], "icon": "taxi"},
+          {"position": [41.146775, -8.614913], "icon": "water"},
+          
+          in general:
+          {"position": [double latitude, double longitude], "icon": "id from icons loader"}
+        ]
+
 * Map:
 
     * GoogleMapsWidget - object operating map usage

@@ -37,6 +37,8 @@ dependencies:
   fluster: ^1.1.2
   # Cache manager
   flutter_cache_manager: ^1.1.1
+  # files service
+  path_provider: ^0.5.0
 
 dev_dependencies:
   flutter_test:

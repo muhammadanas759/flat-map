@@ -46,7 +46,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
   // create circles
   Set<Circle> _circles = Set.from([
-    Circle(circleId: CircleId('1'),center: LatLng(41.147125, -8.611249), radius: 4000,)
+    Circle(circleId: CircleId('1'),center: LatLng(52.466684, 16.926901), radius: 100,)
   ]);
 
   // set map style
@@ -60,6 +60,9 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   void _initMarkers() async {
     final List<MapMarker> markers = [];
 
+    // load markers on class contruction
+    await _markersLoader.loadMarkers();
+
     for (Map markerMap in _markersLoader.markersMap) {
       final BitmapDescriptor markerImage =
           await MapHelper.getMarkerImageFromUrl(
@@ -69,7 +72,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
       markers.add(
         MapMarker(
           id: _markersLoader.markersMap.indexOf(markerMap).toString(),
-          position: markerMap['position'],
+          position: LatLng(markerMap['position'][0], markerMap['position'][1]),
           icon: markerImage,
         ),
       );
@@ -121,6 +124,9 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
       ..clear()
       ..addAll(MapHelper.getClusterMarkers(_clusterManager, _currentZoom));
 
+    // save new markers
+    _markersLoader.saveMarkers();
+
     setState(() {
       _areMarkersLoading = false;
     });
@@ -128,7 +134,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
   // add marker in the place where user touched the map
   Future _addMarkerLongPressed(LatLng latlang) async {
-    _markersLoader.markersMap.add({'position': latlang, 'icon': 'home'});
+    _markersLoader.markersMap.add({'position': [latlang.latitude, latlang.longitude], 'icon': 'home'});
     _initMarkers();
   }
 
@@ -142,7 +148,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
           child: GoogleMap(
             mapToolbarEnabled: false,
             initialCameraPosition: CameraPosition(
-              target: LatLng(41.143029, -8.611274),
+              target: LatLng(52.466684, 16.926901),
               zoom: _currentZoom,
             ),
             markers: _markers,
