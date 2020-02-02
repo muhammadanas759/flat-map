@@ -44,6 +44,18 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   /// Markers loading flag
   bool _areMarkersLoading = true;
 
+  // create circles
+  Set<Circle> _circles = Set.from([
+    Circle(circleId: CircleId('1'),center: LatLng(41.147125, -8.611249), radius: 4000,)
+  ]);
+
+  // set map style
+  void _setStyle(GoogleMapController controller) async {
+    String value = await DefaultAssetBundle.of(context)
+        .loadString('assets/map_style.json');
+    controller.setMapStyle(value);
+  }
+
   /// Init [Fluster] and all the markers with network images and updates the loading state.
   void _initMarkers() async {
     final List<MapMarker> markers = [];
@@ -79,6 +91,10 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   /// Called when the Google Map widget is created. Updates the map loading state
   /// and inits the markers.
   void _onMapCreated(GoogleMapController controller) {
+    // set custom map style
+    _setStyle(controller);
+
+    // crete map controller
     _mapController.complete(controller);
 
     setState(() {
@@ -110,6 +126,12 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
     });
   }
 
+  // add marker in the place where user touched the map
+  Future _addMarkerLongPressed(LatLng latlang) async {
+    _markersLoader.markersMap.add({'position': latlang, 'icon': 'home'});
+    _initMarkers();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -124,8 +146,12 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
               zoom: _currentZoom,
             ),
             markers: _markers,
+            circles: _circles,
             onMapCreated: (controller) => _onMapCreated(controller),
             onCameraMove: (position) => _updateMarkers(position.zoom),
+            onLongPress: (latlang) {
+              _addMarkerLongPressed(latlang); //we will call this function when pressed on the map
+            },
           ),
         ),
 

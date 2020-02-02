@@ -73,11 +73,17 @@ Key is used once every time user opens application
 
 ## Map usage
 
-[Put Google on the Map](https://codelabs.developers.google.com/codelabs/google-maps-in-flutter/#5)
+[Put Google on the Map](https://codelabs.developers.google.com/codelabs/google-maps-in-flutter/#5) | 
+[Map customization and easy tutorial](https://www.raywenderlich.com/4466319-google-maps-for-flutter-tutorial-getting-started)
+
+Drawing documentation:
+[shapes](https://developers.google.com/maps/documentation/android-sdk/shapes) | 
+[circles](https://pub.dev/documentation/google_maps_flutter/latest/google_maps_flutter/Circle-class.html)
 
 ## Technical details
 * FlatMApp current min SDKVersion (Android level) is 18.
 * App main colour is `HEX: 4CAF50` or `RGBA: 76 175 80 100`.
+* Custom map style was created with [Map style with Google tool](https://mapstyle.withgoogle.com)
 * Custom icons were created in [Android Asset Studio Launcher icon generator](https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html#foreground.type=clipart&foreground.clipart=location_on&foreground.space.trim=0&foreground.space.pad=0.3&foreColor=rgb(76%2C%20175%2C%2080)&backColor=rgb(255%2C%20255%2C%20255)&crop=0&backgroundShape=circle&effects=elevate&name=ic_launcher).
 * No custom icons for iOS are developed yet.
 * New screens (or views) should be operated by Navigator as in [this example](https://flutter.dev/docs/cookbook/navigation/named-routes).
