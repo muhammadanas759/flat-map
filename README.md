@@ -87,6 +87,7 @@ Drawing documentation:
 * Custom icons were created in [Android Asset Studio Launcher icon generator](https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html#foreground.type=clipart&foreground.clipart=location_on&foreground.space.trim=0&foreground.space.pad=0.3&foreColor=rgb(76%2C%20175%2C%2080)&backColor=rgb(255%2C%20255%2C%20255)&crop=0&backgroundShape=circle&effects=elevate&name=ic_launcher).
 * No custom icons for iOS are developed yet.
 * New screens (or views) should be operated by Navigator as in [this example](https://flutter.dev/docs/cookbook/navigation/named-routes).
+* Custom loading screen can be added as shown in [this medium tutorial](https://medium.com/@jongzpuangput/flutter-splash-screen-5c8a0001721b).
 
 ### Objects
 FlatMapp uses objects (classes) to define packages of functions.
