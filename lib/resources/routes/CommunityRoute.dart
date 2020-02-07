@@ -1,3 +1,5 @@
+import 'package:flatmapp/resources/objects/data/icons_loader.dart';
+import 'package:flatmapp/resources/objects/data/markers_loader.dart';
 import 'package:flutter/material.dart';
 
 import '../objects/widgets/side_bar_menu.dart';
@@ -6,46 +8,102 @@ import '../objects/widgets/app_bar.dart';
 import '../objects/widgets/text_styles.dart';
 
 
-class CommunityRoute extends StatelessWidget {
+class CommunityRoute extends StatefulWidget {
+  @override
+  _CommunityRouteState createState() => _CommunityRouteState();
+}
+
+class _CommunityRouteState extends State<CommunityRoute> {
+  MarkerLoader markersLoader = MarkerLoader();
+  final IconsLoader icons = IconsLoader();
+
+  Expanded queryResults(){
+    // QUERY RESULTS
+    if(markersLoader.markersMap == null){
+      return Expanded(child: new Card());
+    } else {
+      return new Expanded(
+        child: new ListView.separated(
+          itemCount:markersLoader.markersMap.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.white,
+                backgroundImage: AssetImage(
+                    icons.iconsMapLocal[markersLoader.markersMap[index]['icon']]
+                ),
+              ),
+              title:  SelectableText(
+                  markersLoader.markersMap[index]['icon'],
+                  showCursor: false,
+                  toolbarOptions: ToolbarOptions(
+                      copy: true,
+                      selectAll: true,
+                      cut: false,
+                      paste: false
+                  ),
+                  style: bodyText()
+              ),
+              subtitle: SelectableText(
+                'Position: ' +
+                    markersLoader.markersMap[index]['position'][0].toString() + ', ' +
+                    markersLoader.markersMap[index]['position'][1].toString(),
+                showCursor: false,
+                toolbarOptions: ToolbarOptions(
+                    copy: true,
+                    selectAll: true,
+                    cut: false,
+                    paste: false
+                ),
+                style: footer(),
+              ),
+            );
+          },
+          separatorBuilder: (context, index) {
+            return Divider();
+          },
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
       body:
-
       // BODY
-      ListView(
-        children: ListTile.divideTiles(
-          context: context,
-          tiles: [
-            ListTile(
-              title: Text(
-                'Community',
-                style: header(),
-              ),
-              leading: Icon(Icons.language),
+      new Column(
+        children: <Widget>[
+          ListTile(
+            title: Text(
+              'Community',
+              style: header(),
             ),
-            ListTile(
-              title: Text(
-                'Community 1',
-                style: bodyText(),
-              ),
+            leading: Icon(Icons.language),
+          ),
+
+          ListTile(
+            title: Text(
+              'test markers download',
+              style: bodyText(),
             ),
-            ListTile(
-              title: Text(
-                'Community 2',
-                style: bodyText(),
-              ),
+            onLongPress: (){
+              setState(() {
+                markersLoader.internetTest();
+              });
+            },
+          ),
+
+          queryResults(),
+
+          ListTile(
+            title: Text(
+              'FlatMapp Team @ 2020',
+              style: footer(),
             ),
-            ListTile(
-              title: Text(
-                'FlatMapp Team @ 2020',
-                style: footer(),
-              ),
-            ),
-          ],
-        ).toList(),
+          ),
+        ],
       ),
 
       // SIDE PANEL MENU
