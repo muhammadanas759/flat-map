@@ -39,5 +39,14 @@ class MapMarker extends Clusterable {
           position.longitude,
         ),
         icon: icon,
+        onTap: () {onTappedMarker(this.toMarker());},
+        infoWindow: InfoWindow(
+          title: 'marker title',
+          snippet: 'action description',
+        )
       );
+
+  void onTappedMarker(Marker marker) {
+
+  }
 }

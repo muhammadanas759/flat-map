@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
 
-import '../objects/widgets/text_styles.dart';
-import '../objects/map/google_maps_widget.dart';
+import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
+import 'package:flatmapp/resources/objects/map/google_maps_widget.dart';
 
-import '../objects/widgets/side_bar_menu.dart';
-import '../objects/widgets/app_bar.dart';
+import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
+import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 
 
 class MapRoute extends StatefulWidget {

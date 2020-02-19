@@ -1,12 +1,13 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:fluster/fluster.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:flatmapp/resources/objects/data/icons_loader.dart';
 import 'package:flatmapp/resources/objects/data/markers_loader.dart';
-import 'utils/map_marker.dart';
-import 'utils/map_helper.dart';
+import 'package:flatmapp/resources/objects/map/utils/map_marker.dart';
+import 'package:flatmapp/resources/objects/map/utils/map_helper.dart';
 
 import '../widgets/text_styles.dart';
 
@@ -20,33 +21,34 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
   final Completer<GoogleMapController> _mapController = Completer();
 
+  // loaders for icons and markers
   final IconsLoader _iconsLoader = IconsLoader();
   final MarkerLoader _markersLoader = MarkerLoader();
 
-  /// Set of displayed markers and cluster markers on the map
+  // Set of displayed markers and cluster markers on the map
   final Set<Marker> _markers = Set();
 
-  /// Minimum zoom at which the markers will cluster
+  // Minimum zoom at which the markers will cluster
   final int _minClusterZoom = 0;
 
-  /// Maximum zoom at which the markers will cluster
+  // Maximum zoom at which the markers will cluster
   final int _maxClusterZoom = 19;
 
-  /// [Fluster] instance used to manage the clusters
+  // [Fluster] instance used to manage the clusters
   Fluster<MapMarker> _clusterManager;
 
-  /// Current map zoom. Initial zoom will be 15, street level
+  // Current map zoom. Initial zoom will be 15, street level
   double _currentZoom = 15;
 
-  /// Map loading flag
+  // Map loading flag
   bool _isMapLoading = true;
 
-  /// Markers loading flag
+  // Markers loading flag
   bool _areMarkersLoading = true;
 
   // create circles
   Set<Circle> _circles = Set.from([
-    Circle(circleId: CircleId('1'),center: LatLng(52.466684, 16.926901), radius: 100,)
+    Circle(circleId: CircleId('1'),center: LatLng(52.466684, 16.926901), radius: 100,),
   ]);
 
   // set map style
@@ -56,19 +58,23 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
     controller.setMapStyle(value);
   }
 
-  /// Init [Fluster] and all the markers with network images and updates the loading state.
+  // Init [Fluster] and all the markers with network images and update the loading state.
   void _initMarkers() async {
     final List<MapMarker> markers = [];
 
     // load markers on class contruction
     await _markersLoader.loadMarkers();
 
+    // for each marker in loader
     for (Map markerMap in _markersLoader.markersMap) {
+
+      // get marker image
       final BitmapDescriptor markerImage =
-          await MapHelper.getMarkerImageFromUrl(
+          await MapHelper.getMarkerImageFromAssets(
               _iconsLoader.markerImageUrl[markerMap['icon']]
           );
 
+      // add MapMarker object to the list
       markers.add(
         MapMarker(
           id: _markersLoader.markersMap.indexOf(markerMap).toString(),
@@ -78,6 +84,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
       );
     }
 
+    // initialize cluster manager
     _clusterManager = await MapHelper.initClusterManager(
       markers,
       _minClusterZoom,
@@ -85,14 +92,15 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
       _iconsLoader.markerImageUrl['pointer_place'],
     );
 
+    // update markers states
     _updateMarkers();
   }
 
   // ===========================================================================
   // -------------------- GOOGLE MAPS WIDGET SECTION ---------------------------
 
-  /// Called when the Google Map widget is created. Updates the map loading state
-  /// and inits the markers.
+  // Called when the Google Map widget is created. Updates the map loading state
+  // and inits the markers.
   void _onMapCreated(GoogleMapController controller) {
     // set custom map style
     _setStyle(controller);
@@ -107,8 +115,8 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
     _initMarkers();
   }
 
-  /// Gets the markers and clusters to be displayed on the map for the current zoom level and
-  /// updates state.
+  // Gets the markers and clusters to be displayed on the map for the current zoom level and
+  // updates state.
   void _updateMarkers([double updatedZoom]) {
     if (_clusterManager == null || updatedZoom == _currentZoom) return;
 
@@ -122,11 +130,14 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
     _markers
       ..clear()
-      ..addAll(MapHelper.getClusterMarkers(_clusterManager, _currentZoom));
+      ..addAll(
+          MapHelper.getClusterMarkers(_clusterManager, _currentZoom)
+      );
 
     // save new markers
     _markersLoader.saveMarkers();
 
+    // reload application state
     setState(() {
       _areMarkersLoading = false;
     });
@@ -134,7 +145,9 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
   // add marker in the place where user touched the map
   Future _addMarkerLongPressed(LatLng latlang) async {
-    _markersLoader.markersMap.add({'position': [latlang.latitude, latlang.longitude], 'icon': 'home'});
+    _markersLoader.markersMap.add(
+      {'position': [latlang.latitude, latlang.longitude], 'icon': 'home'}
+    );
     _initMarkers();
   }
 

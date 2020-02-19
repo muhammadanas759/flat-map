@@ -1,6 +1,8 @@
 
 
-class IconsLoader{
+// class providing paths to markers icons
+class IconsLoader {
+
   // https://img.icons8.com/office/80/000000/marker.png
   // https://img.icons8.com/officel/80/000000/place-marker.png
   // https://img.icons8.com/dusk/80/000000/order-delivered.png
@@ -39,6 +41,7 @@ class IconsLoader{
   };
 
   /// Map of icon images urls used on normal markers
+
   final Map markerImageUrl = {
     'pointer':       'https://img.icons8.com/office/80/000000/marker.png',
     'pointer_place': 'https://img.icons8.com/officel/80/000000/place-marker.png',
@@ -72,4 +75,5 @@ class IconsLoader{
     'water':         'https://img.icons8.com/office/80/000000/water.png',
     'meal':          'https://img.icons8.com/office/80/000000/meal.png',
   };
+
 }

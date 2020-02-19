@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 
-import './resources/routes/MapRoute.dart';
-import './resources/routes/ProfileRoute.dart';
-import './resources/routes/ActionsRoute.dart';
-import './resources/routes/CommunityRoute.dart';
-import './resources/routes/SettingsRoute.dart';
-import './resources/routes/AboutRoute.dart';
+import 'package:flatmapp/resources/routes/MapRoute.dart';
+import 'package:flatmapp/resources/routes/ProfileRoute.dart';
+import 'package:flatmapp/resources/routes/ActionsRoute.dart';
+import 'package:flatmapp/resources/routes/CommunityRoute.dart';
+import 'package:flatmapp/resources/routes/SettingsRoute.dart';
+import 'package:flatmapp/resources/routes/AboutRoute.dart';
 
 
 String initScreen;

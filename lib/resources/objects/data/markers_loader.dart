@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
 
-class MarkerLoader{
+class MarkerLoader {
   // list of marker data
   List<dynamic> markersMap;
 
