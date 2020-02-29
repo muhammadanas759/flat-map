@@ -39,7 +39,7 @@ class AboutRoute extends StatelessWidget {
               title: Text(
                 'FlatMapp is free to use and is not gathering any personal data '
                 'without user consent. All data gathered from application, such '
-                'as user settings, saved locations and custom triggers are '
+                'as user settings, saved locations or custom triggers, is '
                 'anonymized before gathering. ',
                 style: bodyText(),
               ),
