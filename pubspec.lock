@@ -64,6 +64,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.2"
+  decoding_text_effect:
+    dependency: "direct main"
+    description:
+      name: decoding_text_effect
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   dynamic_theme:
     dependency: "direct main"
     description:

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
-import 'package:flatmapp/resources/objects/widgets/bottom_navigation_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
+// import 'package:flatmapp/resources/objects/widgets/bottom_navigation_bar.dart';
 
 
 class AboutRoute extends StatelessWidget {
@@ -58,7 +58,7 @@ class AboutRoute extends StatelessWidget {
       drawer: sideBarMenu(context),
 
       // NAVIGATION BAR
-      floatingActionButton: navigationBarButton(context),
+      // floatingActionButton: navigationBarButton(context),
     );
   }
 }

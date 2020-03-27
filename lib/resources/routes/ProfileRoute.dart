@@ -3,9 +3,9 @@ import 'package:flatmapp/resources/objects/data/markers_loader.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
-import 'package:flatmapp/resources/objects/widgets/bottom_navigation_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
+// import 'package:flatmapp/resources/objects/widgets/bottom_navigation_bar.dart';
 
 
 class ProfileRoute extends StatefulWidget {
@@ -110,7 +110,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
       drawer: sideBarMenu(context),
 
       // NAVIGATION BAR
-      floatingActionButton: navigationBarButton(context),
+      // floatingActionButton: navigationBarButton(context),
 
     );
   }

@@ -23,18 +23,19 @@ class _MapRouteState extends State<MapRoute> {
 
       // GOOGLE MAPS
       PrefService.get('map_enabled') != true
-        ? textInfo('Map disabled' ?? '')
+        ? textInfo('Map is disabled' ?? '')
         : GoogleMapWidget(),
 
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
 
+      /*
       floatingActionButton: new FloatingActionButton(
         onPressed: () {}, // TODO - function to add new pointers
         tooltip: 'Add new pointer',
         child: new Icon(Icons.add),
         elevation: 4.0,
-      ),
+      ),*/
 
       // NAVIGATION BAR
       // bottomNavigationBar: createBottomAppBar,

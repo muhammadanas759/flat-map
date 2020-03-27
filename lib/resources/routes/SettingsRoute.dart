@@ -3,9 +3,9 @@ import 'package:preferences/preferences.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
-import 'package:flatmapp/resources/objects/widgets/bottom_navigation_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
+// import 'package:flatmapp/resources/objects/widgets/bottom_navigation_bar.dart';
 
 
 class SettingsRoute extends StatefulWidget {
@@ -83,7 +83,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
       drawer: sideBarMenu(context),
 
       // NAVIGATION BAR
-      floatingActionButton: navigationBarButton(context),
+      // floatingActionButton: navigationBarButton(context),
     );
   }
 }

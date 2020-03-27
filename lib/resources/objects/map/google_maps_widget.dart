@@ -108,15 +108,15 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
     // crete map controller
     _mapController.complete(controller);
 
+    _initMarkers();
+
     setState(() {
       _isMapLoading = false;
     });
-
-    _initMarkers();
   }
 
-  // Gets the markers and clusters to be displayed on the map for the current zoom level and
-  // updates state.
+  // Gets the markers and clusters to be displayed on the map
+  // for the current zoom level and updates state.
   void _updateMarkers([double updatedZoom]) {
     if (_clusterManager == null || updatedZoom == _currentZoom) return;
 
@@ -161,6 +161,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
           child: GoogleMap(
             mapToolbarEnabled: false,
             initialCameraPosition: CameraPosition(
+              // TODO initial camera position - change to phone position
               target: LatLng(52.466684, 16.926901),
               zoom: _currentZoom,
             ),
@@ -168,8 +169,10 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
             circles: _circles,
             onMapCreated: (controller) => _onMapCreated(controller),
             onCameraMove: (position) => _updateMarkers(position.zoom),
+            // call this function when long pressed on the map
             onLongPress: (latlang) {
-              _addMarkerLongPressed(latlang); //we will call this function when pressed on the map
+              print(latlang);
+              _addMarkerLongPressed(latlang);
             },
           ),
         ),
@@ -182,7 +185,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
         // Map markers loading indicator
         if (_areMarkersLoading)
-          textInfo('Loading')
+          textInfo('Loading map widget')
       ],
     );
   }
