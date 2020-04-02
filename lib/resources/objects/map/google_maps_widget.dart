@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:preferences/preferences.dart';
 
 
 class GoogleMapWidget extends StatefulWidget {
@@ -13,13 +14,15 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
   final Completer<GoogleMapController> _mapController = Completer();
 
+  final String preset = PrefService.get('ui_theme');
+
   // Current map zoom. Initial zoom will be 15, street level
   double _currentZoom = 15;
 
   // set map style
   void _setStyle(GoogleMapController controller) async {
     String value = await DefaultAssetBundle.of(context)
-        .loadString('assets/map_style.json');
+        .loadString('assets/map_style_$preset.json');
     controller.setMapStyle(value);
   }
 
