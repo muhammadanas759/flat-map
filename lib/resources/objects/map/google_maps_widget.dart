@@ -14,7 +14,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
   final Completer<GoogleMapController> _mapController = Completer();
 
-  final String preset = PrefService.get('ui_theme');
+  final String _preset = PrefService.get('ui_theme');
 
   // Current map zoom. Initial zoom will be 15, street level
   double _currentZoom = 15;
@@ -22,7 +22,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   // set map style
   void _setStyle(GoogleMapController controller) async {
     String value = await DefaultAssetBundle.of(context)
-        .loadString('assets/map_style_$preset.json');
+        .loadString('assets/map_style_$_preset.json');
     controller.setMapStyle(value);
   }
 
