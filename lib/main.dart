@@ -23,8 +23,7 @@ main() async {
   });
 
   // get start page
-  //initScreen = PrefService.get('start_page');
-  initScreen = 'Profile';
+  initScreen = PrefService.get('start_page');
   switch(initScreen) {
     case 'About': {initScreen = '/about';} break;
     case 'Actions': {initScreen = '/actions';} break;

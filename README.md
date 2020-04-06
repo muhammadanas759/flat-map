@@ -74,7 +74,10 @@ Key is used once every time user opens application
 ## Map usage
 
 [Put Google on the Map](https://codelabs.developers.google.com/codelabs/google-maps-in-flutter/#5) | 
-[Map customization and easy tutorial](https://www.raywenderlich.com/4466319-google-maps-for-flutter-tutorial-getting-started)
+[Map customization and easy tutorial](https://www.raywenderlich.com/4466319-google-maps-for-flutter-tutorial-getting-started) | 
+[Working with geolocation 1](https://medium.com/swlh/working-with-geolocation-and-geocoding-in-flutter-and-integration-with-maps-16fb0bc35ede) | 
+
+
 
 Drawing documentation:
 [shapes](https://developers.google.com/maps/documentation/android-sdk/shapes) | 

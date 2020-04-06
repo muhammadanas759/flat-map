@@ -42,9 +42,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
               style: bodyText(),
             ),
             onLongPress: (){
-              setState(() {
 
-              });
             },
           ),
 

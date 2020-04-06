@@ -10,11 +10,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 // class providing paths to markers icons
 class IconsLoader {
 
-  // constructor
-  IconsLoader() {
-    _loadingAllIcons();
-  }
-
   // https://img.icons8.com/office/80/000000/marker.png
   // https://img.icons8.com/officel/80/000000/place-marker.png
   // https://img.icons8.com/dusk/80/000000/order-delivered.png
@@ -99,7 +94,7 @@ class IconsLoader {
   }
 
   // method for loading all icons - TODO performance check
-  void _loadingAllIcons(){
+  void loadingAllIcons(){
     _markerImageUrl.forEach((String iconName, String url) {
       getMarkerImage(url).then((BitmapDescriptor value){
           // _iconsLoaded[iconName] = value;

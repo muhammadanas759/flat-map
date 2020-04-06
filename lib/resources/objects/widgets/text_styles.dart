@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:decoding_text_effect/decoding_text_effect.dart';
 
 
 TextStyle header(){
@@ -38,11 +37,9 @@ Padding textInfo(String text){
         color: Colors.grey.withOpacity(0.9),
         child: Padding(
           padding: const EdgeInsets.all(4),
-          child: DecodingTextEffect(
+          child: Text(
             text,
-            refreshDuration: Duration(milliseconds: 30),
-            decodeEffect: DecodeEffect.fromStart,
-            textStyle: TextStyle(
+            style: TextStyle(
               color: Colors.white,
               fontStyle: FontStyle.italic,
               fontSize: 16,

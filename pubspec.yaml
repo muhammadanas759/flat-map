@@ -39,10 +39,8 @@ dependencies:
   flutter_cache_manager: ^1.1.1
   # files service
   path_provider: ^0.5.0
-  # decoding text effect
-  decoding_text_effect: ^1.0.0
   # geolocation service
-  geolocator: ^5.1.4+2
+  location: ^1.4.1
 
 dev_dependencies:
   flutter_test:
