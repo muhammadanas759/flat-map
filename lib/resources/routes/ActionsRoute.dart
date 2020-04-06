@@ -13,14 +13,14 @@ class ActionsRoute extends StatelessWidget {
 
   Widget _iconsListView(BuildContext context) {
     return ListView.builder(
-      itemCount: icons.iconsMapLocal.length,
+      itemCount: icons.markerImageLocal.length,
       itemBuilder: (context, index) {
-        String key = icons.iconsMapLocal.keys.elementAt(index);
+        String key = icons.markerImageLocal.keys.elementAt(index);
         return Card( //                           <-- Card widget
           child: ListTile(
             leading: CircleAvatar(
               backgroundColor: Colors.white,
-              backgroundImage: AssetImage(icons.iconsMapLocal[key]),
+              backgroundImage: AssetImage(icons.markerImageLocal[key]),
             ),
             title: Text(key, style: bodyText()),
             trailing: Icon(Icons.keyboard_arrow_right),

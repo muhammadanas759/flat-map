@@ -1,13 +1,25 @@
+import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui';
+
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 
 // class providing paths to markers icons
 class IconsLoader {
 
+  // constructor
+  IconsLoader() {
+    _loadingAllIcons();
+  }
+
   // https://img.icons8.com/office/80/000000/marker.png
   // https://img.icons8.com/officel/80/000000/place-marker.png
   // https://img.icons8.com/dusk/80/000000/order-delivered.png
-  final Map<String, String> iconsMapLocal = {
-    'pointer':       'assets/icons/marker.png',
+  final Map<String, String> markerImageLocal = {
+    'default':       'assets/icons/marker.png',
     'pointer_place': 'assets/icons/place-marker.png',
     'pin':           'assets/icons/map-pin.png',
 
@@ -41,9 +53,8 @@ class IconsLoader {
   };
 
   /// Map of icon images urls used on normal markers
-
-  final Map markerImageUrl = {
-    'pointer':       'https://img.icons8.com/office/80/000000/marker.png',
+  final Map<String, String> _markerImageUrl = {
+    'default':       'https://img.icons8.com/office/80/000000/marker.png',
     'pointer_place': 'https://img.icons8.com/officel/80/000000/place-marker.png',
     'pin':           'https://img.icons8.com/office/80/000000/map-pin.png',
 
@@ -76,4 +87,70 @@ class IconsLoader {
     'meal':          'https://img.icons8.com/office/80/000000/meal.png',
   };
 
+  // map of loaded icons, filled during constructions
+  Map<String, BitmapDescriptor> _iconsLoaded;
+
+  // return image from name
+  BitmapDescriptor getIcon(String name){
+    if (_iconsLoaded?.containsKey(name) ?? false) {
+      return _iconsLoaded[name];
+    }
+    throw("no value like $name in IconsLoader iconsLoaded map. Available: $_iconsLoaded");
+  }
+
+  // method for loading all icons - TODO performance check
+  void _loadingAllIcons(){
+    _markerImageUrl.forEach((String iconName, String url) {
+      getMarkerImage(url).then((BitmapDescriptor value){
+          // _iconsLoaded[iconName] = value;
+        _iconsLoaded.putIfAbsent(iconName, () => value);
+      });
+    });
+  }
+
+  Future<BitmapDescriptor> getMarkerImage(
+      String name, {int targetWidth}) async {
+    assert(name != null);
+
+    // get picture from url - TODO load pictures from assets folder, not internet url
+    final File markerImageFile = await DefaultCacheManager().getSingleFile(
+        _markerImageUrl[name]
+    );
+    Uint8List markerImageBytes = await markerImageFile.readAsBytes();
+
+    // get picture from assets
+    // ByteData byteData = await rootBundle.load('$url');
+    // Uint8List markerImageBytes = Uint8List.view(byteData.buffer);
+
+    if (targetWidth != null) {
+      markerImageBytes = await _resizeImageBytes(
+        markerImageBytes,
+        targetWidth,
+      );
+    }
+
+    return BitmapDescriptor.fromBytes(markerImageBytes);
+  }
+
+  // Resize given [imageBytes] with the [targetWidth].
+  static Future<Uint8List> _resizeImageBytes(
+      Uint8List imageBytes,
+      int targetWidth,
+      ) async {
+    assert(imageBytes != null);
+    assert(targetWidth != null);
+
+    final Codec imageCodec = await instantiateImageCodec(
+      imageBytes,
+      targetWidth: targetWidth,
+    );
+
+    final FrameInfo frameInfo = await imageCodec.getNextFrame();
+
+    final ByteData byteData = await frameInfo.image.toByteData(
+      format: ImageByteFormat.png,
+    );
+
+    return byteData.buffer.asUint8List();
+  }
 }
