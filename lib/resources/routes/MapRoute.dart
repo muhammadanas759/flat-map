@@ -56,6 +56,8 @@ class _MapRouteState extends State<MapRoute> {
   }
 
   void findDevice() {
+    // get device position
+
 //    // move camera to the device position
 //    mapController?.moveCamera(
 //      CameraUpdate.newCameraPosition(
@@ -122,8 +124,9 @@ class _MapRouteState extends State<MapRoute> {
 
   // add marker in the place where user touched the map
   Future _mapTap(LatLng position) async {
+    Marker marker = await _markerLoader.temporaryMarker(position);
     addMarker(
-      marker: _markerLoader.temporaryMarker(position)
+      marker: marker
     );
   }
 
@@ -156,7 +159,7 @@ class _MapRouteState extends State<MapRoute> {
                 zoom: _currentZoom,
               ),
               markers: Set<Marker>.of(_markerLoader.googleMarkers.values),
-              circles: _markerLoader.zones,
+              circles: Set<Circle>.of(_markerLoader.zones.values),
               onMapCreated: (controller) => _onMapCreated(controller),
 
               // call this function when tapped on the map

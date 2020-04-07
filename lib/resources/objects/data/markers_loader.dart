@@ -20,16 +20,10 @@ class MarkerLoader {
   List<dynamic> _markersDescriptions = [];
 
   // google maps markers set
-  Map<MarkerId, Marker> googleMarkers = <MarkerId, Marker>{};
+  Map<String, Marker> googleMarkers = <String, Marker>{};
 
   // zones set - TODO zones repair
-  Set<Circle> zones = Set.from([
-    Circle(
-      circleId: CircleId('1'),
-      center: LatLng(52.466684, 16.926901),
-      radius: 30,
-    ),
-  ]);
+  Map<String, Circle> zones  = <String, Circle>{};
 
   // icons loader
   final IconsLoader _iconsLoader = IconsLoader();
@@ -60,25 +54,37 @@ class MarkerLoader {
     // for each marker description in json
     for (Map markerMap in _markersDescriptions) {
 
-      // translate description into marker in markers set:
-      _iconsLoader.getMarkerImage(markerMap['icon']).then((value) {
-        googleMarkers[generateId()] = Marker(
-          markerId: MarkerId(markerMap['id']),
-          position: LatLng(
-              markerMap['position_x'],
-              markerMap['position_y']
-          ),
-          icon: value,
-          onTap: () {
+      String id = markerMap['id'];
+      LatLng position = LatLng(
+          markerMap['position_x'],
+          markerMap['position_y']
+      );
 
-          },
-          infoWindow: InfoWindow(
-            title: markerMap['title'],
-            snippet: markerMap['description'],
-          )
-        );
-      });
+      // translate description into marker in markers set:
+      BitmapDescriptor icon = await _iconsLoader.getMarkerImage(markerMap['icon']);
+      googleMarkers[id] = Marker(
+        markerId: MarkerId(id),
+        position: position,
+        icon: icon,
+//      onTap: () {},
+        infoWindow: InfoWindow(
+          title: markerMap['title'],
+          snippet: markerMap['description'],
+        )
+      );
+
+      // add zone
+      zones[id] = Circle(
+        circleId: CircleId(id),
+        center: position,
+        radius: markerMap['range'],
+      );
     }
+  }
+
+  // generate id
+  String generateId(){
+    return "id_1";
   }
 
   // save markers to local storage
@@ -88,15 +94,13 @@ class MarkerLoader {
     String markerStorage = json.encode(_markersDescriptions);
     await file.writeAsString(markerStorage);
   }
-
-  MarkerId generateId(){
-    return MarkerId("id_1");
-  }
   
-  Marker temporaryMarker(LatLng position){
+  Future<Marker> temporaryMarker(LatLng position) async {
+    BitmapDescriptor icon = await _iconsLoader.getMarkerImage("home", targetWidth: 80);
     return Marker(
         markerId: MarkerId("temporary"),
         position: position,
+        icon: icon,
         infoWindow: InfoWindow(
           title: "temporary marker",
           snippet: "marker presenting chosen position",

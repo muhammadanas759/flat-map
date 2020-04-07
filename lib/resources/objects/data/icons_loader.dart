@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -94,37 +95,45 @@ class IconsLoader {
   }
 
   // method for loading all icons - TODO performance check
-  void loadingAllIcons(){
-    _markerImageUrl.forEach((String iconName, String url) {
-      getMarkerImage(url).then((BitmapDescriptor value){
-          // _iconsLoaded[iconName] = value;
-        _iconsLoaded.putIfAbsent(iconName, () => value);
-      });
-    });
-  }
+//  void loadingAllIcons(){
+//    _markerImageUrl.forEach((String iconName, String url) {
+//      getMarkerImage(url).then((BitmapDescriptor value){
+//          // _iconsLoaded[iconName] = value;
+//        _iconsLoaded.putIfAbsent(iconName, () => value);
+//      });
+//    });
+//  }
 
   Future<BitmapDescriptor> getMarkerImage(
-      String name, {int targetWidth}) async {
+      String name, {double targetWidth}) async {
     assert(name != null);
 
-    // get picture from url - TODO load pictures from assets folder, not internet url
-    final File markerImageFile = await DefaultCacheManager().getSingleFile(
-        _markerImageUrl[name]
+//    // get picture from url - TODO load pictures from assets folder, not internet url
+//    final File markerImageFile = await DefaultCacheManager().getSingleFile(
+//        _markerImageUrl[name]
+//    );
+//    Uint8List markerImageBytes = await markerImageFile.readAsBytes();
+//
+//    // get picture from assets
+//    // ByteData byteData = await rootBundle.load('$url');
+//    // Uint8List markerImageBytes = Uint8List.view(byteData.buffer);
+//
+//    if (targetWidth != null) {
+//      markerImageBytes = await _resizeImageBytes(
+//        markerImageBytes,
+//        targetWidth,
+//      );
+//    }
+//
+//    return BitmapDescriptor.fromBytes(markerImageBytes);
+
+    BitmapDescriptor value = await BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(
+        size: Size(targetWidth, targetWidth),
+      ),
+      markerImageLocal[name],
     );
-    Uint8List markerImageBytes = await markerImageFile.readAsBytes();
-
-    // get picture from assets
-    // ByteData byteData = await rootBundle.load('$url');
-    // Uint8List markerImageBytes = Uint8List.view(byteData.buffer);
-
-    if (targetWidth != null) {
-      markerImageBytes = await _resizeImageBytes(
-        markerImageBytes,
-        targetWidth,
-      );
-    }
-
-    return BitmapDescriptor.fromBytes(markerImageBytes);
+    return value;
   }
 
   // Resize given [imageBytes] with the [targetWidth].
