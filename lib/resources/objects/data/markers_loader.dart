@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flatmapp/resources/objects/data/icons_loader.dart';
-import 'package:flatmapp/resources/objects/map/utils/map_marker.dart';
+import 'file:///C:/Users/Adam/IdeaProjects/flatmapp_app/lib/resources/objects/map/map_marker.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -10,14 +10,12 @@ import 'package:path_provider/path_provider.dart';
 
 
 class MarkerLoader {
+  //-------------------------- VARIABLES ---------------------------------------
   // server address - TODO add server address
   String _serverURL = "";
 
   // list of marker data in strings
   List<dynamic> _markersDescriptions = [];
-
-  // custom markers set
-  final Set<MapMarker> _mapMarkers = Set();
 
   // google maps markers set
   final Set<Marker> googleMarkers = Set();
@@ -34,6 +32,7 @@ class MarkerLoader {
   // icons loader
   final IconsLoader _iconsLoader = IconsLoader();
 
+  //-------------------------- LOADING METHODS ---------------------------------
   // load markers from local storage
   Future loadMarkers() async {
 
@@ -61,28 +60,24 @@ class MarkerLoader {
 
       // translate description into marker in markers set:
       _iconsLoader.getMarkerImage(markerMap['icon']).then((value) {
-        _mapMarkers.add(
-          MapMarker(
-              id: markerMap['id'].toString(),
+        googleMarkers.add(
+          Marker(
+            markerId: MarkerId(markerMap['id']),
+            position: LatLng(
+                markerMap['position_x'],
+                markerMap['position_y']
+            ),
+            icon: value,
+            onTap: () {
+
+            },
+            infoWindow: InfoWindow(
               title: markerMap['title'],
-              position: LatLng(
-                  markerMap['position_x'],
-                  markerMap['position_y']
-              ),
-              description: markerMap['description'],
-              range: markerMap['range'],
-              icon: value
-          ),
+              snippet: markerMap['description'],
+            )
+          )
         );
       });
-    }
-
-    // for map marker object in set
-    for (MapMarker mapMarker in _mapMarkers) {
-      // translate map marker into google marker:
-      googleMarkers.add(
-          mapMarker.toMarker()
-      );
     }
   }
 

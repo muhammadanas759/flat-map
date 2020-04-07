@@ -16,7 +16,7 @@ class MapMarker {
     String description,
     LatLng position,
     double range,
-    BitmapDescriptor icon
+    String icon
   });
 
   Marker toMarker() => Marker(
