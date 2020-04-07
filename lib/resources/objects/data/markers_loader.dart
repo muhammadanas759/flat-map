@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:async';
 
-import 'package:flatmapp/resources/objects/data/icons_loader.dart';
-import 'file:///C:/Users/Adam/IdeaProjects/flatmapp_app/lib/resources/objects/map/map_marker.dart';
-
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import 'package:flatmapp/resources/objects/data/icons_loader.dart';
+
+
+// TODO CUSTOM ICONS FOR MARKERS https://medium.com/flutter-community/ad-custom-marker-images-for-your-google-maps-in-flutter-68ce627107fc
 
 class MarkerLoader {
   //-------------------------- VARIABLES ---------------------------------------
@@ -18,7 +20,7 @@ class MarkerLoader {
   List<dynamic> _markersDescriptions = [];
 
   // google maps markers set
-  final Set<Marker> googleMarkers = Set();
+  Map<MarkerId, Marker> googleMarkers = <MarkerId, Marker>{};
 
   // zones set - TODO zones repair
   Set<Circle> zones = Set.from([
@@ -60,21 +62,19 @@ class MarkerLoader {
 
       // translate description into marker in markers set:
       _iconsLoader.getMarkerImage(markerMap['icon']).then((value) {
-        googleMarkers.add(
-          Marker(
-            markerId: MarkerId(markerMap['id']),
-            position: LatLng(
-                markerMap['position_x'],
-                markerMap['position_y']
-            ),
-            icon: value,
-            onTap: () {
+        googleMarkers[generateId()] = Marker(
+          markerId: MarkerId(markerMap['id']),
+          position: LatLng(
+              markerMap['position_x'],
+              markerMap['position_y']
+          ),
+          icon: value,
+          onTap: () {
 
-            },
-            infoWindow: InfoWindow(
-              title: markerMap['title'],
-              snippet: markerMap['description'],
-            )
+          },
+          infoWindow: InfoWindow(
+            title: markerMap['title'],
+            snippet: markerMap['description'],
           )
         );
       });
@@ -89,13 +89,19 @@ class MarkerLoader {
     await file.writeAsString(markerStorage);
   }
 
-  // add marker
-  void addMarker() {
-
+  MarkerId generateId(){
+    return MarkerId("id_1");
   }
-
-  void changeMarker({int id}){
-
+  
+  Marker temporaryMarker(LatLng position){
+    return Marker(
+        markerId: MarkerId("temporary"),
+        position: position,
+        infoWindow: InfoWindow(
+          title: "temporary marker",
+          snippet: "marker presenting chosen position",
+        )
+    );
   }
 
   //-------------------------- NETWORK CONTENT ---------------------------------

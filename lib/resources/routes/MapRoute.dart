@@ -81,6 +81,23 @@ class _MapRouteState extends State<MapRoute> {
     });
   }
 
+  void addMarker({Marker marker}) {
+    setState(() {
+      // adding a new marker to map
+      _markerLoader.googleMarkers[_markerLoader.generateId()] = marker;
+    });
+  }
+
+  // TODO change marker procedure
+  void changeMarker({String id, Marker marker}){
+    setState(() {
+      // change marker
+      _markerLoader.googleMarkers[
+        _markerLoader.generateId()
+      ] = marker;
+    });
+  }
+
   // ===========================================================================
   // -------------------- GOOGLE MAPS WIDGET SECTION ---------------------------
 
@@ -105,7 +122,9 @@ class _MapRouteState extends State<MapRoute> {
 
   // add marker in the place where user touched the map
   Future _mapTap(LatLng position) async {
-
+    addMarker(
+      marker: _markerLoader.temporaryMarker(position)
+    );
   }
 
   // open marker add formula if user pressed the map
@@ -136,7 +155,7 @@ class _MapRouteState extends State<MapRoute> {
                 ),
                 zoom: _currentZoom,
               ),
-              markers: _markerLoader.googleMarkers,
+              markers: Set<Marker>.of(_markerLoader.googleMarkers.values),
               circles: _markerLoader.zones,
               onMapCreated: (controller) => _onMapCreated(controller),
 
