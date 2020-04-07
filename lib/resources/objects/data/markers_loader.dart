@@ -9,8 +9,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flatmapp/resources/objects/data/icons_loader.dart';
 
 
-// TODO CUSTOM ICONS FOR MARKERS https://medium.com/flutter-community/ad-custom-marker-images-for-your-google-maps-in-flutter-68ce627107fc
-
 class MarkerLoader {
   //-------------------------- VARIABLES ---------------------------------------
   // server address - TODO add server address
@@ -22,7 +20,7 @@ class MarkerLoader {
   // google maps markers set
   Map<String, Marker> googleMarkers = <String, Marker>{};
 
-  // zones set - TODO zones repair
+  // zones set
   Map<String, Circle> zones  = <String, Circle>{};
 
   // icons loader
@@ -79,7 +77,7 @@ class MarkerLoader {
     }
   }
 
-  // generate id
+  // TODO generate id
   String generateId(){
     return "id_1";
   }

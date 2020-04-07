@@ -42,6 +42,7 @@ class IconsLoader {
     'meal':          'assets/icons/meal.png',
   };
 
+  // TODO function is delayed and therefore returns null (and after, when nobody cares, image)
   BitmapDescriptor getMarkerImage(
       String name, {double targetWidth}) {
     assert(name != null);
