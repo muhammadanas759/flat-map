@@ -48,9 +48,6 @@ class MarkerLoader {
       File(path).writeAsString('[]');
     }
 
-    // load icons
-    // await _iconsLoader.loadingAllIcons(); - suppressed due to individual load
-
     // for each marker description in json
     for (Map markerMap in _markersDescriptions) {
 
@@ -61,7 +58,7 @@ class MarkerLoader {
       );
 
       // translate description into marker in markers set:
-      BitmapDescriptor icon = await _iconsLoader.getMarkerImage(markerMap['icon']);
+      BitmapDescriptor icon = _iconsLoader.getMarkerImage(markerMap['icon']);
       googleMarkers[id] = Marker(
         markerId: MarkerId(id),
         position: position,
@@ -96,7 +93,10 @@ class MarkerLoader {
   }
   
   Future<Marker> temporaryMarker(LatLng position) async {
-    BitmapDescriptor icon = await _iconsLoader.getMarkerImage("home", targetWidth: 80);
+    BitmapDescriptor icon = _iconsLoader.getMarkerImage(
+        "home",
+        targetWidth: 80
+    );
     return Marker(
         markerId: MarkerId("temporary"),
         position: position,

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
 import 'package:preferences/preferences.dart';
 
 import 'package:flatmapp/resources/objects/data/markers_loader.dart';
@@ -18,22 +17,17 @@ class MapRoute extends StatefulWidget {
 
 class _MapRouteState extends State<MapRoute> {
 
+  // google map controller
   final Completer<GoogleMapController> _mapController = Completer();
+
+  // location controller
+  LatLng _userPosition = LatLng(52.466699, 16.926961);
 
   // map style preset
   final String _preset = PrefService.get('ui_theme');
 
   // Current map zoom. Initial zoom will be 15, street level
   double _currentZoom = 15;
-
-  // device location controller
-  Location locationController = new Location();
-
-  // last results from location controller
-  Map<String, double> _currentLocation = {
-    "latitude": 52.466684,
-    "longitude": 16.926901,
-  };
 
   // data loader
   final MarkerLoader _markerLoader = MarkerLoader();
@@ -43,33 +37,19 @@ class _MapRouteState extends State<MapRoute> {
   // Markers loading flag
   bool _areMarkersLoading = true;
 
-  // device marker
-  Marker deviceMarker;
   // temporary marker
   Marker temporaryMarker;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   // set custom map style
   void _setStyle(GoogleMapController controller) async {
     String value = await DefaultAssetBundle.of(context)
         .loadString('assets/map_style_$_preset.json');
     controller.setMapStyle(value);
-  }
-
-  void findDevice() {
-    // get device position
-
-//    // move camera to the device position
-//    mapController?.moveCamera(
-//      CameraUpdate.newCameraPosition(
-//        CameraPosition(
-//          target: LatLng(
-//            _currentLocation["latitude"],
-//            _currentLocation["longitude"],
-//          ),
-//          zoom: _currentZoom,
-//        ),
-//      ),
-//    );
   }
 
   // Init all the markers with network images and update the loading state.
@@ -150,12 +130,10 @@ class _MapRouteState extends State<MapRoute> {
           Opacity(
             opacity: _isMapLoading ? 0 : 1,
             child: GoogleMap(
+              myLocationEnabled: true,
               mapToolbarEnabled: false,
               initialCameraPosition: CameraPosition(
-                target: LatLng(
-                  _currentLocation["latitude"],
-                  _currentLocation["longitude"],
-                ),
+                target: _userPosition,
                 zoom: _currentZoom,
               ),
               markers: Set<Marker>.of(_markerLoader.googleMarkers.values),
@@ -181,26 +159,13 @@ class _MapRouteState extends State<MapRoute> {
 
           // Map markers loading indicator
           if (_areMarkersLoading)
-            textInfo('Loading map widget')
+            textInfo('Loading markers')
 
         ],
       ),
 
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
-
-      floatingActionButton: new FloatingActionButton(
-        onPressed: () {
-          findDevice();
-        },
-        tooltip: 'Locate me',
-        child: new Icon(Icons.location_on),
-        elevation: 4.0,
-      ),
-
-      // NAVIGATION BAR
-      // bottomNavigationBar: createBottomAppBar,
-      //  floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
