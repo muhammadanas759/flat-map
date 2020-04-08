@@ -6,7 +6,6 @@ import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 
 
-
 class ActionsRoute extends StatelessWidget {
 
   final IconsLoader icons = IconsLoader();

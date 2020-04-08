@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/routes/LogInRoute.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
@@ -28,6 +29,7 @@ main() async {
     case 'About': {initScreen = '/about';} break;
     case 'Actions': {initScreen = '/actions';} break;
     case 'Community': {initScreen = '/community';} break;
+    case 'Log In': {initScreen = '/login';} break;
     case 'Map': {initScreen = '/map';} break;
     case 'Profile': {initScreen = '/profile';} break;
     case 'Settings': {initScreen = '/settings';} break;
@@ -58,6 +60,7 @@ class MyApp extends StatelessWidget {
             '/community': (context) => CommunityRoute(),
             '/settings': (context) => SettingsRoute(),
             '/about': (context) => AboutRoute(),
+            '/login': (context) => LogInRoute(),
           },
         );
       }

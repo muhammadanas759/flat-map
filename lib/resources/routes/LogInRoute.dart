@@ -1,0 +1,110 @@
+import 'package:flutter/material.dart';
+
+import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
+import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
+import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
+import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
+
+
+class LogInRoute extends StatefulWidget {
+  @override
+  _LogInRouteState createState() => _LogInRouteState();
+}
+
+class _LogInRouteState extends State<LogInRoute> {
+
+  final _formKey = GlobalKey<FormState>();
+  final Map<String, dynamic> _formData = {
+    'email': '',
+    'password': '',
+  };
+  final focusPassword = FocusNode();
+
+  Widget _buildEmailField(context) {
+    return TextFormField(
+      style: bodyText(),
+      decoration: textFieldStyle(
+          labelTextStr: "Email",
+          hintTextStr: "Your email goes here"
+      ),
+      // ignore: missing_return
+      validator: (String value) {
+        if (!RegExp(
+            r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+            .hasMatch(value)) {
+          return 'Invalid email format';
+        }
+      },
+      onSaved: (String value) {
+        _formData['email'] = value;
+      },
+      textInputAction: TextInputAction.next,
+      onFieldSubmitted: (v) {
+        FocusScope.of(context).requestFocus(focusPassword);
+      },
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return TextFormField(
+      style: bodyText(),
+      decoration: textFieldStyle(
+          labelTextStr: "Password",
+          hintTextStr: "Your password goes here"
+      ),
+      // ignore: missing_return
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'Password can not be empty';
+        }
+      },
+      onSaved: (String value) {
+        _formData['password'] = value;
+      },
+      focusNode: focusPassword,
+      onFieldSubmitted: (v) {
+        _submitForm();
+      },
+    );
+  }
+
+  void _submitForm() {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: appBar(),
+
+      // BODY FORM
+      body: Form(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(height: 20),
+              _buildEmailField(context),
+              SizedBox(height: 20),
+              _buildPasswordField(),
+              SizedBox(height: 20),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  textFieldButton(text: "Log in", onPressedMethod: _submitForm),
+                  SizedBox(width: 20),
+                  textFieldButton(text: "Sign up", onPressedMethod: _submitForm),
+                  SizedBox(width: 20),
+                  textFieldButton(text: "Use as guest", onPressedMethod: _submitForm),
+                ],
+              ),
+            ],
+          )
+      ),
+
+      // SIDE PANEL MENU
+      drawer: sideBarMenu(context),
+    );
+  }
+}
