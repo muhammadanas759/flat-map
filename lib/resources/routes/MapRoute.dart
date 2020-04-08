@@ -228,9 +228,11 @@ class _MapRouteState extends State<MapRoute> {
   }
 
   void _saveMarker(){
-
     // _submitForm();
+    _closePanel();
+  }
 
+  void _closePanel(){
     // close panel
     _slidingFormController.close();
   }
@@ -254,8 +256,15 @@ class _MapRouteState extends State<MapRoute> {
           SizedBox(height: 20),
           _buildMarkerRangeField(),
           SizedBox(height: 20),
-          textFieldButton(text: "Save marker", onPressedMethod: _saveMarker),
-          SizedBox(width: 20),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              textFieldButton(text: "Save marker", onPressedMethod: _saveMarker),
+              SizedBox(width: 20),
+              textFieldButton(text: "Close form", onPressedMethod: _closePanel),
+            ],
+          ),
+
           textFieldButton(text: "Add action", onPressedMethod: _saveMarker),
           SizedBox(width: 20),
         ],
