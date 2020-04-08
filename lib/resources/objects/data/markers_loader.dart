@@ -91,14 +91,9 @@ class MarkerLoader {
   }
   
   Future<Marker> temporaryMarker(LatLng position) async {
-    BitmapDescriptor icon = _iconsLoader.getMarkerImage(
-        "home",
-        targetWidth: 80
-    );
     return Marker(
         markerId: MarkerId("temporary"),
         position: position,
-        icon: icon,
         infoWindow: InfoWindow(
           title: "temporary marker",
           snippet: "marker presenting chosen position",

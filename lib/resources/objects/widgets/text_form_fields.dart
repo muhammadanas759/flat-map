@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
-
 
 InputDecoration textFieldStyle({
     String labelTextStr="", String hintTextStr=""}) {

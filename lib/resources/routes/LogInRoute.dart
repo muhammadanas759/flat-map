@@ -52,6 +52,7 @@ class _LogInRouteState extends State<LogInRoute> {
           labelTextStr: "Password",
           hintTextStr: "Your password goes here"
       ),
+      obscureText: false,
       // ignore: missing_return
       validator: (String value) {
         if (value.isEmpty) {
@@ -74,34 +75,38 @@ class _LogInRouteState extends State<LogInRoute> {
     }
   }
 
+  Widget _logInForm(){
+    return Form(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(height: 20),
+            _buildEmailField(context),
+            SizedBox(height: 20),
+            _buildPasswordField(),
+            SizedBox(height: 20),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                textFieldButton(text: "Log in", onPressedMethod: _submitForm),
+                SizedBox(width: 20),
+                textFieldButton(text: "Sign up", onPressedMethod: _submitForm),
+                SizedBox(width: 20),
+                textFieldButton(text: "Use as guest", onPressedMethod: _submitForm),
+              ],
+            ),
+          ],
+        )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
 
       // BODY FORM
-      body: Form(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(height: 20),
-              _buildEmailField(context),
-              SizedBox(height: 20),
-              _buildPasswordField(),
-              SizedBox(height: 20),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  textFieldButton(text: "Log in", onPressedMethod: _submitForm),
-                  SizedBox(width: 20),
-                  textFieldButton(text: "Sign up", onPressedMethod: _submitForm),
-                  SizedBox(width: 20),
-                  textFieldButton(text: "Use as guest", onPressedMethod: _submitForm),
-                ],
-              ),
-            ],
-          )
-      ),
+      body: _logInForm(),
 
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
