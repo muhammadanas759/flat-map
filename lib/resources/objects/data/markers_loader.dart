@@ -1,15 +1,16 @@
-import 'dart:convert';
-import 'dart:io';
-import 'dart:async';
+import 'package:flatmapp/resources/objects/data/icons_loader.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'package:flatmapp/resources/objects/data/icons_loader.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'dart:async';
 
 
 class MarkerLoader {
+  // ===========================================================================
   //-------------------------- VARIABLES ---------------------------------------
   // server address - TODO add server address
   String _serverURL = "";
@@ -26,6 +27,7 @@ class MarkerLoader {
   // icons loader
   final IconsLoader _iconsLoader = IconsLoader();
 
+  // ===========================================================================
   //-------------------------- LOADING METHODS ---------------------------------
   // load markers from local storage
   Future loadMarkers() async {
@@ -101,6 +103,7 @@ class MarkerLoader {
     );
   }
 
+  // ===========================================================================
   //-------------------------- NETWORK CONTENT ---------------------------------
   Future<http.Response> postMarkers({String endpoint, List<dynamic> content}) async {
     http.Response _response;

@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:preferences/preferences.dart';
-import 'package:dynamic_theme/dynamic_theme.dart';
-
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
+
+import 'package:flutter/material.dart';
+import 'package:preferences/preferences.dart';
+import 'package:dynamic_theme/dynamic_theme.dart';
 
 
 class SettingsRoute extends StatefulWidget {

@@ -1,10 +1,14 @@
+import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 
 // class providing paths to markers icons
 class IconsLoader {
 
+  // ===========================================================================
   // https://img.icons8.com/office/80/000000/marker.png
   // https://img.icons8.com/officel/80/000000/place-marker.png
   // https://img.icons8.com/dusk/80/000000/order-delivered.png
@@ -42,6 +46,7 @@ class IconsLoader {
     'meal':          'assets/icons/meal.png',
   };
 
+  // ===========================================================================
   // TODO function is delayed and therefore returns null (and after, when nobody cares, image)
   BitmapDescriptor getMarkerImage(
       String name, {double targetWidth}) {
@@ -57,5 +62,30 @@ class IconsLoader {
     ).then((image){icon = image;});
 
     return icon;
+  }
+
+  // ===========================================================================
+  Widget _iconsListView(BuildContext context, ScrollController scrollController) { // ignore: unused_element
+    return ListView.builder(
+      controller: scrollController,
+      itemCount: markerImageLocal.length,
+      itemBuilder: (context, index) {
+        String key = markerImageLocal.keys.elementAt(index);
+        return Card(
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: Colors.white,
+              backgroundImage: AssetImage(markerImageLocal[key]),
+            ),
+            title: Text(key, style: bodyText()),
+            trailing: Icon(Icons.keyboard_arrow_right),
+            onTap: () {
+              // do something
+              print(key);
+            },
+          ),
+        );
+      },
+    );
   }
 }

@@ -1,14 +1,14 @@
 import 'package:flatmapp/resources/routes/LogInRoute.dart';
-import 'package:flutter/material.dart';
-import 'package:preferences/preferences.dart';
-import 'package:dynamic_theme/dynamic_theme.dart';
-
 import 'package:flatmapp/resources/routes/MapRoute.dart';
 import 'package:flatmapp/resources/routes/ProfileRoute.dart';
 import 'package:flatmapp/resources/routes/ActionsRoute.dart';
 import 'package:flatmapp/resources/routes/CommunityRoute.dart';
 import 'package:flatmapp/resources/routes/SettingsRoute.dart';
 import 'package:flatmapp/resources/routes/AboutRoute.dart';
+
+import 'package:flutter/material.dart';
+import 'package:preferences/preferences.dart';
+import 'package:dynamic_theme/dynamic_theme.dart';
 
 
 String initScreen;

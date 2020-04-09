@@ -1,16 +1,16 @@
-import 'dart:async';
-
-import 'package:flatmapp/resources/objects/data/icons_loader.dart';
+import 'package:flatmapp/resources/objects/forms/counter_form_field.dart';
 import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
-import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:preferences/preferences.dart';
-
 import 'package:flatmapp/resources/objects/data/markers_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
+
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:preferences/preferences.dart';
+
+import 'dart:async';
 
 
 class MapRoute extends StatefulWidget {
@@ -19,6 +19,8 @@ class MapRoute extends StatefulWidget {
 }
 
 class _MapRouteState extends State<MapRoute> {
+  // ===========================================================================
+  // -------------------- INIT VARIABLES SECTION -------------------------------
 
   // google map controller
   final Completer<GoogleMapController> _mapController = Completer();
@@ -48,13 +50,8 @@ class _MapRouteState extends State<MapRoute> {
     super.initState();
   }
 
-  // set custom map style
-  void _setStyle(GoogleMapController controller) async {
-    String value = await DefaultAssetBundle.of(context)
-        .loadString('assets/map_style_$_preset.json');
-    controller.setMapStyle(value);
-  }
-
+  // ===========================================================================
+  // -------------------- MARKERS SECTION --------------------------------------
   // Init all the markers with network images and update the loading state.
   void _initMarkers() async {
 
@@ -85,6 +82,12 @@ class _MapRouteState extends State<MapRoute> {
 
   // ===========================================================================
   // -------------------- GOOGLE MAPS WIDGET SECTION ---------------------------
+  // set custom map style
+  void _setStyle(GoogleMapController controller) async {
+    String value = await DefaultAssetBundle.of(context)
+        .loadString('assets/map_style_$_preset.json');
+    controller.setMapStyle(value);
+  }
 
   // Called when the Google Map widget is created.
   // Updates the map loading state and inits the markers.
@@ -145,43 +148,16 @@ class _MapRouteState extends State<MapRoute> {
 
   // ===========================================================================
   // -------------------- MARKER FORM WIDGET SECTION ---------------------------
-
-  final IconsLoader icons = IconsLoader();
-
-  Widget _iconsListView(BuildContext context, ScrollController scrollController) {
-    return ListView.builder(
-      controller: scrollController,
-      itemCount: icons.markerImageLocal.length,
-      itemBuilder: (context, index) {
-        String key = icons.markerImageLocal.keys.elementAt(index);
-        return Card(
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.white,
-              backgroundImage: AssetImage(icons.markerImageLocal[key]),
-            ),
-            title: Text(key, style: bodyText()),
-            trailing: Icon(Icons.keyboard_arrow_right),
-            onTap: () {
-              // do something
-              print(key);
-            },
-          ),
-        );
-      },
-    );
-  }
-
   final _formKey = GlobalKey<FormState>();
   final Map<String, dynamic> _formMarkerData = {
     'name': '',
-    'range': 10.0,
+    'range': 10,
     'actions': []
   };
-  final focusPassword = FocusNode();
 
   Widget _buildMarkerNameField(context) {
     return TextFormField(
+      initialValue: _formMarkerData['name'],
       style: bodyText(),
       decoration: textFieldStyle(
           labelTextStr: "Marker name",
@@ -191,33 +167,13 @@ class _MapRouteState extends State<MapRoute> {
         _formMarkerData['name'] = value;
       },
       textInputAction: TextInputAction.next,
-      onFieldSubmitted: (v) {
-        FocusScope.of(context).requestFocus(focusPassword);
-      },
     );
   }
 
   Widget _buildMarkerRangeField() {
-    return TextFormField(
-      style: bodyText(),
-      decoration: textFieldStyle(
-          labelTextStr: "Marker range",
-          hintTextStr: "Marker range goes here"
-      ),
-      keyboardType: TextInputType.number,
-      // ignore: missing_return
-      validator: (String value) {
-        if (value.isEmpty) {
-          return 'Marker range can not be empty';
-        }
-      },
-      onSaved: (String value) {
-        _formMarkerData['range'] = value;
-      },
-      focusNode: focusPassword,
-      onFieldSubmitted: (v) {
-        _submitForm();
-      },
+    return CounterFormField(
+      initialValue: _formMarkerData['range'],
+      onSaved: (value) => this._formMarkerData['range'] = value,
     );
   }
 
@@ -228,7 +184,7 @@ class _MapRouteState extends State<MapRoute> {
   }
 
   void _saveMarker(){
-    // _submitForm();
+    _submitForm();
     _closePanel();
   }
 
@@ -243,13 +199,25 @@ class _MapRouteState extends State<MapRoute> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           SizedBox(height: 20),
-          Text(
-            'Temporary marker position:\n'
-                '${_temporaryMarkerPosition.latitude}, '
-                '${_temporaryMarkerPosition.longitude}',
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            style: bodyText(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                'Temporary marker position:\n'
+                    '${_temporaryMarkerPosition.latitude},\n'
+                    '${_temporaryMarkerPosition.longitude}',
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: bodyText(),
+              ),
+              IconButton(
+                icon: Icon(Icons.keyboard_arrow_down),
+                tooltip: 'Close form',
+                onPressed: () {
+                  _closePanel();
+                },
+              ),
+            ],
           ),
           SizedBox(height: 20),
           _buildMarkerNameField(context),
@@ -261,11 +229,9 @@ class _MapRouteState extends State<MapRoute> {
             children: <Widget>[
               textFieldButton(text: "Save marker", onPressedMethod: _saveMarker),
               SizedBox(width: 20),
-              textFieldButton(text: "Close form", onPressedMethod: _closePanel),
+              textFieldButton(text: "Add action", onPressedMethod: _saveMarker),
             ],
           ),
-
-          textFieldButton(text: "Add action", onPressedMethod: _saveMarker),
           SizedBox(width: 20),
         ],
       )
@@ -273,6 +239,7 @@ class _MapRouteState extends State<MapRoute> {
   }
 
   // ===========================================================================
+  // -------------------- MAIN MAP WIDGET SECTION ------------------------------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
