@@ -1,5 +1,4 @@
-import 'package:flatmapp/resources/objects/data/icons_loader.dart';
-
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -16,7 +15,7 @@ class MarkerLoader {
   String _serverURL = "";
 
   // list of marker data in strings
-  List<dynamic> _markersDescriptions = [];
+  Map<String, Map> _markersDescriptions = <String, Map>{};
 
   // google maps markers set
   Map<String, Marker> googleMarkers = <String, Marker>{};
@@ -25,7 +24,7 @@ class MarkerLoader {
   Map<String, Circle> zones  = <String, Circle>{};
 
   // icons loader
-  final IconsLoader _iconsLoader = IconsLoader();
+  // final IconsLoader _iconsLoader = IconsLoader();
 
   // ===========================================================================
   //-------------------------- LOADING METHODS ---------------------------------
@@ -41,51 +40,99 @@ class MarkerLoader {
       final file = File(path);
       String markerStorage = await file.readAsString();
       // save it to map
-      _markersDescriptions = json.decode(markerStorage);
-
+      try{
+        _markersDescriptions = Map<String, Map<dynamic, dynamic>>.from(
+            json.decode(markerStorage)
+        );
+      } catch (error) {
+        print(error);
+        print('could not load marker descriptions from local storage...');
+      }
     } else {
       // create new one
-      File(path).writeAsString('[]');
+      File(path).writeAsString('');
+      print('local storage did not exist, created new one...');
     }
 
-    // for each marker description in json
-    for (Map markerMap in _markersDescriptions) {
+    // translate descriptions to objects
+    _descriptionsToObjects();
+  }
 
-      String id = markerMap['id'];
+  // translate descriptions to google map markers and zones
+  void _descriptionsToObjects(){
+    // for each marker description
+    _markersDescriptions.forEach((String markerID, Map markerData) {
+
+      String id = markerID;
       LatLng position = LatLng(
-          markerMap['position_x'],
-          markerMap['position_y']
+          markerData['position_x'],
+          markerData['position_y']
       );
 
       // translate description into marker in markers set:
-      BitmapDescriptor icon = _iconsLoader.getMarkerImage(markerMap['icon']);
-      googleMarkers[id] = Marker(
-        markerId: MarkerId(id),
-        position: position,
-        icon: icon,
-//      onTap: () {},
-        infoWindow: InfoWindow(
-          title: markerMap['title'],
-          snippet: markerMap['description'],
-        )
-      );
+      // BitmapDescriptor icon = _iconsLoader.getMarkerImage(markerMap['icon']);
 
-      // add zone
-      zones[id] = Circle(
-        circleId: CircleId(id),
-        center: position,
-        radius: markerMap['range'],
+      // add marker
+      addMarker(
+          id: id,
+          position: position,
+          icon: markerData['icon'],
+          title: markerData['title'],
+          description: markerData['description'],
+          range: markerData['range']
       );
-    }
+    });
   }
 
-  // TODO generate id
+  // translate google map markers and zones to descriptions
+  void _objectsToDescriptions(){
+    // translate googleMarkers to markersDescription
+    googleMarkers.forEach((String id, Marker marker) {
+      _markersDescriptions[id] = {
+        'position_x': marker.position.latitude,
+        'position_y': marker.position.longitude,
+        'range': zones[id].radius,
+        'icon': 'default', // TODO ???
+        'title': marker.infoWindow.title,
+        'description': marker.infoWindow.snippet,
+      };
+    });
+  }
+
   String generateId(){
-    return "id_1";
+    return UniqueKey().toString();
+  }
+
+  void addMarker({
+    String id, LatLng position, String icon,
+    String title, String description, double range
+  }){
+    googleMarkers[id] = Marker(
+      markerId: MarkerId(id),
+      position: position,
+      // icon: icon,
+      //      onTap: () {},
+      infoWindow: InfoWindow(
+        title: title,
+        snippet: description,
+      )
+    );
+
+    // add zone
+    zones[id] = Circle(
+      circleId: CircleId(id),
+      center: position,
+      radius: range,
+    );
   }
 
   // save markers to local storage
   void saveMarkers() async {
+
+    // populate description with markers
+    _objectsToDescriptions();
+
+    // save markersDescription
     final directory = await getApplicationDocumentsDirectory();
     final file = new File('${directory.path}/marker_storage.json');
     String markerStorage = json.encode(_markersDescriptions);
@@ -105,7 +152,9 @@ class MarkerLoader {
 
   // ===========================================================================
   //-------------------------- NETWORK CONTENT ---------------------------------
-  Future<http.Response> postMarkers({String endpoint, List<dynamic> content}) async {
+  Future<http.Response> postMarkers({
+    String endpoint, Map<String, Map> content
+  }) async {
     http.Response _response;
     _response = await http.post(
         _serverURL + "/$endpoint",
@@ -117,7 +166,7 @@ class MarkerLoader {
   }
 
   // TODO add all endpoints from docs
-  Future<List<dynamic>> getMarkers({String endpoint}) async {
+  Future<Map<String, Map<dynamic, dynamic>>> getMarkers({String endpoint}) async {
     http.Response _response;
     _response = await http.get(
         _serverURL + "/$endpoint",
@@ -136,9 +185,9 @@ class MarkerLoader {
     await postMarkers(endpoint: "marker", content: _markersDescriptions);
 
     // get markers
-    List<dynamic> temp = await getMarkers(endpoint: "marker");
+    Map<String, Map<dynamic, dynamic>> temp = await getMarkers(endpoint: "marker");
 
     // analyse results
-    temp.forEach((element) => print(element));
+    temp.forEach((String element, Map marker) => print(element));
   }
 }

@@ -1,4 +1,3 @@
-import 'package:flatmapp/resources/objects/forms/counter_form_field.dart';
 import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/data/markers_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
@@ -45,6 +44,15 @@ class _MapRouteState extends State<MapRoute> {
   // Markers loading flag
   bool _areMarkersLoading = true;
 
+  // Form variables
+  final _formKey = GlobalKey<FormState>();
+  final Map<String, dynamic> _formMarkerData = {
+    'title': '',
+    'description': '',
+    'range': 10,
+    'actions': []
+  };
+
   @override
   void initState() {
     super.initState();
@@ -63,21 +71,9 @@ class _MapRouteState extends State<MapRoute> {
     });
   }
 
-  void addMarker({Marker marker}) {
-    setState(() {
-      // adding a new marker to map
-      _markerLoader.googleMarkers[_markerLoader.generateId()] = marker;
-    });
-  }
-
   // TODO change marker procedure
   void changeMarker({String id, Marker marker}){
-    setState(() {
-      // change marker
-      _markerLoader.googleMarkers[
-        _markerLoader.generateId()
-      ] = marker;
-    });
+
   }
 
   // ===========================================================================
@@ -110,11 +106,20 @@ class _MapRouteState extends State<MapRoute> {
 
   // add marker in the place where user touched the map
   Future _mapTap(LatLng position) async {
-    _temporaryMarkerPosition = position;
-    Marker marker = await _markerLoader.temporaryMarker(_temporaryMarkerPosition);
-    addMarker(
-      marker: marker
-    );
+    setState(() {
+      // change temporary position
+      _temporaryMarkerPosition = position;
+
+      // adding a new marker to map
+      _markerLoader.addMarker(
+        id: "temporary",
+        position: _temporaryMarkerPosition,
+        icon: "default",
+        title: "temporary marker",
+        description: "marker presenting chosen position",
+        range: _formMarkerData['range'].toDouble(),
+      );
+    });
   }
 
   // open marker add formula if user pressed the map
@@ -148,25 +153,41 @@ class _MapRouteState extends State<MapRoute> {
 
   // ===========================================================================
   // -------------------- MARKER FORM WIDGET SECTION ---------------------------
-  final _formKey = GlobalKey<FormState>();
-  final Map<String, dynamic> _formMarkerData = {
-    'name': '',
-    'range': 10,
-    'actions': []
-  };
-
   Widget _buildMarkerNameField(context) {
     return TextFormField(
-      initialValue: _formMarkerData['name'],
+      initialValue: _formMarkerData['title'],
       style: bodyText(),
       decoration: textFieldStyle(
-          labelTextStr: "Marker name",
-          hintTextStr: "Marker name goes here"
+          labelTextStr: "Marker title",
+          hintTextStr: "Marker title goes here"
       ),
       onSaved: (String value) {
-        _formMarkerData['name'] = value;
+        _formMarkerData['title'] = value;
       },
       textInputAction: TextInputAction.next,
+      onFieldSubmitted: (String value) {
+        _formMarkerData['title'] = value;
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+    );
+  }
+
+  Widget _buildMarkerDescriptionField(context) {
+    return TextFormField(
+      initialValue: _formMarkerData['description'],
+      style: bodyText(),
+      decoration: textFieldStyle(
+          labelTextStr: "Marker description",
+          hintTextStr: "Marker description goes here"
+      ),
+      onSaved: (String value) {
+        _formMarkerData['description'] = value;
+      },
+      textInputAction: TextInputAction.next,
+      onFieldSubmitted: (String value) {
+        _formMarkerData['description'] = value;
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
     );
   }
 
@@ -177,28 +198,43 @@ class _MapRouteState extends State<MapRoute> {
     );
   }
 
-  void _submitForm() {
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
-    }
-  }
-
   void _saveMarker(){
-    _submitForm();
-    _closePanel();
+    // save form
+    _formKey.currentState.save();
+
+    setState(() {
+      // adding a new marker to map
+      _markerLoader.addMarker(
+          id: _markerLoader.generateId(),
+          position: _temporaryMarkerPosition,
+          icon: "default",
+          title: _formMarkerData['title'],
+          description: _formMarkerData['description'],
+          range: _formMarkerData['range'].toDouble()
+      );
+    });
+
+    // close form panel
+    _closePanel(context);
+
+    // save markers to file
+    _markerLoader.saveMarkers();
   }
 
-  void _closePanel(){
+  void _closePanel(context){
+    // close keyboard
+    FocusScope.of(context).requestFocus(FocusNode());
     // close panel
     _slidingFormController.close();
   }
 
-  Widget _markerAddForm(){
+  Widget _markerAddForm(context){
     return Form(
+      key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          SizedBox(height: 20),
+          SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -214,25 +250,47 @@ class _MapRouteState extends State<MapRoute> {
                 icon: Icon(Icons.keyboard_arrow_down),
                 tooltip: 'Close form',
                 onPressed: () {
-                  _closePanel();
+                  _closePanel(context);
                 },
               ),
             ],
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 10),
           _buildMarkerNameField(context),
-          SizedBox(height: 20),
+          SizedBox(height: 10),
+          _buildMarkerDescriptionField(context),
+          SizedBox(height: 10),
           _buildMarkerRangeField(),
-          SizedBox(height: 20),
+          SizedBox(height: 10),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              textFieldButton(text: "Save marker", onPressedMethod: _saveMarker),
+              RaisedButton(
+                elevation: 0.0,
+                color: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(15.0),
+                  side: BorderSide(color: Colors.grey),
+                ),
+                padding: EdgeInsets.all(20.0),
+                onPressed: (){
+                  _saveMarker();
+                },
+                child: Text(
+                  "Add marker",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
               SizedBox(width: 20),
-              textFieldButton(text: "Add action", onPressedMethod: _saveMarker),
+              textFieldButton(text: "Add action", onPressedMethod: (){
+
+              }),
             ],
           ),
-          SizedBox(width: 20),
+          SizedBox(width: 10),
         ],
       )
     );
@@ -269,7 +327,7 @@ class _MapRouteState extends State<MapRoute> {
             isDraggable: false,
             defaultPanelState: PanelState.CLOSED,
             controller: _slidingFormController,
-            panel: _markerAddForm(),
+            panel: _markerAddForm(context),
             body: Opacity(
                 opacity: _isMapLoading ? 0 : 1,
                 // Google Map widget
