@@ -1,4 +1,6 @@
+import 'package:flatmapp/resources/objects/data/icons_loader.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -15,7 +17,7 @@ class MarkerLoader {
   String _serverURL = "";
 
   // list of marker data in strings
-  Map<String, Map> _markersDescriptions = <String, Map>{};
+  Map<String, Map> markersDescriptions = <String, Map>{};
 
   // google maps markers set
   Map<String, Marker> googleMarkers = <String, Marker>{};
@@ -24,13 +26,17 @@ class MarkerLoader {
   Map<String, Circle> zones  = <String, Circle>{};
 
   // icons loader
-  // final IconsLoader _iconsLoader = IconsLoader();
+  final IconsLoader iconsLoader = IconsLoader();
 
   // ===========================================================================
   //-------------------------- LOADING METHODS ---------------------------------
+  // constructor
+  MarkerLoader() {
+    loadMarkers();
+  }
+
   // load markers from local storage
   Future loadMarkers() async {
-
     final directory = await getApplicationDocumentsDirectory();
     String path = '${directory.path}/marker_storage.json';
     // if marker storage does exist
@@ -41,7 +47,7 @@ class MarkerLoader {
       String markerStorage = await file.readAsString();
       // save it to map
       try{
-        _markersDescriptions = Map<String, Map<dynamic, dynamic>>.from(
+        markersDescriptions = Map<String, Map<dynamic, dynamic>>.from(
             json.decode(markerStorage)
         );
       } catch (error) {
@@ -54,14 +60,13 @@ class MarkerLoader {
       print('local storage did not exist, created new one...');
     }
 
-    // translate descriptions to objects
     _descriptionsToObjects();
   }
 
   // translate descriptions to google map markers and zones
   void _descriptionsToObjects(){
     // for each marker description
-    _markersDescriptions.forEach((String markerID, Map markerData) {
+    markersDescriptions.forEach((String markerID, Map markerData) {
 
       String id = markerID;
       LatLng position = LatLng(
@@ -70,7 +75,7 @@ class MarkerLoader {
       );
 
       // translate description into marker in markers set:
-      // BitmapDescriptor icon = _iconsLoader.getMarkerImage(markerMap['icon']);
+      // BitmapDescriptor icon = iconsLoader.getMarkerImage(markerMap['icon']);
 
       // add marker
       addMarker(
@@ -88,7 +93,7 @@ class MarkerLoader {
   void _objectsToDescriptions(){
     // translate googleMarkers to markersDescription
     googleMarkers.forEach((String id, Marker marker) {
-      _markersDescriptions[id] = {
+      markersDescriptions[id] = {
         'position_x': marker.position.latitude,
         'position_y': marker.position.longitude,
         'range': zones[id].radius,
@@ -124,6 +129,20 @@ class MarkerLoader {
       center: position,
       radius: range,
     );
+
+    // save descriptions
+    _objectsToDescriptions();
+  }
+
+  void removeMarker({String id}){
+    markersDescriptions.remove(id);
+    googleMarkers.remove(id);
+    zones.remove(id);
+  }
+
+  // TODO edit marker
+  void editMarker(){
+
   }
 
   // save markers to local storage
@@ -135,7 +154,7 @@ class MarkerLoader {
     // save markersDescription
     final directory = await getApplicationDocumentsDirectory();
     final file = new File('${directory.path}/marker_storage.json');
-    String markerStorage = json.encode(_markersDescriptions);
+    String markerStorage = json.encode(markersDescriptions);
     await file.writeAsString(markerStorage);
   }
   
@@ -177,12 +196,12 @@ class MarkerLoader {
   }
 
   void internetTest() async {
-    if(_markersDescriptions == null){
+    if(markersDescriptions == null){
       await loadMarkers();
     }
 
     // post markers
-    await postMarkers(endpoint: "marker", content: _markersDescriptions);
+    await postMarkers(endpoint: "marker", content: markersDescriptions);
 
     // get markers
     Map<String, Map<dynamic, dynamic>> temp = await getMarkers(endpoint: "marker");

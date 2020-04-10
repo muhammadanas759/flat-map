@@ -59,24 +59,6 @@ class _MapRouteState extends State<MapRoute> {
   }
 
   // ===========================================================================
-  // -------------------- MARKERS SECTION --------------------------------------
-  // Init all the markers with network images and update the loading state.
-  void _initMarkers() async {
-
-    await _markerLoader.loadMarkers();
-
-    // notify about finished markers loading
-    setState(() {
-      _areMarkersLoading = false;
-    });
-  }
-
-  // TODO change marker procedure
-  void changeMarker({String id, Marker marker}){
-
-  }
-
-  // ===========================================================================
   // -------------------- GOOGLE MAPS WIDGET SECTION ---------------------------
   // set custom map style
   void _setStyle(GoogleMapController controller) async {
@@ -86,7 +68,7 @@ class _MapRouteState extends State<MapRoute> {
   }
 
   // Called when the Google Map widget is created.
-  // Updates the map loading state and inits the markers.
+  // Updates the map loading state and initializes markers.
   void _onMapCreated(GoogleMapController controller) {
 
     // set custom map style
@@ -101,7 +83,12 @@ class _MapRouteState extends State<MapRoute> {
     });
 
     // load markers
-    _initMarkers();
+    _markerLoader.loadMarkers();
+
+    // notify about finished markers loading
+    setState(() {
+      _areMarkersLoading = false;
+    });
   }
 
   // add marker in the place where user touched the map
