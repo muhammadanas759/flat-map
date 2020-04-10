@@ -28,6 +28,43 @@ class _ProfileRouteState extends State<ProfileRoute> {
     _markerLoader.loadMarkers();
   }
 
+  Future<void> _raiseAlertDialog(BuildContext context, var id, var _marker) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+            title: Text("Remove marker?"),
+            content: Text("You are about to remove marker\n"
+                "${_marker['title']}\n"
+                "${_marker['description']}."
+            ),
+            actions: [
+              // set up the buttons
+              FlatButton(
+                child: Text("no nO NO"),
+                onPressed:  () {
+                  // dismiss alert
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text("HELL YEAH"),
+                onPressed:  () {
+                  // remove marker
+                  setState(() {
+                    _markerLoader.removeMarker(id: id);
+                  });
+                  // dismiss alert
+                  Navigator.of(context).pop();
+                },
+              ),
+            ]
+        );
+      },
+    );
+  }
+
   Widget listMarkers(BuildContext context) {
     if (_markerLoader.markersDescriptions.length > 0){
       return ListView.builder(
@@ -57,32 +94,36 @@ class _ProfileRouteState extends State<ProfileRoute> {
                 subtitle: Text(_marker['description'], style: footer()),
                 trailing: Icon(Icons.keyboard_arrow_right),
                 children: <Widget>[
-                  Text(
-                    'Range: ${_marker['range'].toString()}',
-                    style: footer(),
-                  ),
-                  Text(
-                    'Position:\n${_marker['position_x'].toString()},\n'
-                        '${_marker['position_y'].toString()}',
-                    style: footer(),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.edit),
-                    tooltip: 'Edit marker',
-                    onPressed: () {
-                      setState(() {
-                        _markerLoader.editMarker();
-                      });
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.delete_forever),
-                    tooltip: 'Remove marker',
-                    onPressed: () {
-                      setState(() {
-                        _markerLoader.removeMarker(id: _id);
-                      });
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+//                      Text(
+//                        'Range: ${_marker['range'].toString()}',
+//                        style: footer(),
+//                      ),
+//                      Text(
+//                        'Position:\n${_marker['position_x'].toString()},\n'
+//                            '${_marker['position_y'].toString()}',
+//                        style: footer(),
+//                      ),
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        tooltip: 'Edit marker',
+                        onPressed: () {
+                          setState(() {
+                            _markerLoader.editMarker();
+                          });
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete_forever),
+                        tooltip: 'Remove marker',
+                        onPressed: () {
+                          // set up the AlertDialog
+                          _raiseAlertDialog(context, _id, _marker);
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -93,7 +134,10 @@ class _ProfileRouteState extends State<ProfileRoute> {
     } else {
       return ListTile(
         title: Text('no markers found', style: footer()),
-        leading: Icon(Icons.close),
+        leading: Icon(Icons.error_outline),
+        onLongPress: (){
+          _markerLoader.loadMarkers();
+        },
       );
     }
   }
@@ -122,12 +166,10 @@ class _ProfileRouteState extends State<ProfileRoute> {
           ),
 
           ListTile(
-            title: Text('Number of markers:', style: bodyText()),
-            leading: Icon(Icons.settings_backup_restore),
-          ),
-
-          ListTile(
-            title: Text('Active markers:', style: bodyText()),
+            title: Text('Active markers: #'
+                '${_markerLoader.markersDescriptions.length}',
+                style: bodyText()
+            ),
             leading: Icon(Icons.bookmark_border),
           ),
 
