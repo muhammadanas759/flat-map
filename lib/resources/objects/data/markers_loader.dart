@@ -31,9 +31,9 @@ class MarkerLoader {
   // ===========================================================================
   //-------------------------- LOADING METHODS ---------------------------------
   // constructor
-  MarkerLoader() {
-    loadMarkers();
-  }
+//  MarkerLoader() {
+//    loadMarkers();
+//  }
 
   MarkerLoader.test();
 
@@ -55,6 +55,9 @@ class MarkerLoader {
       } catch (error) {
         print(error);
         print('could not load marker descriptions from local storage...');
+
+        // clear file
+        File(path).writeAsString('');
       }
     } else {
       // create new one

@@ -1,4 +1,3 @@
-import 'package:flatmapp/resources/objects/data/icons_loader.dart';
 import 'package:flatmapp/resources/objects/data/markers_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
@@ -11,21 +10,21 @@ import 'package:flutter/material.dart';
 // https://medium.com/flutterpub/adding-swipe-to-refresh-to-flutter-app-b234534f39a7
 
 class ProfileRoute extends StatefulWidget {
+
+  // data loader
+  MarkerLoader _markerLoader = MarkerLoader();
+
+  ProfileRoute(this._markerLoader, {Key key}): super(key: key);
+
   @override
   _ProfileRouteState createState() => _ProfileRouteState();
 }
 
 class _ProfileRouteState extends State<ProfileRoute> {
 
-  // data loader
-  final MarkerLoader _markerLoader = MarkerLoader();
-
-  final IconsLoader icons = IconsLoader();
-
   @override
   void initState() {
     super.initState();
-    _markerLoader.loadMarkers();
   }
 
   Future<void> _raiseAlertDialog(BuildContext context, var id, var _marker) async {
@@ -53,7 +52,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
                 onPressed:  () {
                   // remove marker
                   setState(() {
-                    _markerLoader.removeMarker(id: id);
+                    widget._markerLoader.removeMarker(id: id);
                   });
                   // dismiss alert
                   Navigator.of(context).pop();
@@ -66,77 +65,79 @@ class _ProfileRouteState extends State<ProfileRoute> {
   }
 
   Widget listMarkers(BuildContext context) {
-    if (_markerLoader.markersDescriptions.length > 0){
-      return ListView.builder(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        itemCount: _markerLoader.markersDescriptions.length,
-        itemBuilder: (context, index) {
+    if (widget._markerLoader.markersDescriptions.length > 0){
+      return SingleChildScrollView(child:
+          ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: widget._markerLoader.markersDescriptions.length,
+            itemBuilder: (context, index) {
 
-          // marker data for card
-          var _id = _markerLoader.markersDescriptions.keys.elementAt(index);
-          var _marker = _markerLoader.markersDescriptions[_id];
+              // marker data for card
+              var _id = widget._markerLoader.markersDescriptions.keys.elementAt(index);
+              var _marker = widget._markerLoader.markersDescriptions[_id];
 
-          // marker expandable card
-          return Card(
-            child: Padding(
-              padding: EdgeInsets.only(
-                  top: 5.0, left: 10.0, right: 10.0, bottom: 0.0
-              ),
-              child: ExpansionTile(
-                leading: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  backgroundImage: AssetImage(
-                      _markerLoader.iconsLoader.markerImageLocal[_marker['icon']]
+              // marker expandable card
+              return Card(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      top: 5.0, left: 10.0, right: 10.0, bottom: 0.0
                   ),
-                ),
-                title: Text(_marker['title'], style: bodyText()),
-                subtitle: Text(_marker['description'], style: footer()),
-                trailing: Icon(Icons.keyboard_arrow_right),
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-//                      Text(
-//                        'Range: ${_marker['range'].toString()}',
-//                        style: footer(),
-//                      ),
-//                      Text(
-//                        'Position:\n${_marker['position_x'].toString()},\n'
-//                            '${_marker['position_y'].toString()}',
-//                        style: footer(),
-//                      ),
-                      IconButton(
-                        icon: Icon(Icons.edit),
-                        tooltip: 'Edit marker',
-                        onPressed: () {
-                          setState(() {
-                            _markerLoader.editMarker();
-                          });
-                        },
+                  child: ExpansionTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      backgroundImage: AssetImage(
+                          widget._markerLoader.iconsLoader.markerImageLocal[_marker['icon']]
                       ),
-                      IconButton(
-                        icon: Icon(Icons.delete_forever),
-                        tooltip: 'Remove marker',
-                        onPressed: () {
-                          // set up the AlertDialog
-                          _raiseAlertDialog(context, _id, _marker);
-                        },
+                    ),
+                    title: Text(_marker['title'], style: bodyText()),
+                    subtitle: Text(_marker['description'], style: footer()),
+                    trailing: Icon(Icons.keyboard_arrow_right),
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+    //                      Text(
+    //                        'Range: ${_marker['range'].toString()}',
+    //                        style: footer(),
+    //                      ),
+    //                      Text(
+    //                        'Position:\n${_marker['position_x'].toString()},\n'
+    //                            '${_marker['position_y'].toString()}',
+    //                        style: footer(),
+    //                      ),
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            tooltip: 'Edit marker',
+                            onPressed: () {
+                              setState(() {
+                                widget._markerLoader.editMarker();
+                              });
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete_forever),
+                            tooltip: 'Remove marker',
+                            onPressed: () {
+                              // set up the AlertDialog
+                              _raiseAlertDialog(context, _id, _marker);
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-          );
-        },
+                ),
+              );
+            },
+          ),
       );
     } else {
       return ListTile(
         title: Text('no markers found', style: footer()),
         leading: Icon(Icons.error_outline),
         onLongPress: (){
-          _markerLoader.loadMarkers();
+          widget._markerLoader.loadMarkers();
         },
       );
     }
@@ -148,43 +149,44 @@ class _ProfileRouteState extends State<ProfileRoute> {
       appBar: appBar(),
       body:
       // BODY
-      new ListView(
-        children: <Widget>[
-          ListTile(
-            title: Text('Profile', style: header()),
-            leading: Icon(Icons.account_circle),
-          ),
-
-          ListTile(
-            title: Text('E-mail:', style: bodyText()),
-            leading: Icon(Icons.mail_outline),
-          ),
-
-          ListTile(
-            title: Text('Username:', style: bodyText()),
-            leading: Icon(Icons.laptop),
-          ),
-
-          ListTile(
-            title: Text('Active markers: #'
-                '${_markerLoader.markersDescriptions.length}',
-                style: bodyText()
+      SingleChildScrollView(
+        child: new Column(
+          children: <Widget>[
+            ListTile(
+              title: Text('Profile', style: header()),
+              leading: Icon(Icons.account_circle),
             ),
-            leading: Icon(Icons.bookmark_border),
-          ),
 
-          // list of active markers
-          listMarkers(context),
-
-          ListTile(
-            title: Text(
-              'FlatMapp Team @ 2020',
-              style: footer(),
+            ListTile(
+              title: Text('E-mail:', style: bodyText()),
+              leading: Icon(Icons.mail_outline),
             ),
-          ),
-        ],
+
+            ListTile(
+              title: Text('Username:', style: bodyText()),
+              leading: Icon(Icons.laptop),
+            ),
+
+            ListTile(
+              title: Text('Active markers: #'
+                  '${widget._markerLoader.markersDescriptions.length}',
+                  style: bodyText()
+              ),
+              leading: Icon(Icons.bookmark_border),
+            ),
+
+            // list of active markers
+            listMarkers(context),
+
+            ListTile(
+              title: Text(
+                'FlatMapp Team @ 2020',
+                style: footer(),
+              ),
+            ),
+          ],
+        ),
       ),
-
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
     );

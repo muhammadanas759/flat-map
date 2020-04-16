@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
-
-
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
+
+import 'package:flutter/material.dart';
 
 
 class AboutRoute extends StatelessWidget {

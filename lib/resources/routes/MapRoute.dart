@@ -13,6 +13,12 @@ import 'dart:async';
 
 
 class MapRoute extends StatefulWidget {
+
+  // data loader
+  MarkerLoader _markerLoader = MarkerLoader();
+
+  MapRoute(this._markerLoader, {Key key}): super(key: key);
+
   @override
   _MapRouteState createState() => _MapRouteState();
 }
@@ -35,9 +41,6 @@ class _MapRouteState extends State<MapRoute> {
 
   // Current map zoom. Initial zoom will be 15, street level
   double _currentZoom = 15;
-
-  // data loader
-  final MarkerLoader _markerLoader = MarkerLoader();
 
   // Map loading flag
   bool _isMapLoading = true;
@@ -83,7 +86,7 @@ class _MapRouteState extends State<MapRoute> {
     });
 
     // load markers
-    _markerLoader.loadMarkers();
+    widget._markerLoader.loadMarkers();
 
     // notify about finished markers loading
     setState(() {
@@ -98,7 +101,7 @@ class _MapRouteState extends State<MapRoute> {
       _temporaryMarkerPosition = position;
 
       // adding a new marker to map
-      _markerLoader.addMarker(
+      widget._markerLoader.addMarker(
         id: "temporary",
         position: _temporaryMarkerPosition,
         icon: "default",
@@ -123,8 +126,8 @@ class _MapRouteState extends State<MapRoute> {
         target: _temporaryMarkerPosition,
         zoom: _currentZoom,
       ),
-      markers: Set<Marker>.of(_markerLoader.googleMarkers.values),
-      circles: Set<Circle>.of(_markerLoader.zones.values),
+      markers: Set<Marker>.of(widget._markerLoader.googleMarkers.values),
+      circles: Set<Circle>.of(widget._markerLoader.zones.values),
       onMapCreated: (controller) => _onMapCreated(controller),
 
       // call this function when tapped on the map
@@ -191,8 +194,8 @@ class _MapRouteState extends State<MapRoute> {
 
     setState(() {
       // adding a new marker to map
-      _markerLoader.addMarker(
-          id: _markerLoader.generateId(),
+      widget._markerLoader.addMarker(
+          id: widget._markerLoader.generateId(),
           position: _temporaryMarkerPosition,
           icon: "default",
           title: _formMarkerData['title'],
@@ -205,7 +208,7 @@ class _MapRouteState extends State<MapRoute> {
     _closePanel(context);
 
     // save markers to file
-    _markerLoader.saveMarkers();
+    widget._markerLoader.saveMarkers();
   }
 
   void _closePanel(context){
