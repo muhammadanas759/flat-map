@@ -35,6 +35,8 @@ class MarkerLoader {
     loadMarkers();
   }
 
+  MarkerLoader.test();
+
   // load markers from local storage
   Future loadMarkers() async {
     final directory = await getApplicationDocumentsDirectory();

@@ -45,6 +45,9 @@ dependencies:
   sliding_up_panel: ^1.0.1
 
 dev_dependencies:
+  flutter_driver:
+    sdk: flutter
+  test: any
   flutter_test:
     sdk: flutter
 
