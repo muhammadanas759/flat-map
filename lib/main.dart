@@ -6,12 +6,17 @@ import 'package:flatmapp/resources/routes/CommunityRoute.dart';
 import 'package:flatmapp/resources/routes/SettingsRoute.dart';
 import 'package:flatmapp/resources/routes/AboutRoute.dart';
 
+import 'package:flatmapp/resources/objects/data/markers_loader.dart';
+
 import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 
 
 String initScreen;
+
+// data loader
+final MarkerLoader _markerLoader = MarkerLoader();
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +41,8 @@ main() async {
     default: { throw Exception('wrong start_page value: $initScreen'); } break;
   }
 
+  _markerLoader.loadMarkers();
+
   runApp(MyApp());
 }
 
@@ -54,8 +61,8 @@ class MyApp extends StatelessWidget {
           initialRoute: initScreen,
           routes: {
             // When navigating to the "/name" route, build the NameRoute widget.
-            '/map': (context) => MapRoute(),
-            '/profile': (context) => ProfileRoute(),
+            '/map': (context) => MapRoute(_markerLoader),
+            '/profile': (context) => ProfileRoute(_markerLoader),
             '/actions': (context) => ActionsRoute(),
             '/community': (context) => CommunityRoute(),
             '/settings': (context) => SettingsRoute(),
