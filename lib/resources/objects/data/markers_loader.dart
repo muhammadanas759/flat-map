@@ -30,12 +30,6 @@ class MarkerLoader {
 
   // ===========================================================================
   //-------------------------- LOADING METHODS ---------------------------------
-  // constructor
-//  MarkerLoader() {
-//    loadMarkers();
-//  }
-
-  MarkerLoader.test();
 
   // load markers from local storage
   Future loadMarkers() async {
@@ -148,6 +142,8 @@ class MarkerLoader {
   // TODO edit marker
   void editMarker(){
 
+    // save markers state to file
+    saveMarkers();
   }
 
   // save markers to local storage

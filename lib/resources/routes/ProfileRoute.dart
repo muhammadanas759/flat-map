@@ -53,6 +53,9 @@ class _ProfileRouteState extends State<ProfileRoute> {
                   // remove marker
                   setState(() {
                     widget._markerLoader.removeMarker(id: id);
+
+                    // save markers state to file
+                    widget._markerLoader.saveMarkers();
                   });
                   // dismiss alert
                   Navigator.of(context).pop();

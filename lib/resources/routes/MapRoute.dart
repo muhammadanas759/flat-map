@@ -109,6 +109,9 @@ class _MapRouteState extends State<MapRoute> {
         description: "marker presenting chosen position",
         range: _formMarkerData['range'].toDouble(),
       );
+
+      // save markers state to file
+      widget._markerLoader.saveMarkers();
     });
   }
 
@@ -206,9 +209,6 @@ class _MapRouteState extends State<MapRoute> {
 
     // close form panel
     _closePanel(context);
-
-    // save markers to file
-    widget._markerLoader.saveMarkers();
   }
 
   void _closePanel(context){
