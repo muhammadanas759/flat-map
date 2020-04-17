@@ -115,7 +115,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
                             tooltip: 'Edit marker',
                             onPressed: () {
                               // set selected marker id for map screen
-                              PrefService.setString('selected_marker', _marker['id']);
+                              PrefService.setString('selected_marker', _id);
                               // Navigate to the profile screen using a named route.
                               Navigator.pushNamed(context, '/map');
                             },

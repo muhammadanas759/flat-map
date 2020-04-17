@@ -33,6 +33,10 @@ class _MapRouteState extends State<MapRoute> {
   // sliding form controller
   PanelController _slidingFormController = new PanelController();
 
+  // form controllers:
+  TextEditingController _formTitleController = new TextEditingController();
+  TextEditingController _formDescriptionController = new TextEditingController();
+
   // map style preset
   final String _preset = PrefService.get('ui_theme');
 
@@ -49,16 +53,22 @@ class _MapRouteState extends State<MapRoute> {
 
   // Form variables
   final _formKey = GlobalKey<FormState>();
-  final Map<String, dynamic> _formMarkerData = {
-    'title': '',
-    'description': '',
+  Map<String, dynamic> _formMarkerData = {
+    'id': "temporary",
+    'title': "temporary marker",
+    'description': "marker presenting chosen position",
     'range': 10,
-    'actions': []
   };
 
   @override
   void initState() {
     super.initState();
+
+    // update form
+    updateFormData();
+
+    // update camera position
+    updateCameraPosition();
   }
 
   // ===========================================================================
@@ -97,8 +107,6 @@ class _MapRouteState extends State<MapRoute> {
   // add marker in the place where user touched the map
   Future _mapTap(LatLng position) async {
     setState(() {
-      // LatLng(52.466699, 16.926961)
-
       // change temporary position
       widget._markerLoader.addTemporaryMarker(position);
 
@@ -107,22 +115,29 @@ class _MapRouteState extends State<MapRoute> {
     });
   }
 
-  // open marker add formula if user pressed the map
+  // open marker form if user pressed the map
   Future _mapLongPress(LatLng position) async {
+    // update form
+    updateFormData();
     // open sliding form
     _slidingFormController.open();
+  }
+
+  // update camera position basing on selected marker
+  CameraPosition updateCameraPosition(){
+    return CameraPosition(
+      target: _selectedMarkerId == null ?
+      widget._markerLoader.getTemporaryMarker().position :
+      widget._markerLoader.googleMarkers[_selectedMarkerId].position,
+      zoom: _currentZoom,
+    );
   }
 
   Widget _googleMapWidget(){
     return GoogleMap(
       myLocationEnabled: true,
       mapToolbarEnabled: false,
-      initialCameraPosition: CameraPosition(
-        target: _selectedMarkerId == null ?
-        widget._markerLoader.getTemporaryMarker().position :
-        widget._markerLoader.googleMarkers[_selectedMarkerId].position,
-        zoom: _currentZoom,
-      ),
+      initialCameraPosition: updateCameraPosition(),
       markers: Set<Marker>.of(widget._markerLoader.googleMarkers.values),
       circles: Set<Circle>.of(widget._markerLoader.zones.values),
       onMapCreated: (controller) => _onMapCreated(controller),
@@ -140,9 +155,23 @@ class _MapRouteState extends State<MapRoute> {
 
   // ===========================================================================
   // -------------------- MARKER FORM WIDGET SECTION ---------------------------
+  void updateFormData(){
+    var temp = widget._markerLoader.markersDescriptions[_selectedMarkerId];
+    // set marker data to temporary marker
+    if (widget._markerLoader.markersDescriptions[_selectedMarkerId] != null){
+      _formMarkerData['title'] = temp['title'];
+      _formMarkerData['description'] = temp['description'];
+      _formMarkerData['range'] = temp['range'].toInt();
+    }
+
+    // update controllers
+    _formTitleController.text = _formMarkerData['title'];
+    _formDescriptionController.text = _formMarkerData['description'];
+  }
+
   Widget _buildMarkerNameField(context) {
     return TextFormField(
-      initialValue: _formMarkerData['title'],
+      controller: _formTitleController,
       style: bodyText(),
       decoration: textFieldStyle(
           labelTextStr: "Marker title",
@@ -161,7 +190,7 @@ class _MapRouteState extends State<MapRoute> {
 
   Widget _buildMarkerDescriptionField(context) {
     return TextFormField(
-      initialValue: _formMarkerData['description'],
+      controller: _formDescriptionController,
       style: bodyText(),
       decoration: textFieldStyle(
           labelTextStr: "Marker description",
@@ -307,6 +336,7 @@ class _MapRouteState extends State<MapRoute> {
             textInfo('Loading markers'),
 
           SlidingUpPanel(
+            color: _preset == 'dark' ? Colors.black : Colors.white,
             minHeight: 0,
             padding: EdgeInsets.only(left: 30, right: 30),
             isDraggable: false,

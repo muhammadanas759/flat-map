@@ -9,6 +9,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 
+import 'package:preferences/preferences.dart';
+
 
 class MarkerLoader {
   // ===========================================================================
@@ -116,7 +118,10 @@ class MarkerLoader {
       markerId: MarkerId(id),
       position: position,
       // icon: icon,
-      //      onTap: () {},
+      onTap: () {
+        // set marker as selected on tap
+        PrefService.setString('selected_marker', id);
+      },
       infoWindow: InfoWindow(
         title: title,
         snippet: description,
@@ -160,7 +165,7 @@ class MarkerLoader {
       icon: 'default',
       title: "temporary marker",
       description: "marker presenting chosen position",
-      range: 0,
+      range: 10,
     );
   }
 
