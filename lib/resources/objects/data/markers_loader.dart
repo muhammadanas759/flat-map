@@ -107,6 +107,7 @@ class MarkerLoader {
     return UniqueKey().toString();
   }
 
+  // add or edit marker
   void addMarker({
     String id, LatLng position, String icon,
     String title, String description, double range
@@ -139,13 +140,6 @@ class MarkerLoader {
     zones.remove(id);
   }
 
-  // TODO edit marker
-  void editMarker(){
-
-    // save markers state to file
-    saveMarkers();
-  }
-
   // save markers to local storage
   void saveMarkers() async {
 
@@ -159,15 +153,19 @@ class MarkerLoader {
     await file.writeAsString(markerStorage);
   }
   
-  Future<Marker> temporaryMarker(LatLng position) async {
-    return Marker(
-        markerId: MarkerId("temporary"),
-        position: position,
-        infoWindow: InfoWindow(
-          title: "temporary marker",
-          snippet: "marker presenting chosen position",
-        )
+  void addTemporaryMarker(LatLng position){
+    addMarker(
+      id: "temporary",
+      position: position,
+      icon: 'default',
+      title: "temporary marker",
+      description: "marker presenting chosen position",
+      range: 0,
     );
+  }
+
+  Marker getTemporaryMarker(){
+    return googleMarkers['temporary'];
   }
 
   // ===========================================================================

@@ -4,6 +4,7 @@ import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 
 import 'package:flutter/material.dart';
+import 'package:preferences/preferences.dart';
 
 
 // TODO SWIPE DOWN TO REFRESH
@@ -113,9 +114,10 @@ class _ProfileRouteState extends State<ProfileRoute> {
                             icon: Icon(Icons.edit),
                             tooltip: 'Edit marker',
                             onPressed: () {
-                              setState(() {
-                                widget._markerLoader.editMarker();
-                              });
+                              // set selected marker id for map screen
+                              PrefService.setString('selected_marker', _marker['id']);
+                              // Navigate to the profile screen using a named route.
+                              Navigator.pushNamed(context, '/map');
                             },
                           ),
                           IconButton(

@@ -33,11 +33,11 @@ class _MapRouteState extends State<MapRoute> {
   // sliding form controller
   PanelController _slidingFormController = new PanelController();
 
-  // temporary touch position
-  LatLng _temporaryMarkerPosition = LatLng(52.466699, 16.926961);
-
   // map style preset
   final String _preset = PrefService.get('ui_theme');
+
+  // selected marker
+  String _selectedMarkerId = PrefService.get('selected_marker');
 
   // Current map zoom. Initial zoom will be 15, street level
   double _currentZoom = 15;
@@ -97,18 +97,10 @@ class _MapRouteState extends State<MapRoute> {
   // add marker in the place where user touched the map
   Future _mapTap(LatLng position) async {
     setState(() {
-      // change temporary position
-      _temporaryMarkerPosition = position;
+      // LatLng(52.466699, 16.926961)
 
-      // adding a new marker to map
-      widget._markerLoader.addMarker(
-        id: "temporary",
-        position: _temporaryMarkerPosition,
-        icon: "default",
-        title: "temporary marker",
-        description: "marker presenting chosen position",
-        range: _formMarkerData['range'].toDouble(),
-      );
+      // change temporary position
+      widget._markerLoader.addTemporaryMarker(position);
 
       // save markers state to file
       widget._markerLoader.saveMarkers();
@@ -126,7 +118,9 @@ class _MapRouteState extends State<MapRoute> {
       myLocationEnabled: true,
       mapToolbarEnabled: false,
       initialCameraPosition: CameraPosition(
-        target: _temporaryMarkerPosition,
+        target: _selectedMarkerId == null ?
+        widget._markerLoader.getTemporaryMarker().position :
+        widget._markerLoader.googleMarkers[_selectedMarkerId].position,
         zoom: _currentZoom,
       ),
       markers: Set<Marker>.of(widget._markerLoader.googleMarkers.values),
@@ -199,7 +193,7 @@ class _MapRouteState extends State<MapRoute> {
       // adding a new marker to map
       widget._markerLoader.addMarker(
           id: widget._markerLoader.generateId(),
-          position: _temporaryMarkerPosition,
+          position: widget._markerLoader.getTemporaryMarker().position,
           icon: "default",
           title: _formMarkerData['title'],
           description: _formMarkerData['description'],
@@ -219,6 +213,7 @@ class _MapRouteState extends State<MapRoute> {
   }
 
   Widget _markerAddForm(context){
+    Marker tempMarker = widget._markerLoader.getTemporaryMarker();
     return Form(
       key: _formKey,
       child: Column(
@@ -230,8 +225,8 @@ class _MapRouteState extends State<MapRoute> {
             children: <Widget>[
               Text(
                 'Temporary marker position:\n'
-                    '${_temporaryMarkerPosition.latitude},\n'
-                    '${_temporaryMarkerPosition.longitude}',
+                    '${tempMarker.position.latitude},\n'
+                    '${tempMarker.position.longitude}',
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
                 style: bodyText(),

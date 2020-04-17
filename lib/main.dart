@@ -26,6 +26,7 @@ main() async {
     'project_description': 'FlatMapp prototype',
     'start_page': 'Map',
     'ui_theme': 'light',
+    'selected_marker': null,
   });
 
   // get start page
