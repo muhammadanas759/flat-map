@@ -141,9 +141,6 @@ class _ProfileRouteState extends State<ProfileRoute> {
       return ListTile(
         title: Text('no markers found', style: footer()),
         leading: Icon(Icons.error_outline),
-        onLongPress: (){
-          widget._markerLoader.loadMarkers();
-        },
       );
     }
   }
