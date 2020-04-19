@@ -252,20 +252,44 @@ class _MapRouteState extends State<MapRoute> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                'Temporary marker position:\n'
+                'Selected marker position:\n'
                     '${tempMarker.position.latitude},\n'
                     '${tempMarker.position.longitude}',
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
                 style: bodyText(),
               ),
-              IconButton(
-                icon: Icon(Icons.keyboard_arrow_down),
-                tooltip: 'Close form',
-                onPressed: () {
-                  _closePanel(context);
-                },
-              ),
+            Material(
+              child: Ink(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.lightGreen, width: 5.0),
+                  color: Colors.green,
+                  shape: BoxShape.circle,
+                ),
+                child: InkWell(
+                  //This keeps the splash effect within the circle
+                  borderRadius: BorderRadius.circular(1000.0),
+                  child: Padding(
+                    padding:EdgeInsets.all(1.0),
+                    child: IconButton(
+                      icon: Icon(Icons.keyboard_arrow_down),
+                      color: Colors.white,
+                      tooltip: 'Close form',
+                      onPressed: () {
+                        _closePanel(context);
+                      },
+                    ),
+                  ),
+                ),
+              )
+            ),
+//            IconButton(
+//              icon: Icon(Icons.close),
+//              tooltip: 'Close form',
+//              onPressed: () {
+//                _closePanel(context);
+//              },
+//            ),
             ],
           ),
           SizedBox(height: 10),
