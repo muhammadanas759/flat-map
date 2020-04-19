@@ -66,11 +66,14 @@ class _MapRouteState extends State<MapRoute> {
   void initState() {
     super.initState();
 
-    // update form
-    updateFormData();
+    // load markers
+    widget._markerLoader.loadMarkers().then((onValue){
+      // update form
+      updateFormData();
 
-    // update camera position
-    updateCameraPosition();
+      // update camera position
+      updateCameraPosition();
+    });
   }
 
   // ===========================================================================
@@ -96,9 +99,6 @@ class _MapRouteState extends State<MapRoute> {
     setState(() {
       _isMapLoading = false;
     });
-
-    // load markers
-    widget._markerLoader.loadMarkers();
 
     // notify about finished markers loading
     setState(() {
