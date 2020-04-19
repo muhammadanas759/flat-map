@@ -5,7 +5,28 @@ import 'package:flatmapp/resources/objects/data/markers_loader.dart';
 
 void main() {
   group('Markters_Loader', () {
-    test('Simple adding and removing markers ', (){
+    test('Simple adding marker test', (){
+      final markerLoader = MarkerLoader();
+
+      markerLoader.addMarker(
+          id: "test1",
+          position: LatLng(-43.0, 170.0),
+          icon: "default",
+          title: "test markter 1",
+          description: "marker presenting chosen position 1",
+          range: 12.5
+      );
+
+      expect(markerLoader.googleMarkers["test1"].markerId.value, "test1");
+      expect(markerLoader.googleMarkers["test1"].position, LatLng(-43.0, 170.0));
+      expect(markerLoader.googleMarkers["test1"].infoWindow.title, "test markter 1");
+      expect(markerLoader.googleMarkers["test1"].infoWindow.snippet, "marker presenting chosen position 1");
+      expect(markerLoader.zones["test1"].radius, 12.5);
+      expect(markerLoader.zones["test1"].center, LatLng(-43.0, 170.0));
+
+
+    });
+    test('Simple removing marker test', (){
       final markerLoader = MarkerLoader();
 
       markerLoader.addMarker(
@@ -32,6 +53,33 @@ void main() {
 
       expect(markerLoader.googleMarkers["test1"], null);
       expect(markerLoader.zones["test1"], null);
+    });
+
+    test('Simple editing markers test', (){
+      final markerLoader = MarkerLoader();
+
+      markerLoader.addMarker(
+          id: "test1",
+          position: LatLng(70.0, 20.0),
+          icon: "default",
+          title: "test markter 1",
+          description: "marker presenting chosen position 1",
+          range: 12.5
+      );
+
+      expect(markerLoader.googleMarkers["test1"].position, LatLng(70.0, 20.0));
+
+      markerLoader.addMarker(
+          id: "test1",
+          position: LatLng(-73.0, 120.0),
+          icon: "default",
+          title: "test markter 1",
+          description: "marker presenting chosen position 1",
+          range: 12.5
+      );
+
+      expect(markerLoader.googleMarkers["test1"].position, LatLng(-73.0, 120.0));
+
     });
   });
 }
