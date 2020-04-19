@@ -54,10 +54,14 @@ class MarkerLoader {
 
         // clear file
         File(path).writeAsString('');
+        // add temporary marker
+        addTemporaryMarker(LatLng(69.420, 69.420));
       }
     } else {
       // create new one
       File(path).writeAsString('');
+      // add temporary marker
+      addTemporaryMarker(LatLng(69.420, 69.420));
       print('local storage did not exist, created new one...');
     }
 
