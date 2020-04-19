@@ -66,14 +66,11 @@ class _MapRouteState extends State<MapRoute> {
   void initState() {
     super.initState();
 
-    // load markers
-    widget._markerLoader.loadMarkers().then((onValue){
-      // update form
-      updateFormData();
+    // update form
+    updateFormData();
 
-      // update camera position
-      updateCameraPosition();
-    });
+    // update camera position
+    updateCameraPosition();
   }
 
   // ===========================================================================
@@ -138,7 +135,7 @@ class _MapRouteState extends State<MapRoute> {
   Widget _googleMapWidget(){
     return GoogleMap(
       myLocationEnabled: true,
-      mapToolbarEnabled: false,
+      mapToolbarEnabled: true,
       initialCameraPosition: updateCameraPosition(),
       markers: Set<Marker>.of(widget._markerLoader.googleMarkers.values),
       circles: Set<Circle>.of(widget._markerLoader.zones.values),

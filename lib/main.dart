@@ -42,7 +42,7 @@ main() async {
     default: { throw Exception('wrong start_page value: $initScreen'); } break;
   }
 
-  _markerLoader.loadMarkers();
+  await _markerLoader.loadMarkers();
 
   runApp(MyApp());
 }
