@@ -12,6 +12,8 @@ import 'package:preferences/preferences.dart';
 import 'dart:async';
 
 
+// TODO: add geolocator: https://github.com/Baseflow/flutter-geolocator
+// TODO: add location marker: https://medium.com/flutter-community/implement-real-time-location-updates-on-google-maps-in-flutter-235c8a09173e
 class MapRoute extends StatefulWidget {
 
   // data loader

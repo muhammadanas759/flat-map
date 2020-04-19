@@ -3,13 +3,20 @@
 Flutter geolocation manager. Choose actions and set their geolocation trigger.
 
 Previous versions:
-* **v0.0.1:** google map example created
+* **v0.1:** google map example created
 
 **Current version:**
-* **v0.0.2:** basic interface introduced
+* **v0.2:** basic interface introduced
 
-Incoming version:
-* **v0.0.3:** basic geotrigger
+Incoming versions:
+* **v0.3:** basic geotrigger
+* **v0.4:** server communication
+* **v0.5:** rebuild
+* **v0.6:** actions recommendation system
+* **v0.7:** interface enhancements
+* **v0.8:** new actions package
+* **v0.9:** rebuild
+* **v1.0:** release
 
 
 ## Getting Started
@@ -54,6 +61,7 @@ Geotrigger:
 * [Geolocation and Geocoding, integrated with Maps](https://medium.com/swlh/working-with-geolocation-and-geocoding-in-flutter-and-integration-with-maps-16fb0bc35ede)
 * [Notifications triggered by GPS location](https://stackoverflow.com/questions/55439979/flutter-local-notifications-triggered-by-gps-location)
 * [Background geofencing](https://medium.com/flutter/executing-dart-in-the-background-with-flutter-plugins-and-geofencing-2b3e40a1a124)
+* [Background location changes handling package](https://github.com/Almoullim/background_location)
 
 Google Maps: 
 * [How to cluster markers on Flutter Google Maps](https://medium.com/coletiv-stories/how-to-cluster-markers-on-flutter-google-maps-44620f607de3)
@@ -98,21 +106,13 @@ FlatMapp uses objects (classes) to define packages of functions.
 Currently FlatMapp uses:
 * Loaders:
 
-    marker loader operates on JSON list of objects, as follows:
-    
-        [
-          {"position": [41.147125, -8.611249], "icon": "home"},
-          {"position": [41.145599, -8.610691], "icon": "pointer"},
-          {"position": [41.145645, -8.614761], "icon": "taxi"},
-          {"position": [41.146775, -8.614913], "icon": "water"},
-          
-          in general:
-          {"position": [double latitude, double longitude], "icon": "id from icons loader"}
-        ]
+    marker loader operates on JSON list of objects
+    icon loader
+    trigger loader
 
 * Map:
 
-    * GoogleMapsWidget - object operating map usage
+
 
 * Widgets:
 

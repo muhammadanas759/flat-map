@@ -44,6 +44,10 @@ dependencies:
   # sliding panel for forms
   sliding_up_panel: ^1.0.1
 
+  # actions:
+  # change phone sound volume
+  volume: ^0.1.4
+
 dev_dependencies:
   flutter_driver:
     sdk: flutter
