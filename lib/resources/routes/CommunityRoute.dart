@@ -1,4 +1,3 @@
-import 'package:flatmapp/resources/objects/data/icons_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
@@ -12,11 +11,45 @@ class CommunityRoute extends StatefulWidget {
 }
 
 class _CommunityRouteState extends State<CommunityRoute> {
-  final IconsLoader icons = IconsLoader();
 
-  Expanded queryResults(){
-    // QUERY RESULTS
-    return Expanded(child: new Card());
+  Widget _tabWidget(){
+    return SizedBox(
+      height: 300.0,
+      child: DefaultTabController(
+        length: 3,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Container(
+              child: TabBar(
+                tabs: [
+                  Tab(icon: Icon(Icons.directions_car)),
+                  Tab(icon: Icon(Icons.directions_transit)),
+                  Tab(icon: Icon(Icons.directions_bike)),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 100.0,
+              child: TabBarView(
+                children: <Widget>[
+                  Container(
+                    color: Colors.grey,
+                  ),
+                  Container(
+                    color: Colors.green,
+                  ),
+                  Container(
+                    color: Colors.purple,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -25,35 +58,29 @@ class _CommunityRouteState extends State<CommunityRoute> {
       appBar: appBar(),
       body:
       // BODY
-      new Column(
-        children: <Widget>[
-          ListTile(
-            title: Text(
-              'Community',
-              style: header(),
+      SingleChildScrollView(
+        child: new Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              title: Text(
+                'Community',
+                style: header(),
+              ),
+              leading: Icon(Icons.language),
             ),
-            leading: Icon(Icons.language),
-          ),
 
-          ListTile(
-            title: Text(
-              'community data',
-              style: bodyText(),
+            _tabWidget(),
+
+            ListTile(
+              title: Text(
+                'FlatMapp Team @ 2020',
+                style: footer(),
+              ),
             ),
-            onLongPress: (){
-
-            },
-          ),
-
-          queryResults(),
-
-          ListTile(
-            title: Text(
-              'FlatMapp Team @ 2020',
-              style: footer(),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
 
       // SIDE PANEL MENU

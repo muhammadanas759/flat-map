@@ -94,21 +94,6 @@ class MarkerLoader {
     });
   }
 
-  // translate google map markers and zones to descriptions
-//  void _objectsToDescriptions(){
-//    // translate googleMarkers to markersDescription
-//    googleMarkers.forEach((String id, Marker marker) {
-//      markersDescriptions[id] = {
-//        'position_x': marker.position.latitude,
-//        'position_y': marker.position.longitude,
-//        'range': zones[id].radius,
-//        'icon': 'default', // TODO ???
-//        'title': marker.infoWindow.title,
-//        'description': marker.infoWindow.snippet,
-//      };
-//    });
-//  }
-
   String generateId(){
     return UniqueKey().toString();
   }
@@ -160,8 +145,17 @@ class MarkerLoader {
   // save markers to local storage
   void saveMarkers() async {
 
-    // populate description with markers
-    // _objectsToDescriptions();
+//    // populate description with markers
+//    googleMarkers.forEach((String id, Marker marker) {
+//      markersDescriptions[id] = {
+//        'position_x': marker.position.latitude,
+//        'position_y': marker.position.longitude,
+//        'range': zones[id].radius,
+//        'icon': googleMarkers[id].icon.toString(), // TODO ???
+//        'title': marker.infoWindow.title,
+//        'description': marker.infoWindow.snippet,
+//      };
+//    });
 
     // save markersDescription
     final directory = await getApplicationDocumentsDirectory();
