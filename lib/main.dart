@@ -1,7 +1,7 @@
 import 'package:flatmapp/resources/routes/LogInRoute.dart';
 import 'package:flatmapp/resources/routes/MapRoute.dart';
 import 'package:flatmapp/resources/routes/ProfileRoute.dart';
-import 'package:flatmapp/resources/routes/ActionsRoute.dart';
+import 'package:flatmapp/resources/routes/IconsRoute.dart';
 import 'package:flatmapp/resources/routes/CommunityRoute.dart';
 import 'package:flatmapp/resources/routes/SettingsRoute.dart';
 import 'package:flatmapp/resources/routes/AboutRoute.dart';
@@ -26,14 +26,14 @@ main() async {
     'project_description': 'FlatMapp prototype',
     'start_page': 'Map',
     'ui_theme': 'light',
-    'selected_marker': null,
+    'selected_marker': 'temporary',
+    'selected_icon': 'default',
   });
 
   // get start page
   initScreen = PrefService.get('start_page');
   switch(initScreen) {
     case 'About': {initScreen = '/about';} break;
-    case 'Actions': {initScreen = '/actions';} break;
     case 'Community': {initScreen = '/community';} break;
     case 'Log In': {initScreen = '/login';} break;
     case 'Map': {initScreen = '/map';} break;
@@ -64,11 +64,11 @@ class MyApp extends StatelessWidget {
             // When navigating to the "/name" route, build the NameRoute widget.
             '/map': (context) => MapRoute(_markerLoader),
             '/profile': (context) => ProfileRoute(_markerLoader),
-            '/actions': (context) => ActionsRoute(),
             '/community': (context) => CommunityRoute(),
             '/settings': (context) => SettingsRoute(),
             '/about': (context) => AboutRoute(),
             '/login': (context) => LogInRoute(),
+            '/icons': (context) => IconsRoute(),
           },
         );
       }

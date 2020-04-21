@@ -126,8 +126,8 @@ class _MapRouteState extends State<MapRoute> {
   CameraPosition updateCameraPosition(){
     return CameraPosition(
       target: _selectedMarkerId == null ?
-      widget._markerLoader.getTemporaryMarker().position :
-      widget._markerLoader.googleMarkers[_selectedMarkerId].position,
+      widget._markerLoader.getMarker(id: "temporary").position :
+      widget._markerLoader.getMarker(id: _selectedMarkerId).position,
       zoom: _currentZoom,
     );
   }
@@ -166,6 +166,57 @@ class _MapRouteState extends State<MapRoute> {
     // update controllers
     _formTitleController.text = _formMarkerData['title'];
     _formDescriptionController.text = _formMarkerData['description'];
+  }
+
+  Widget _closeFormButton(){
+    return Material(
+      child: Ink(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.lightGreen, width: 5.0),
+          color: Colors.green,
+          shape: BoxShape.circle,
+        ),
+        child: InkWell(
+          //This keeps the splash effect within the circle
+          borderRadius: BorderRadius.circular(1000.0),
+          child: Padding(
+            padding:EdgeInsets.all(1.0),
+            child: IconButton(
+              icon: Icon(Icons.keyboard_arrow_down),
+              color: Colors.white,
+              tooltip: 'Close form',
+              onPressed: () {
+                _closePanel(context);
+              },
+            ),
+          ),
+        ),
+      )
+    );
+  }
+
+  Widget _iconChangeButton(){
+    return Expanded(
+      child: SizedBox(
+        height: 60.0,
+        // icon change button
+        child: Container(
+          child: ConstrainedBox(
+            constraints: BoxConstraints.expand(),
+            child: FlatButton(
+              onPressed: (){
+                // Navigate to the icons screen using a named route.
+                Navigator.pushNamed(context, '/icons');
+              },
+              padding: EdgeInsets.all(0.0),
+              child: Image.asset(
+                  widget._markerLoader.getSelectedMarkerIcon()
+              )
+            )
+          )
+        ),
+      ),
+    );
   }
 
   Widget _buildMarkerNameField(context) {
@@ -221,8 +272,8 @@ class _MapRouteState extends State<MapRoute> {
       // adding a new marker to map
       widget._markerLoader.addMarker(
           id: widget._markerLoader.generateId(),
-          position: widget._markerLoader.getTemporaryMarker().position,
-          icon: "default",
+          position: widget._markerLoader.getMarker(id: "temporary").position,
+          icon: PrefService.get('selected_icon'),
           title: _formMarkerData['title'],
           description: _formMarkerData['description'],
           range: _formMarkerData['range'].toDouble()
@@ -241,7 +292,7 @@ class _MapRouteState extends State<MapRoute> {
   }
 
   Widget _markerAddForm(context){
-    Marker tempMarker = widget._markerLoader.getTemporaryMarker();
+    Marker tempMarker = widget._markerLoader.getMarker(id: _selectedMarkerId);
     return Form(
       key: _formKey,
       child: Column(
@@ -259,30 +310,7 @@ class _MapRouteState extends State<MapRoute> {
                 overflow: TextOverflow.ellipsis,
                 style: bodyText(),
               ),
-            Material(
-              child: Ink(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.lightGreen, width: 5.0),
-                  color: Colors.green,
-                  shape: BoxShape.circle,
-                ),
-                child: InkWell(
-                  //This keeps the splash effect within the circle
-                  borderRadius: BorderRadius.circular(1000.0),
-                  child: Padding(
-                    padding:EdgeInsets.all(1.0),
-                    child: IconButton(
-                      icon: Icon(Icons.keyboard_arrow_down),
-                      color: Colors.white,
-                      tooltip: 'Close form',
-                      onPressed: () {
-                        _closePanel(context);
-                      },
-                    ),
-                  ),
-                ),
-              )
-            ),
+              _closeFormButton(),
 //            IconButton(
 //              icon: Icon(Icons.close),
 //              tooltip: 'Close form',
@@ -297,7 +325,17 @@ class _MapRouteState extends State<MapRoute> {
           SizedBox(height: 10),
           _buildMarkerDescriptionField(context),
           SizedBox(height: 10),
-          _buildMarkerRangeField(),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              // icon change button
+              _iconChangeButton(),
+              // range counter
+              _buildMarkerRangeField(),
+            ],
+          ),
+
           SizedBox(height: 10),
           Row(
             mainAxisSize: MainAxisSize.min,

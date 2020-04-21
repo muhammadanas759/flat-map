@@ -95,19 +95,19 @@ class MarkerLoader {
   }
 
   // translate google map markers and zones to descriptions
-  void _objectsToDescriptions(){
-    // translate googleMarkers to markersDescription
-    googleMarkers.forEach((String id, Marker marker) {
-      markersDescriptions[id] = {
-        'position_x': marker.position.latitude,
-        'position_y': marker.position.longitude,
-        'range': zones[id].radius,
-        'icon': 'default', // TODO ???
-        'title': marker.infoWindow.title,
-        'description': marker.infoWindow.snippet,
-      };
-    });
-  }
+//  void _objectsToDescriptions(){
+//    // translate googleMarkers to markersDescription
+//    googleMarkers.forEach((String id, Marker marker) {
+//      markersDescriptions[id] = {
+//        'position_x': marker.position.latitude,
+//        'position_y': marker.position.longitude,
+//        'range': zones[id].radius,
+//        'icon': 'default', // TODO ???
+//        'title': marker.infoWindow.title,
+//        'description': marker.infoWindow.snippet,
+//      };
+//    });
+//  }
 
   String generateId(){
     return UniqueKey().toString();
@@ -118,13 +118,24 @@ class MarkerLoader {
     String id, LatLng position, String icon,
     String title, String description, double range
   }){
+
+    markersDescriptions[id] = {
+      'position_x': position.latitude,
+      'position_y': position.longitude,
+      'range': range,
+      'icon': icon,
+      'title': title,
+      'description': description,
+    };
+
     googleMarkers[id] = Marker(
       markerId: MarkerId(id),
       position: position,
-      // icon: icon,
+      // icon: iconsLoader.getMarkerImage(icon),
       onTap: () {
         // set marker as selected on tap
         PrefService.setString('selected_marker', id);
+        PrefService.setString('selected_icon', icon);
       },
       infoWindow: InfoWindow(
         title: title,
@@ -138,9 +149,6 @@ class MarkerLoader {
       center: position,
       radius: range,
     );
-
-    // save descriptions
-    _objectsToDescriptions();
   }
 
   void removeMarker({String id}){
@@ -153,7 +161,7 @@ class MarkerLoader {
   void saveMarkers() async {
 
     // populate description with markers
-    _objectsToDescriptions();
+    // _objectsToDescriptions();
 
     // save markersDescription
     final directory = await getApplicationDocumentsDirectory();
@@ -173,8 +181,14 @@ class MarkerLoader {
     );
   }
 
-  Marker getTemporaryMarker(){
-    return googleMarkers['temporary'];
+  Marker getMarker({String id}){
+    return googleMarkers[id];
+  }
+
+  String getSelectedMarkerIcon(){
+    return iconsLoader.markerImageLocal[
+      markersDescriptions[PrefService.get('selected_marker')]['icon']
+    ];
   }
 
   // ===========================================================================

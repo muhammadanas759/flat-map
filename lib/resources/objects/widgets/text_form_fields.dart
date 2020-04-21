@@ -57,7 +57,7 @@ class CounterFormField extends FormField<int> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(
-              "Marker range:",
+              "Range:",
               style: bodyText(),
             ),
             SizedBox(height: 20),
