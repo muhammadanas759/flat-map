@@ -34,35 +34,35 @@ class _ProfileRouteState extends State<ProfileRoute> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-            title: Text("Remove marker?"),
-            content: Text("You are about to remove marker\n"
-                "${_marker['title']}\n"
-                "${_marker['description']}."
+          title: Text("Remove marker?"),
+          content: Text(
+            "You are about to remove marker\n"
+            "${_marker['title']}\n"
+            "${_marker['description']}."
+          ),
+          actions: [
+            // set up the buttons
+            FlatButton(
+              child: Text("no nO NO"),
+              onPressed:  () {
+                // dismiss alert
+                Navigator.of(context).pop();
+              },
             ),
-            actions: [
-              // set up the buttons
-              FlatButton(
-                child: Text("no nO NO"),
-                onPressed:  () {
-                  // dismiss alert
-                  Navigator.of(context).pop();
-                },
-              ),
-              FlatButton(
-                child: Text("HELL YEAH"),
-                onPressed:  () {
-                  // remove marker
-                  setState(() {
-                    widget._markerLoader.removeMarker(id: id);
-
-                    // save markers state to file
-                    widget._markerLoader.saveMarkers();
-                  });
-                  // dismiss alert
-                  Navigator.of(context).pop();
-                },
-              ),
-            ]
+            FlatButton(
+              child: Text("HELL YEAH"),
+              onPressed:  () {
+                // remove marker
+                setState(() {
+                  widget._markerLoader.removeMarker(id: id);
+                  // save markers state to file
+                  widget._markerLoader.saveMarkers();
+                });
+                // dismiss alert
+                Navigator.of(context).pop();
+              },
+            ),
+          ]
         );
       },
     );
@@ -101,15 +101,6 @@ class _ProfileRouteState extends State<ProfileRoute> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-    //                      Text(
-    //                        'Range: ${_marker['range'].toString()}',
-    //                        style: footer(),
-    //                      ),
-    //                      Text(
-    //                        'Position:\n${_marker['position_x'].toString()},\n'
-    //                            '${_marker['position_y'].toString()}',
-    //                        style: footer(),
-    //                      ),
                           IconButton(
                             icon: Icon(Icons.edit),
                             tooltip: 'Edit marker',

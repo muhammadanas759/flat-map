@@ -65,7 +65,9 @@ class IconsLoader {
   }
 
   // ===========================================================================
-  Widget _iconsListView(BuildContext context, ScrollController scrollController) { // ignore: unused_element
+  Widget _iconsListView( // ignore: unused_element
+      BuildContext context, ScrollController scrollController
+  ){
     return ListView.builder(
       controller: scrollController,
       itemCount: markerImageLocal.length,

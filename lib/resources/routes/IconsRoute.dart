@@ -4,9 +4,10 @@ import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:flatmapp/resources/objects/data/icons_loader.dart';
 
 import 'package:flutter/material.dart';
+import 'package:preferences/preferences.dart';
 
 
-class ActionsRoute extends StatelessWidget {
+class IconsRoute extends StatelessWidget {
 
   final IconsLoader icons = IconsLoader();
 
@@ -23,9 +24,11 @@ class ActionsRoute extends StatelessWidget {
             ),
             title: Text(key, style: bodyText()),
             trailing: Icon(Icons.keyboard_arrow_right),
-            onTap: () {
-              // do something
-              print(key);
+            onLongPress: () {
+              // set selected marker id for map screen
+              PrefService.setString('selected_icon', 'assets/$key');
+              // Navigate back
+              Navigator.pop(context);
             },
           ),
         );
@@ -38,15 +41,10 @@ class ActionsRoute extends StatelessWidget {
     return Scaffold(
       appBar: appBar(),
       body:
-
       // BODY
       _iconsListView(context),
-
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
-
-      // NAVIGATION BAR
-      // floatingActionButton: navigationBarButton(context),
     );
   }
 }
