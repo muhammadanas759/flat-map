@@ -85,7 +85,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
               var _marker = widget._markerLoader.markersDescriptions[_id];
 
               // marker expandable card
-              return Card(
+              return _id == 'temporary' ? SizedBox.shrink() : Card(
                 child: Padding(
                   padding: EdgeInsets.only(
                       top: 5.0, left: 10.0, right: 10.0, bottom: 0.0
@@ -165,7 +165,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
 
             ListTile(
               title: Text('Active markers: #'
-                  '${widget._markerLoader.markersDescriptions.length}',
+                  '${widget._markerLoader.markersDescriptions.length - 1}',
                   style: bodyText()
               ),
               leading: Icon(Icons.bookmark_border),
