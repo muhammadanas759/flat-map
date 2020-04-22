@@ -18,7 +18,6 @@ class MapRoute extends StatefulWidget {
 
   // data loader
   MarkerLoader _markerLoader = MarkerLoader();
-
   MapRoute(this._markerLoader, {Key key}): super(key: key);
 
   @override
@@ -210,7 +209,7 @@ class _MapRouteState extends State<MapRoute> {
               },
               padding: EdgeInsets.all(0.0),
               child: Image.asset(
-                  widget._markerLoader.getSelectedMarkerIcon()
+                  widget._markerLoader.iconsLoader.markerImageLocal[PrefService.get('selected_icon')]
               )
             )
           )
@@ -268,15 +267,18 @@ class _MapRouteState extends State<MapRoute> {
     // save form
     _formKey.currentState.save();
 
+    _selectedMarkerId = PrefService.get('selected_marker');
+
     setState(() {
       // adding a new marker to map
       widget._markerLoader.addMarker(
-          id: widget._markerLoader.generateId(),
-          position: widget._markerLoader.getMarker(id: "temporary").position,
-          icon: PrefService.get('selected_icon'),
-          title: _formMarkerData['title'],
-          description: _formMarkerData['description'],
-          range: _formMarkerData['range'].toDouble()
+        id: _selectedMarkerId == 'temporary' ?
+            widget._markerLoader.generateId() : _selectedMarkerId,
+        position: widget._markerLoader.getMarker(id: _selectedMarkerId).position,
+        icon: PrefService.get('selected_icon'),
+        title: _formMarkerData['title'],
+        description: _formMarkerData['description'],
+        range: _formMarkerData['range'].toDouble()
       );
     });
 
@@ -311,13 +313,6 @@ class _MapRouteState extends State<MapRoute> {
                 style: bodyText(),
               ),
               _closeFormButton(),
-//            IconButton(
-//              icon: Icon(Icons.close),
-//              tooltip: 'Close form',
-//              onPressed: () {
-//                _closePanel(context);
-//              },
-//            ),
             ],
           ),
           SizedBox(height: 10),

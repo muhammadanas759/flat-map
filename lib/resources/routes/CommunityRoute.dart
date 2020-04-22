@@ -85,10 +85,6 @@ class _CommunityRouteState extends State<CommunityRoute> {
 
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
-
-      // NAVIGATION BAR
-      // floatingActionButton: navigationBarButton(context),
-
     );
   }
 }

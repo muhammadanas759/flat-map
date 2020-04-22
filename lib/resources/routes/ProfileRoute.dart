@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/data/icons_loader.dart';
 import 'package:flatmapp/resources/objects/data/markers_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
@@ -22,6 +23,8 @@ class ProfileRoute extends StatefulWidget {
 }
 
 class _ProfileRouteState extends State<ProfileRoute> {
+
+  IconsLoader _iconsLoader = IconsLoader();
 
   @override
   void initState() {
@@ -91,7 +94,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
                     leading: CircleAvatar(
                       backgroundColor: Colors.white,
                       backgroundImage: AssetImage(
-                          widget._markerLoader.iconsLoader.markerImageLocal[_marker['icon']]
+                          _iconsLoader.markerImageLocal[_marker['icon']]
                       ),
                     ),
                     title: Text(_marker['title'], style: bodyText()),
