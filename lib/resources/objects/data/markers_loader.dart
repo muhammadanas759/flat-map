@@ -140,6 +140,10 @@ class MarkerLoader {
     markersDescriptions.remove(id);
     googleMarkers.remove(id);
     zones.remove(id);
+
+    if(PrefService.get('selected_marker') == id){
+      PrefService.setString('selected_marker', 'temporary');
+    }
   }
 
   // save markers to local storage
@@ -177,6 +181,10 @@ class MarkerLoader {
 
   Marker getMarker({String id}){
     return googleMarkers[id];
+  }
+
+  int getRange({String id}){
+    return zones[id].radius.toInt();
   }
 
   // ===========================================================================

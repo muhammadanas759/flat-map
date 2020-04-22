@@ -89,10 +89,6 @@ class CounterFormField extends FormField<int> {
                 ],
               ),
             ),
-//            Text(
-//              state.value.toString(),
-//              style: bodyText(),
-//            ),
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () {

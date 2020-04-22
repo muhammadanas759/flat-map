@@ -41,9 +41,6 @@ class _MapRouteState extends State<MapRoute> {
   // map style preset
   final String _preset = PrefService.get('ui_theme');
 
-  // selected marker
-  String _selectedMarkerId = PrefService.get('selected_marker');
-
   // Current map zoom. Initial zoom will be 15, street level
   double _currentZoom = 15;
 
@@ -124,9 +121,9 @@ class _MapRouteState extends State<MapRoute> {
   // update camera position basing on selected marker
   CameraPosition updateCameraPosition(){
     return CameraPosition(
-      target: _selectedMarkerId == null ?
-      widget._markerLoader.getMarker(id: "temporary").position :
-      widget._markerLoader.getMarker(id: _selectedMarkerId).position,
+      target: widget._markerLoader.getMarker(
+          id: PrefService.get('selected_marker')
+      ).position,
       zoom: _currentZoom,
     );
   }
@@ -154,9 +151,10 @@ class _MapRouteState extends State<MapRoute> {
   // ===========================================================================
   // -------------------- MARKER FORM WIDGET SECTION ---------------------------
   void updateFormData(){
-    var temp = widget._markerLoader.markersDescriptions[_selectedMarkerId];
+    var temp = widget._markerLoader.markersDescriptions[
+                PrefService.get('selected_marker')];
     // set marker data to temporary marker
-    if (widget._markerLoader.markersDescriptions[_selectedMarkerId] != null){
+    if (temp != null){
       _formMarkerData['title'] = temp['title'];
       _formMarkerData['description'] = temp['description'];
       _formMarkerData['range'] = temp['range'].toInt();
@@ -257,8 +255,12 @@ class _MapRouteState extends State<MapRoute> {
   }
 
   Widget _buildMarkerRangeField() {
+
     return CounterFormField(
-      initialValue: _formMarkerData['range'],
+      // initialValue: _formMarkerData['range'],
+      initialValue: widget._markerLoader.getRange(
+          id: PrefService.get('selected_marker')
+      ),
       onSaved: (value) => this._formMarkerData['range'] = value,
     );
   }
@@ -267,7 +269,7 @@ class _MapRouteState extends State<MapRoute> {
     // save form
     _formKey.currentState.save();
 
-    _selectedMarkerId = PrefService.get('selected_marker');
+    var _selectedMarkerId = PrefService.get('selected_marker');
 
     setState(() {
       // adding a new marker to map
@@ -294,7 +296,9 @@ class _MapRouteState extends State<MapRoute> {
   }
 
   Widget _markerAddForm(context){
-    Marker tempMarker = widget._markerLoader.getMarker(id: _selectedMarkerId);
+    Marker tempMarker = widget._markerLoader.getMarker(
+        id: PrefService.get('selected_marker')
+    );
     return Form(
       key: _formKey,
       child: Column(
