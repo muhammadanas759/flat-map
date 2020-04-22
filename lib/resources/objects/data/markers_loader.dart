@@ -179,12 +179,6 @@ class MarkerLoader {
     return googleMarkers[id];
   }
 
-  String getSelectedMarkerIcon(){
-    return iconsLoader.markerImageLocal[
-      markersDescriptions[PrefService.get('selected_marker')]['icon']
-    ];
-  }
-
   // ===========================================================================
   //-------------------------- NETWORK CONTENT ---------------------------------
   Future<http.Response> postMarkers({

@@ -22,11 +22,14 @@ class IconsRoute extends StatelessWidget {
               backgroundColor: Colors.white,
               backgroundImage: AssetImage(icons.markerImageLocal[key]),
             ),
-            title: Text(key, style: bodyText()),
+            title: Text(
+                key,
+                style: bodyText()
+            ),
             trailing: Icon(Icons.keyboard_arrow_right),
             onLongPress: () {
               // set selected marker id for map screen
-              PrefService.setString('selected_icon', 'assets/$key');
+              PrefService.setString('selected_icon', key);
               // Navigate back
               Navigator.pop(context);
             },

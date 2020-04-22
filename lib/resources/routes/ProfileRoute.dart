@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/data/icons_loader.dart';
 import 'package:flatmapp/resources/objects/data/markers_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
@@ -22,6 +23,8 @@ class ProfileRoute extends StatefulWidget {
 }
 
 class _ProfileRouteState extends State<ProfileRoute> {
+
+  IconsLoader _iconsLoader = IconsLoader();
 
   @override
   void initState() {
@@ -82,7 +85,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
               var _marker = widget._markerLoader.markersDescriptions[_id];
 
               // marker expandable card
-              return Card(
+              return _id == 'temporary' ? SizedBox.shrink() : Card(
                 child: Padding(
                   padding: EdgeInsets.only(
                       top: 5.0, left: 10.0, right: 10.0, bottom: 0.0
@@ -91,7 +94,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
                     leading: CircleAvatar(
                       backgroundColor: Colors.white,
                       backgroundImage: AssetImage(
-                          widget._markerLoader.iconsLoader.markerImageLocal[_marker['icon']]
+                          _iconsLoader.markerImageLocal[_marker['icon']]
                       ),
                     ),
                     title: Text(_marker['title'], style: bodyText()),
@@ -162,7 +165,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
 
             ListTile(
               title: Text('Active markers: #'
-                  '${widget._markerLoader.markersDescriptions.length}',
+                  '${widget._markerLoader.markersDescriptions.length - 1}',
                   style: bodyText()
               ),
               leading: Icon(Icons.bookmark_border),
