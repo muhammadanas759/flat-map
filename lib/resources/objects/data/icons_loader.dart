@@ -48,20 +48,16 @@ class IconsLoader {
 
   // ===========================================================================
   // TODO function is delayed and therefore returns null (and after, when nobody cares, image)
-  BitmapDescriptor getMarkerImage(
-      String name, {double targetWidth}) {
+  Future<BitmapDescriptor> getMarkerImage(
+      String name, {double targetWidth}) async {
     assert(name != null);
 
-    BitmapDescriptor icon;
-
-    BitmapDescriptor.fromAssetImage(
+    return await BitmapDescriptor.fromAssetImage(
       ImageConfiguration(
         size: Size(targetWidth, targetWidth),
       ),
       markerImageLocal[name],
-    ).then((image){icon = image;});
-
-    return icon;
+    );
   }
 
   // ===========================================================================

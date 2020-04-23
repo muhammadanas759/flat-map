@@ -113,27 +113,29 @@ class MarkerLoader {
       'description': description,
     };
 
-    googleMarkers[id] = Marker(
-      markerId: MarkerId(id),
-      position: position,
-      // icon: iconsLoader.getMarkerImage(icon),
-      onTap: () {
-        // set marker as selected on tap
-        PrefService.setString('selected_marker', id);
-        PrefService.setString('selected_icon', icon);
-      },
-      infoWindow: InfoWindow(
-        title: title,
-        snippet: description,
-      )
-    );
+    iconsLoader.getMarkerImage(icon).then((iconBitmap){
+      googleMarkers[id] = Marker(
+          markerId: MarkerId(id),
+          position: position,
+          icon: iconBitmap,
+          onTap: () {
+            // set marker as selected on tap
+            PrefService.setString('selected_marker', id);
+            PrefService.setString('selected_icon', icon);
+          },
+          infoWindow: InfoWindow(
+            title: title,
+            snippet: description,
+          )
+      );
 
-    // add zone
-    zones[id] = Circle(
-      circleId: CircleId(id),
-      center: position,
-      radius: range,
-    );
+      // add zone
+      zones[id] = Circle(
+        circleId: CircleId(id),
+        center: position,
+        radius: range,
+      );
+    });
   }
 
   void removeMarker({String id}){
