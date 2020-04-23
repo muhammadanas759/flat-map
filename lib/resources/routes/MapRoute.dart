@@ -101,13 +101,19 @@ class _MapRouteState extends State<MapRoute> {
 
   // add marker in the place where user touched the map
   Future _mapTap(LatLng position) async {
-    setState(() {
-      // change temporary position
-      widget._markerLoader.addTemporaryMarker(position);
+    // if the form is opened, close it. In other case, move marker
+    if(_slidingFormController.isPanelOpen){
+      // close panel
+      _slidingFormController.close();
+    } else {
+      setState(() {
+        // change temporary position
+        widget._markerLoader.addTemporaryMarker(position);
 
-      // save markers state to file
-      widget._markerLoader.saveMarkers();
-    });
+        // save markers state to file
+        widget._markerLoader.saveMarkers();
+      });
+    }
   }
 
   // open marker form if user pressed the map

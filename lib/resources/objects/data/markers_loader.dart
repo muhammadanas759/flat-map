@@ -134,6 +134,9 @@ class MarkerLoader {
         circleId: CircleId(id),
         center: position,
         radius: range,
+        fillColor: Colors.redAccent.withOpacity(0.2),
+        strokeWidth: 2,
+        strokeColor: Colors.redAccent,
       );
     });
   }
