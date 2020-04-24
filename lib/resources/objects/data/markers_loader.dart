@@ -113,33 +113,42 @@ class MarkerLoader {
       'description': description,
     };
 
-    googleMarkers[id] = Marker(
-      markerId: MarkerId(id),
-      position: position,
-      // icon: iconsLoader.getMarkerImage(icon),
-      onTap: () {
-        // set marker as selected on tap
-        PrefService.setString('selected_marker', id);
-        PrefService.setString('selected_icon', icon);
-      },
-      infoWindow: InfoWindow(
-        title: title,
-        snippet: description,
-      )
-    );
+    iconsLoader.getMarkerImage(icon).then((iconBitmap){
+      googleMarkers[id] = Marker(
+          markerId: MarkerId(id),
+          position: position,
+          icon: iconBitmap,
+          onTap: () {
+            // set marker as selected on tap
+            PrefService.setString('selected_marker', id);
+            PrefService.setString('selected_icon', icon);
+          },
+          infoWindow: InfoWindow(
+            title: title,
+            snippet: description,
+          )
+      );
 
-    // add zone
-    zones[id] = Circle(
-      circleId: CircleId(id),
-      center: position,
-      radius: range,
-    );
+      // add zone
+      zones[id] = Circle(
+        circleId: CircleId(id),
+        center: position,
+        radius: range,
+        fillColor: Colors.redAccent.withOpacity(0.2),
+        strokeWidth: 2,
+        strokeColor: Colors.redAccent,
+      );
+    });
   }
 
   void removeMarker({String id}){
     markersDescriptions.remove(id);
     googleMarkers.remove(id);
     zones.remove(id);
+
+    if(PrefService.get('selected_marker') == id){
+      PrefService.setString('selected_marker', 'temporary');
+    }
   }
 
   // save markers to local storage
@@ -177,6 +186,10 @@ class MarkerLoader {
 
   Marker getMarker({String id}){
     return googleMarkers[id];
+  }
+
+  int getRange({String id}){
+    return zones[id].radius.toInt();
   }
 
   // ===========================================================================
