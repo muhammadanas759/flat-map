@@ -40,7 +40,7 @@ dependencies:
   # files service
   path_provider: ^0.5.0
   # geolocation service
-  location: ^3.0.2
+  geolocator: ^5.3.1
   # sliding panel for forms
   sliding_up_panel: ^1.0.1
 
