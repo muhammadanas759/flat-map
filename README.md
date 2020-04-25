@@ -4,12 +4,12 @@ Flutter geolocation manager. Choose actions and set their geolocation trigger.
 
 Previous versions:
 * **v0.1:** google map example created
-
-**Current version:**
 * **v0.2:** basic interface introduced
 
-Incoming versions:
+**Current version:**
 * **v0.3:** basic geotrigger
+
+Incoming versions:
 * **v0.4:** server communication
 * **v0.5:** rebuild
 * **v0.6:** actions recommendation system
@@ -35,11 +35,11 @@ samples, guidance on mobile development, and a full API reference.
 ## Installing project
 
 * Download repository to your desired location. 
-* Flutter requires **Android Studio** for Android deployment. 
+* Project requires **Android Studio** for Android deployment and Flutter SDK. 
+* Instructions for installing both is under following [link](https://flutter.dev/docs/get-started/install).
 
     Recommended IDLE to code is **Android Studio**.
 
-* Remember to install **Flutter** plugin, following [these instructions](https://flutter.dev/docs/get-started/install).
 * install packages required for this project with `flutter pub get`, run in **your project folder!**
 
     Any additional packages should be implemented in **pubspec.yaml file** and installed as written above.
@@ -106,9 +106,9 @@ FlatMapp uses objects (classes) to define packages of functions.
 Currently FlatMapp uses:
 * Loaders:
 
-    marker loader operates on JSON list of objects
-    icon loader
-    trigger loader
+    * marker_loader - handles management of list of marker objects (adding, editing, deleting and saving to local data storage) 
+    * icon_loader - handles icon loading
+    * trigger_loader - handles actions calling
 
 * Map:
 
@@ -121,6 +121,7 @@ Currently FlatMapp uses:
     to the previous route, common for all routes;
     * side_bar_menu - sidebar menu widget, operating access to all routes,
     common for all routes;
+    * text_form_fields - widget for adding or editing markers;
     * text_styles - styles for text used in application. 
     Contains *header*, *bodyText* and *footer* styles.
 
@@ -128,14 +129,13 @@ Currently FlatMapp uses:
 Routes are application views. Each new screen presented in the app 
 is another route.
 
-Currently FlatMapp uses 6 routes:
+Currently FlatMapp uses 5 routes:
 
 1. MapRoute - main view with map;
 2. ProfileRoute - view of user profile;
-3. ActionsRoute - view of user-defined triggers;
-4. CommunityRoute - view of community-choice triggers;
-5. SettingsRoute - view of application settings;
-6. AboutRoute - about page, presenting basic information about team,
+3. SettingsRoute - view of application settings;
+4. AboutRoute - about page, presenting basic information about team;
+5. LogInRoute- page for logging in to user account,
 license and application fundations; 
 
 ## Notes
