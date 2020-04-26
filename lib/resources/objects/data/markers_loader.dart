@@ -79,9 +79,6 @@ class MarkerLoader {
           markerData['position_y']
       );
 
-      // translate description into marker in markers set:
-      // BitmapDescriptor icon = iconsLoader.getMarkerImage(markerMap['icon']);
-
       // add marker
       addMarker(
           id: id,

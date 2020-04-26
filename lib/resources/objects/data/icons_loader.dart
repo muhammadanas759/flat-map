@@ -1,5 +1,3 @@
-import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -7,11 +5,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 // class providing paths to markers icons
 class IconsLoader {
-
   // ===========================================================================
+  // more icons:
   // https://img.icons8.com/office/80/000000/marker.png
   // https://img.icons8.com/officel/80/000000/place-marker.png
   // https://img.icons8.com/dusk/80/000000/order-delivered.png
+
   final Map<String, String> markerImageLocal = {
     'default':       'assets/icons/marker.png',
     'pointer_place': 'assets/icons/place-marker.png',
@@ -46,8 +45,6 @@ class IconsLoader {
     'meal':          'assets/icons/meal.png',
   };
 
-  // ===========================================================================
-  // TODO function is delayed and therefore returns null (and after, when nobody cares, image)
   Future<BitmapDescriptor> getMarkerImage(
       String name, {double targetWidth}) async {
     assert(name != null);
@@ -57,33 +54,6 @@ class IconsLoader {
         size: Size(targetWidth, targetWidth),
       ),
       markerImageLocal[name],
-    );
-  }
-
-  // ===========================================================================
-  Widget _iconsListView( // ignore: unused_element
-      BuildContext context, ScrollController scrollController
-  ){
-    return ListView.builder(
-      controller: scrollController,
-      itemCount: markerImageLocal.length,
-      itemBuilder: (context, index) {
-        String key = markerImageLocal.keys.elementAt(index);
-        return Card(
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.white,
-              backgroundImage: AssetImage(markerImageLocal[key]),
-            ),
-            title: Text(key, style: bodyText()),
-            trailing: Icon(Icons.keyboard_arrow_right),
-            onTap: () {
-              // do something
-              print(key);
-            },
-          ),
-        );
-      },
     );
   }
 }

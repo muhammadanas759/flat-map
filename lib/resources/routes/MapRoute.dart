@@ -110,6 +110,9 @@ class _MapRouteState extends State<MapRoute> {
         // change temporary position
         widget._markerLoader.addTemporaryMarker(position);
 
+        // change selected marker in prefs
+        PrefService.setString('selected_marker', 'temporary');
+
         // save markers state to file
         widget._markerLoader.saveMarkers();
       });
@@ -118,6 +121,10 @@ class _MapRouteState extends State<MapRoute> {
 
   // open marker form if user pressed the map
   Future _mapLongPress(LatLng position) async {
+
+    // reload icon in form - requires setState update on preferences
+    setState(() { });
+
     // update form
     updateFormData();
     // open sliding form
@@ -158,7 +165,8 @@ class _MapRouteState extends State<MapRoute> {
   // -------------------- MARKER FORM WIDGET SECTION ---------------------------
   void updateFormData(){
     var temp = widget._markerLoader.markersDescriptions[
-                PrefService.get('selected_marker')];
+      PrefService.get('selected_marker')
+    ];
     // set marker data to temporary marker
     if (temp != null){
       _formMarkerData['title'] = temp['title'];
@@ -213,7 +221,9 @@ class _MapRouteState extends State<MapRoute> {
               },
               padding: EdgeInsets.all(0.0),
               child: Image.asset(
-                  widget._markerLoader.iconsLoader.markerImageLocal[PrefService.get('selected_icon')]
+                widget._markerLoader.iconsLoader.markerImageLocal[
+                  PrefService.get('selected_icon')
+                ]
               )
             )
           )

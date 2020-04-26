@@ -27,7 +27,7 @@ class IconsRoute extends StatelessWidget {
                 style: bodyText()
             ),
             trailing: Icon(Icons.keyboard_arrow_right),
-            onLongPress: () {
+            onTap: () {
               // set selected marker id for map screen
               PrefService.setString('selected_icon', key);
               // Navigate back

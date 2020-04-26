@@ -52,6 +52,10 @@ Flutter app design:
 * [architecture](https://flutter.dev/docs/development/data-and-backend/state-mgmt/simple)
 * [testing](https://flutter.dev/docs/testing)
 
+* *preferences* package
+[libraries](https://pub.dev/documentation/preferences/latest/index.html) |
+[example code](https://gitlab.com/redsolver/preferences/blob/master/example/lib/main.dart)
+
 Optimization: 
 * [app size](https://flutter.dev/docs/perf/app-size)
 * [performance](https://flutter.dev/docs/perf/rendering/best-practices)
@@ -83,8 +87,7 @@ Key is used once every time user opens application
 
 [Put Google on the Map](https://codelabs.developers.google.com/codelabs/google-maps-in-flutter/#5) | 
 [Map customization and easy tutorial](https://www.raywenderlich.com/4466319-google-maps-for-flutter-tutorial-getting-started) | 
-[Working with geolocation 1](https://medium.com/swlh/working-with-geolocation-and-geocoding-in-flutter-and-integration-with-maps-16fb0bc35ede) | 
-
+[Working with geolocation 1](https://medium.com/swlh/working-with-geolocation-and-geocoding-in-flutter-and-integration-with-maps-16fb0bc35ede) |
 
 
 Drawing documentation:
@@ -136,19 +139,27 @@ Currently FlatMapp uses 5 routes:
 3. SettingsRoute - view of application settings;
 4. AboutRoute - about page, presenting basic information about team;
 5. LogInRoute- page for logging in to user account,
-license and application fundations; 
+license and application fundations;
 
-## Notes
-### Design
-*preferences* package: 
-[libraries](https://pub.dev/documentation/preferences/latest/index.html) | 
-[example code](https://gitlab.com/redsolver/preferences/blob/master/example/lib/main.dart)
-  
+## Debugging notes
+### On running dependent tests
 
-### Debugging notes
-none
+If test script depends on outside data (like global PrefService)  
+initialized in other classes than tested one, running test script will
+result in *MissingPlugin* error.
 
-### On reading Future values
+To avoid this and many other errors, run test script via terminal command:
+
+    flutter run x_test.dart
+
+with emulator opened in the background or phone with usb debug on.
+
+Device will open main app and stop on splash screen view, and terminal
+will provide output for test.
+
+
+
+### On reading \<Future\> values
 
 Dart utilizes specific form of asynchronous processing, called Future.
 Future objects allow application to work while their work is not finished.
