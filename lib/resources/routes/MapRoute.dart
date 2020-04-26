@@ -62,8 +62,6 @@ class _MapRouteState extends State<MapRoute> {
   void initState() {
     super.initState();
 
-    _selectedMarkerId = PrefService.get('selected_marker');
-
     // update form
     updateFormData();
 

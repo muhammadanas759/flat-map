@@ -106,7 +106,7 @@ FlatMapp uses objects (classes) to define packages of functions.
 Currently FlatMapp uses:
 * Loaders:
 
-    marker loader operates on JSON list of objects
+    * marker loader operates on JSON list of objects
     icon loader
     trigger loader
 
@@ -121,6 +121,7 @@ Currently FlatMapp uses:
     to the previous route, common for all routes;
     * side_bar_menu - sidebar menu widget, operating access to all routes,
     common for all routes;
+    * text_form_fields - form widget for 
     * text_styles - styles for text used in application. 
     Contains *header*, *bodyText* and *footer* styles.
 
@@ -133,9 +134,8 @@ Currently FlatMapp uses 6 routes:
 1. MapRoute - main view with map;
 2. ProfileRoute - view of user profile;
 3. ActionsRoute - view of user-defined triggers;
-4. CommunityRoute - view of community-choice triggers;
-5. SettingsRoute - view of application settings;
-6. AboutRoute - about page, presenting basic information about team,
+4. SettingsRoute - view of application settings;
+5. AboutRoute - about page, presenting basic information about team,
 license and application fundations; 
 
 ## Notes
