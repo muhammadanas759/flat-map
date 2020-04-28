@@ -14,22 +14,31 @@ class TriggerLoader {
   Geolocator _geolocator = Geolocator();
   LocationOptions locationOptions = LocationOptions(
       accuracy: LocationAccuracy.high,
+      timeInterval: 1000,
       distanceFilter: 10
   );
   Position userLocation;
+
+  // ignore or add somewhere subscription.cancel()
+  // so that app would be able to do some cleanup in stream
+  // ignore: cancel_subscriptions
   StreamSubscription<Position> positionStream;
 
   TriggerLoader() {
 
-//    // check permission
-//    Geolocator().checkGeolocationPermissionStatus().then((permission){
-//      // TODO check permission status
-//      print(permission);
-//    });
-//
-//    positionStream = _geolocator.getPositionStream(locationOptions).listen(
-//      (Position position){operatePositionChange(position: position);}
-//    );
+    // check permission
+    _geolocator.checkGeolocationPermissionStatus().then((permission){
+      // TODO check permission status
+      if(permission != GeolocationStatus.granted){
+        print("GEOLOCATION PERMISSION IS NOT GRANTED YET");
+        print(permission);
+      }
+    });
+
+    // listen to position changes
+    positionStream = _geolocator.getPositionStream(locationOptions).listen(
+      (Position position){operatePositionChange(position: position);}
+    );
   }
 
   Future<LatLng> getCurrentPosition() async {
@@ -95,11 +104,19 @@ class TriggerLoader {
 
   void operatePositionChange({Position position}){
     // operate position change
+    print("POSITION CHANGE DETECTED");
     print(
-        position == null ?
-        'Unknown' :
+        position == null ? 'Unknown' :
         position.latitude.toString() + ', ' + position.longitude.toString()
     );
+
+    // TODO check if user entered any marker
+    // ignore: dead_code
+    if(false){
+      // get actions declared for this marker
+
+      // operate these actions
+    }
   }
 
   // ===========================================================================

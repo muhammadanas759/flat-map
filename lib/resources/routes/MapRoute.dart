@@ -4,6 +4,8 @@ import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 
+import 'package:flatmapp/resources/objects/data/trigger_loader.dart';
+
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -27,6 +29,9 @@ class MapRoute extends StatefulWidget {
 class _MapRouteState extends State<MapRoute> {
   // ===========================================================================
   // -------------------- INIT VARIABLES SECTION -------------------------------
+
+  // trigger loader - must be implemented in Stateful widget
+  final TriggerLoader _triggerLoader = TriggerLoader();
 
   // google map controller
   final Completer<GoogleMapController> _mapController = Completer();
@@ -381,6 +386,11 @@ class _MapRouteState extends State<MapRoute> {
             ],
           ),
           SizedBox(width: 10),
+
+          // actions list
+          // https://stackoverflow.com/questions/53908025/flutter-sortable-drag-and-drop-listview
+          // https://api.flutter.dev/flutter/material/ReorderableListView-class.html
+
         ],
       )
     );
