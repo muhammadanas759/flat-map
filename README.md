@@ -70,10 +70,15 @@ Geotrigger:
 Google Maps: 
 * [How to cluster markers on Flutter Google Maps](https://medium.com/coletiv-stories/how-to-cluster-markers-on-flutter-google-maps-44620f607de3)
 
+Notifications:
+* [medium notifications tutorial](https://medium.com/@nitishk72/flutter-local-notification-1e43a353877b)
+* [pub notifications library](https://pub.dev/packages/flutter_local_notifications#-example-tab-)
+
 Packages:
 * [flutter_map_marker_cluster](https://pub.dev/packages/flutter_map_marker_cluster)
 * [flutter_map](https://pub.dev/packages/flutter_map)
 * [geolocator](https://pub.dev/packages/geolocator)
+* [local_notifications]()
 
 ## API keys
 FlatMapp requires Google Maps API key to get world map for visualisation purposes.

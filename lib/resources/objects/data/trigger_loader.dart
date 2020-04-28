@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flatmapp/resources/extensions.dart';
@@ -24,6 +25,9 @@ class TriggerLoader {
   // ignore: cancel_subscriptions
   StreamSubscription<Position> positionStream;
 
+  // notifications on location change
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
   TriggerLoader() {
 
     // check permission
@@ -39,7 +43,19 @@ class TriggerLoader {
     positionStream = _geolocator.getPositionStream(locationOptions).listen(
       (Position position){operatePositionChange(position: position);}
     );
-  }
+
+    // init notifications
+    var initializationSettingsAndroid =
+    new AndroidInitializationSettings('mipmap/ic_launcher');
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS
+    );
+    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin.initialize(
+        initializationSettings
+    );
+}
 
   Future<LatLng> getCurrentPosition() async {
     Position temp = await _geolocator.getCurrentPosition();
@@ -110,6 +126,11 @@ class TriggerLoader {
         position.latitude.toString() + ', ' + position.longitude.toString()
     );
 
+    _showNotificationWithDefaultSound(
+      title: "POSITION CHANGE DETECTED",
+      content: "CITIZEN NR 26108, STAY AT HOME"
+    );
+
     // TODO check if user entered any marker
     // ignore: dead_code
     if(false){
@@ -121,9 +142,34 @@ class TriggerLoader {
 
   // ===========================================================================
   // define actions
+
+  // push notifications
+  // https://medium.com/@nitishk72/flutter-local-notification-1e43a353877b
+  Future _showNotificationWithDefaultSound({String title, String content}) async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'your channel id', 'your channel name', 'your channel description',
+        importance: Importance.Max, priority: Priority.High);
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics
+    );
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      content,
+      platformChannelSpecifics,
+      payload: 'Default_Sound',
+    );
+  }
+
   void mutePhone() async {
     await Volume.setVol(0, showVolumeUI: ShowVolumeUI.SHOW);
   }
+
+  // https://pub.dev/packages/volume#-example-tab-
+  // https://pub.dev/packages/flutter_blue
+  // https://pub.dev/packages/connectivity
+
 
   // ===========================================================================
 }
