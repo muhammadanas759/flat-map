@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/data/trigger_loader.dart';
 import 'package:flatmapp/resources/routes/LogInRoute.dart';
 import 'package:flatmapp/resources/routes/MapRoute.dart';
 import 'package:flatmapp/resources/routes/ProfileRoute.dart';
@@ -11,6 +12,8 @@ import 'package:flatmapp/resources/objects/data/markers_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
+
+// import 'dart:isolate';
 
 
 String initScreen;
@@ -44,8 +47,33 @@ main() async {
 
   await _markerLoader.loadMarkers();
 
+//  // TODO spawn isolated process for triggers
+//  var receivePort = new ReceivePort();
+//  await Isolate.spawn(entryPoint, receivePort.sendPort);
+//  // Receive the SendPort from the Isolate
+//  SendPort sendPort = await receivePort.first;
+//  // Send a message to the Isolate
+//  sendPort.send("hello");
+
   runApp(MyApp());
 }
+
+// TODO BACKGROUND GEO https://medium.com/flutter/executing-dart-in-the-background-with-flutter-plugins-and-geofencing-2b3e40a1a124
+// TODO CHECK https://pub.dev/packages/isolate_handler
+// Entry point for your Isolate
+//entryPoint(SendPort sendPort) async {
+//  WidgetsFlutterBinding.ensureInitialized();
+//  // Open the ReceivePort to listen for incoming messages (optional)
+//  var port = new ReceivePort();
+//  // trigger loader - must be implemented in Stateful widget
+//  final TriggerLoader _triggerLoader = TriggerLoader();
+//  // Send messages to other Isolates
+//  sendPort.send(port.sendPort);
+//  // Listen for messages (optional)
+//  await for (var data in port) {
+//    // `data` is the message received.
+//  }
+//}
 
 class MyApp extends StatelessWidget {
   @override

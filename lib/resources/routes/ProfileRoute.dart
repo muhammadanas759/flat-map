@@ -105,6 +105,16 @@ class _ProfileRouteState extends State<ProfileRoute> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           IconButton(
+                            icon: Icon(Icons.location_searching),
+                            tooltip: 'Find marker',
+                            onPressed: () {
+                              // set selected marker id for map screen
+                              PrefService.setString('selected_marker', _id);
+                              // Navigate to the profile screen using a named route.
+                              Navigator.pushNamed(context, '/map');
+                            },
+                          ),
+                          IconButton(
                             icon: Icon(Icons.edit),
                             tooltip: 'Edit marker',
                             onPressed: () {

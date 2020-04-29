@@ -56,9 +56,12 @@ class CounterFormField extends FormField<int> {
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text(
-              "Range:",
-              style: bodyText(),
+            Tooltip(
+              message: "marker range in meters",
+              child: new Text(
+                "Range:",
+                style: bodyText(),
+              ),
             ),
             SizedBox(height: 20),
             IconButton(

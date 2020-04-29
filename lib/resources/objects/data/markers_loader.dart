@@ -15,8 +15,8 @@ import 'package:preferences/preferences.dart';
 class MarkerLoader {
   // ===========================================================================
   //-------------------------- VARIABLES ---------------------------------------
-  // server address - TODO add server address
-  String _serverURL = "";
+  // server address
+  String _serverURL = "http://64.227.122.119:8000/api/backup/trigger/";
 
   // list of marker data in strings
   Map<String, Map> markersDescriptions = <String, Map>{};
@@ -150,18 +150,6 @@ class MarkerLoader {
 
   // save markers to local storage
   void saveMarkers() async {
-
-//    // populate description with markers
-//    googleMarkers.forEach((String id, Marker marker) {
-//      markersDescriptions[id] = {
-//        'position_x': marker.position.latitude,
-//        'position_y': marker.position.longitude,
-//        'range': zones[id].radius,
-//        'icon': googleMarkers[id].icon.toString(), // TODO ???
-//        'title': marker.infoWindow.title,
-//        'description': marker.infoWindow.snippet,
-//      };
-//    });
 
     // save markersDescription
     final directory = await getApplicationDocumentsDirectory();

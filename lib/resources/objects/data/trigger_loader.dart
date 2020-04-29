@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -29,6 +30,7 @@ class TriggerLoader {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   TriggerLoader() {
+    WidgetsFlutterBinding.ensureInitialized();
 
     // check permission
     _geolocator.checkGeolocationPermissionStatus().then((permission){
@@ -55,7 +57,7 @@ class TriggerLoader {
     flutterLocalNotificationsPlugin.initialize(
         initializationSettings
     );
-}
+  }
 
   Future<LatLng> getCurrentPosition() async {
     Position temp = await _geolocator.getCurrentPosition();
@@ -118,6 +120,12 @@ class TriggerLoader {
     );
   }
 
+  // ===========================================================================
+
+  void operateIsolatedInput(){
+
+  }
+
   void operatePositionChange({Position position}){
     // operate position change
     print("POSITION CHANGE DETECTED");
@@ -147,8 +155,12 @@ class TriggerLoader {
   // https://medium.com/@nitishk72/flutter-local-notification-1e43a353877b
   Future _showNotificationWithDefaultSound({String title, String content}) async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-        'your channel id', 'your channel name', 'your channel description',
-        importance: Importance.Max, priority: Priority.High);
+        'your channel id',
+        'your channel name',
+        'your channel description',
+        importance: Importance.Max,
+        priority: Priority.High
+    );
     var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
     var platformChannelSpecifics = new NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics
