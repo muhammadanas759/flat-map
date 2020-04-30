@@ -1,5 +1,7 @@
-import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
+import 'package:flatmapp/resources/objects/data/trigger_loader.dart';
 import 'package:flatmapp/resources/objects/data/markers_loader.dart';
+
+import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
@@ -25,6 +27,9 @@ class MapRoute extends StatefulWidget {
 class _MapRouteState extends State<MapRoute> {
   // ===========================================================================
   // -------------------- INIT VARIABLES SECTION -------------------------------
+
+  // TODO remove init trigger loader
+  TriggerLoader _triggerLoader = TriggerLoader();
 
   // google map controller
   final Completer<GoogleMapController> _mapController = Completer();
@@ -121,6 +126,7 @@ class _MapRouteState extends State<MapRoute> {
   Future _mapLongPress(LatLng position) async {
 
     // reload icon in form - requires setState update on preferences
+    // TODO THIS CAUSES Exception - NEED BETTER SOLUTION
     setState(() { });
 
     // update form

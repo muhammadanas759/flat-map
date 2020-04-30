@@ -22,7 +22,6 @@ final isolates = IsolateHandler();
 
 // store channels in a top-level Map for convenience
 const Map<String, MethodChannel> channels = {
-  'counter': const MethodChannel('isolates.example/counter'),
   'trigger': const MethodChannel('isolates.main/trigger'),
 };
 
@@ -34,24 +33,16 @@ String initScreen;
 // data loader
 final MarkerLoader _markerLoader = MarkerLoader();
 
-// TODO BACKGROUND GEO https://medium.com/flutter/executing-dart-in-the-background-with-flutter-plugins-and-geofencing-2b3e40a1a124
 // TODO CHECK https://pub.dev/packages/isolate_handler
 // =============================================================================
 // -------------------- TRIGGER ISOLATE SECTION --------------------------------
 
-void setCounter(int count) {
-   // Set new count and display current count
-   counter = count + 1;
-
-   // Show the new count
-   print("Counter is now $counter");
-
-   // disposal of named isolate.
-   //isolates.kill("trigger");
-}
-
 // This function happens in the isolate
 void triggerEntryPoint(HandledIsolateContext context) {
+
+  // initiate trigger loader in isolated process
+  // TriggerLoader _triggerLoader = TriggerLoader();
+
   // Calling initialize from the entry point with the context is
   // required if communication is desired. It returns a messenger which
   // allows listening and sending information to the main isolate.
@@ -60,9 +51,23 @@ void triggerEntryPoint(HandledIsolateContext context) {
   // Triggered every time data is received from the main isolate
   messenger.listen((data) async {
     // final int result = await channels['trigger'].invokeMethod('getNewCount');
-    messenger.send(99);
+    messenger.send("cool cool cool cool cool coool cool cool cool");
   });
 }
+
+void onReceiveFromTrigger(String confirmation){
+  // onReceive is executed every time data is received from the spawned process
+
+  // show confirmation of ongoing process
+  print(confirmation);
+}
+
+void killTrigger(){
+  isolates.kill("trigger");
+}
+
+// =============================================================================
+// ----------------------- MAIN PROCESS SECTION --------------------------------
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -96,7 +101,7 @@ main() async {
       // name the isolate in order to access it on sending data or disposal
       name: "trigger",
       // onReceive is executed every time data is received from the spawn
-      onReceive: setCounter,
+      onReceive: onReceiveFromTrigger,
       // executed once when spawned isolate is ready for communication
       onInitialized: () => isolates.send(counter, to: "trigger"),
       channels: channels.values.toList()
