@@ -45,6 +45,8 @@ dependencies:
   sliding_up_panel: ^1.0.1
   # push notifications
   flutter_local_notifications:
+  # background processing
+  isolate_handler: ^0.1.2+hotfix1
 
   # actions:
   # change phone sound volume
