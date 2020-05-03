@@ -1,4 +1,3 @@
-import 'package:flatmapp/resources/objects/data/trigger_loader.dart';
 import 'package:flatmapp/resources/objects/data/markers_loader.dart';
 
 import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
@@ -27,9 +26,6 @@ class MapRoute extends StatefulWidget {
 class _MapRouteState extends State<MapRoute> {
   // ===========================================================================
   // -------------------- INIT VARIABLES SECTION -------------------------------
-
-  // TODO remove init trigger loader
-  TriggerLoader _triggerLoader = TriggerLoader();
 
   // google map controller
   final Completer<GoogleMapController> _mapController = Completer();
@@ -148,7 +144,7 @@ class _MapRouteState extends State<MapRoute> {
   Widget _googleMapWidget(){
     return GoogleMap(
       myLocationEnabled: true,
-      mapToolbarEnabled: true,
+      mapToolbarEnabled: false,
       initialCameraPosition: updateCameraPosition(),
       markers: Set<Marker>.of(widget._markerLoader.googleMarkers.values),
       circles: Set<Circle>.of(widget._markerLoader.zones.values),

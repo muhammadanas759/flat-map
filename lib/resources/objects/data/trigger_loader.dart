@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -13,7 +12,7 @@ class TriggerLoader {
   // ===========================================================================
   // init variables
   // geolocator API: https://pub.dev/documentation/geolocator/latest/geolocator/Geolocator-class.html
-  Geolocator _geolocator = Geolocator();
+  Geolocator _geolocator;
   LocationOptions locationOptions = LocationOptions(
       accuracy: LocationAccuracy.high,
       timeInterval: 1000,
@@ -29,33 +28,17 @@ class TriggerLoader {
   // notifications on location change
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
-  TriggerLoader() {
-    WidgetsFlutterBinding.ensureInitialized();
+  TriggerLoader(
+      Geolocator _passedGeolocator,
+      FlutterLocalNotificationsPlugin passedFlutterLocalNotificationsPlugin
+  ) {
 
-    // check permission
-    _geolocator.checkGeolocationPermissionStatus().then((permission){
-      // TODO check permission status
-      if(permission != GeolocationStatus.granted){
-        print("GEOLOCATION PERMISSION IS NOT GRANTED YET");
-        print(permission);
-      }
-    });
+    _geolocator = _passedGeolocator;
+    flutterLocalNotificationsPlugin = passedFlutterLocalNotificationsPlugin;
 
     // listen to position changes
     positionStream = _geolocator.getPositionStream(locationOptions).listen(
       (Position position){operatePositionChange(position: position);}
-    );
-
-    // init notifications
-    var initializationSettingsAndroid =
-    new AndroidInitializationSettings('mipmap/ic_launcher');
-    var initializationSettingsIOS = new IOSInitializationSettings();
-    var initializationSettings = new InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS
-    );
-    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-    flutterLocalNotificationsPlugin.initialize(
-        initializationSettings
     );
   }
 
@@ -134,10 +117,10 @@ class TriggerLoader {
         position.latitude.toString() + ', ' + position.longitude.toString()
     );
 
-    _showNotificationWithDefaultSound(
-      title: "POSITION CHANGE DETECTED",
-      content: "CITIZEN NR 26108, STAY AT HOME"
-    );
+//    _showNotificationWithDefaultSound(
+//      title: "POSITION CHANGE DETECTED",
+//      content: "CITIZEN NR 26108, STAY AT HOME"
+//    );
 
     // TODO check if user entered any marker
     // ignore: dead_code

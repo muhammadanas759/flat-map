@@ -10,22 +10,29 @@ import 'package:flatmapp/resources/objects/data/markers_loader.dart';
 import 'package:flatmapp/resources/objects/data/trigger_loader.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:preferences/preferences.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 
 import 'package:flutter/services.dart';
-import 'package:isolate_handler/isolate_handler.dart';
+import 'package:flutter_isolate/flutter_isolate.dart';
 
 
 // create a new IsolateHandler instance used to spawn isolates.
-final isolates = IsolateHandler();
+// final isolates = IsolateHandler();
 
 // store channels in a top-level Map for convenience
 const Map<String, MethodChannel> channels = {
   'trigger': const MethodChannel('isolates.main/trigger'),
 };
 
-int counter = 0;
+// geolocator API:
+// https://pub.dev/documentation/geolocator/latest/geolocator/Geolocator-class.html
+Geolocator _geolocator = Geolocator();
+
+// notifications on location change
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 // store chosen starting route
 String initScreen;
@@ -33,37 +40,18 @@ String initScreen;
 // data loader
 final MarkerLoader _markerLoader = MarkerLoader();
 
-// TODO CHECK https://pub.dev/packages/isolate_handler
+// TODO CHECK https://pub.dev/packages/flutter_isolate
 // =============================================================================
 // -------------------- TRIGGER ISOLATE SECTION --------------------------------
 
 // This function happens in the isolate
-void triggerEntryPoint(HandledIsolateContext context) {
+void triggerEntryPoint(String arg) async {
 
   // initiate trigger loader in isolated process
-  // TriggerLoader _triggerLoader = TriggerLoader();
-
-  // Calling initialize from the entry point with the context is
-  // required if communication is desired. It returns a messenger which
-  // allows listening and sending information to the main isolate.
-  final messenger = HandledIsolate.initialize(context);
-
-  // Triggered every time data is received from the main isolate
-  messenger.listen((data) async {
-    // final int result = await channels['trigger'].invokeMethod('getNewCount');
-    messenger.send("cool cool cool cool cool coool cool cool cool");
-  });
-}
-
-void onReceiveFromTrigger(String confirmation){
-  // onReceive is executed every time data is received from the spawned process
-
-  // show confirmation of ongoing process
-  print(confirmation);
-}
-
-void killTrigger(){
-  isolates.kill("trigger");
+  // ignore: unused_local_variable
+  TriggerLoader _triggerLoader = TriggerLoader(
+      _geolocator, flutterLocalNotificationsPlugin
+  );
 }
 
 // =============================================================================
@@ -96,16 +84,31 @@ main() async {
   await _markerLoader.loadMarkers();
 
   // TODO spawn isolated process for triggers
-  isolates.spawn(
-      triggerEntryPoint,
-      // name the isolate in order to access it on sending data or disposal
-      name: "trigger",
-      // onReceive is executed every time data is received from the spawn
-      onReceive: onReceiveFromTrigger,
-      // executed once when spawned isolate is ready for communication
-      onInitialized: () => isolates.send(counter, to: "trigger"),
-      channels: channels.values.toList()
+
+  // check permission
+  _geolocator.checkGeolocationPermissionStatus().then((permission){
+    // TODO check permission status
+    if(permission != GeolocationStatus.granted){
+      print("GEOLOCATION PERMISSION IS NOT GRANTED YET");
+    }
+    print(permission);
+  });
+
+  // init notifications
+  var initializationSettingsAndroid =
+  new AndroidInitializationSettings('mipmap/ic_launcher');
+  var initializationSettingsIOS = new IOSInitializationSettings();
+  var initializationSettings = new InitializationSettings(
+      initializationSettingsAndroid, initializationSettingsIOS
   );
+  flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+  flutterLocalNotificationsPlugin.initialize(
+      initializationSettings
+  );
+
+  // spawn isolated process with argument
+  // ignore: unused_local_variable
+  final isolate = await FlutterIsolate.spawn(triggerEntryPoint, "hello");
 
   runApp(MyApp());
 }
