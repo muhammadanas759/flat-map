@@ -1,9 +1,11 @@
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
+import 'package:http/http.dart' as http;
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 
 import 'package:flutter/material.dart';
+import 'dart:convert';
 
 
 class LogInRoute extends StatefulWidget {
@@ -12,7 +14,7 @@ class LogInRoute extends StatefulWidget {
 }
 
 class _LogInRouteState extends State<LogInRoute> {
-
+  String _serverURL = "http://64.227.122.119:8000";
   final _formKey = GlobalKey<FormState>();
   final Map<String, dynamic> _formData = {
     'email': '',
@@ -69,9 +71,16 @@ class _LogInRouteState extends State<LogInRoute> {
     );
   }
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+      http.Response _response;
+      _response = await http.post(
+          _serverURL + "/api/account/login/",
+          headers: {"Content-type": "application/json"},
+          body: json.encode(_formData)
+      );
+      print(_response);
     }
   }
 

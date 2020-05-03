@@ -96,16 +96,16 @@ main() async {
   await _markerLoader.loadMarkers();
 
   // TODO spawn isolated process for triggers
-  isolates.spawn(
-      triggerEntryPoint,
-      // name the isolate in order to access it on sending data or disposal
-      name: "trigger",
-      // onReceive is executed every time data is received from the spawn
-      onReceive: onReceiveFromTrigger,
-      // executed once when spawned isolate is ready for communication
-      onInitialized: () => isolates.send(counter, to: "trigger"),
-      channels: channels.values.toList()
-  );
+//  isolates.spawn(
+//      triggerEntryPoint,
+//      // name the isolate in order to access it on sending data or disposal
+//      name: "trigger",
+//      // onReceive is executed every time data is received from the spawn
+//      onReceive: onReceiveFromTrigger,
+//      // executed once when spawned isolate is ready for communication
+//      onInitialized: () => isolates.send(counter, to: "trigger"),
+//      channels: channels.values.toList()
+//  );
 
   runApp(MyApp());
 }

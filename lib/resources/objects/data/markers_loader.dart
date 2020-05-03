@@ -16,7 +16,7 @@ class MarkerLoader {
   // ===========================================================================
   //-------------------------- VARIABLES ---------------------------------------
   // server address
-  String _serverURL = "http://64.227.122.119:8000/api/backup/trigger/";
+  String _serverURL = "http://64.227.122.119:8000";
 
   // list of marker data in strings
   Map<String, Map> markersDescriptions = <String, Map>{};
