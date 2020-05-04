@@ -49,6 +49,8 @@ dependencies:
   flutter_isolate: ^1.0.0+12
   # custom settings in file
   global_configuration: ^1.5.0
+  # watch for file changes
+  watcher: ^0.9.7+15
 
   # actions:
   # change phone sound volume
