@@ -7,6 +7,8 @@ import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
+import 'package:preferences/preference_service.dart';
+
 
 class LogInRoute extends StatefulWidget {
   @override
@@ -17,7 +19,7 @@ class _LogInRouteState extends State<LogInRoute> {
   String _serverURL = "http://64.227.122.119:8000";
   final _formKey = GlobalKey<FormState>();
   final Map<String, dynamic> _formData = {
-    'email': '',
+    'username': '',
     'password': '',
   };
   final focusPassword = FocusNode();
@@ -36,9 +38,10 @@ class _LogInRouteState extends State<LogInRoute> {
             .hasMatch(value)) {
           return 'Invalid email format';
         }
+        return null;
       },
       onSaved: (String value) {
-        _formData['email'] = value;
+        _formData['username'] = value;
       },
       textInputAction: TextInputAction.next,
       onFieldSubmitted: (v) {
@@ -60,6 +63,7 @@ class _LogInRouteState extends State<LogInRoute> {
         if (value.isEmpty) {
           return 'Password can not be empty';
         }
+        return null;
       },
       onSaved: (String value) {
         _formData['password'] = value;
@@ -74,18 +78,24 @@ class _LogInRouteState extends State<LogInRoute> {
   Future<void> _submitForm() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+      // print(json.encode(_formData));
       http.Response _response;
       _response = await http.post(
           _serverURL + "/api/account/login/",
           headers: {"Content-type": "application/json"},
           body: json.encode(_formData)
       );
-      print(_response);
+      if(json.decode(_response.body)["token"] != null)
+        {
+          PrefService.setString("token", json.decode(_response.body)["token"]);
+        }
+      // print(PrefService.getString("token"));
     }
   }
 
   Widget _logInForm(){
     return Form(
+        key: _formKey,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
