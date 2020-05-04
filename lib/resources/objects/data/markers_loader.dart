@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flatmapp/resources/objects/data/icons_loader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,10 +35,15 @@ class MarkerLoader {
   // ===========================================================================
   //-------------------------- LOADING METHODS ---------------------------------
 
+  Future<String> getFilePath() async {
+    // get file storage path
+    final directory = await getApplicationDocumentsDirectory();
+    return '${directory.path}/marker_storage.json';
+  }
+
   // load markers from local storage
   Future loadMarkers() async {
-    final directory = await getApplicationDocumentsDirectory();
-    String path = '${directory.path}/marker_storage.json';
+    String path = await getFilePath();
     // if marker storage does exist
 
     if (await File(path).exists()){
@@ -98,7 +105,7 @@ class MarkerLoader {
   // add or edit marker
   void addMarker({
     String id, LatLng position, String icon,
-    String title, String description, double range
+    String title, String description, double range, List<String> actions
   }){
 
     markersDescriptions[id] = {
@@ -108,6 +115,7 @@ class MarkerLoader {
       'icon': icon,
       'title': title,
       'description': description,
+      'actions': actions,
     };
 
     iconsLoader.getMarkerImage(icon).then((iconBitmap){
@@ -166,6 +174,7 @@ class MarkerLoader {
       title: "temporary marker",
       description: "marker presenting chosen position",
       range: 10,
+      actions: [],
     );
   }
 
@@ -175,6 +184,29 @@ class MarkerLoader {
 
   int getRange({String id}){
     return zones[id].radius.toInt();
+  }
+
+  List<String> getMarkerActions({String id}){
+    return markersDescriptions[id]['actions'];
+  }
+
+  List<String> getActivatedMarkers(LatLng user){
+    List<String> activated = [];
+
+    markersDescriptions.forEach((String markerID, Map markerData) {
+      String id = markerID;
+      double centerX = markerData['position_x'];
+      double centerY = markerData['position_y'];
+      double range = markerData['range'];
+
+      // check if marker should be activated - circle equation
+      if( pow(user.latitude - centerX, 2) + pow(user.longitude - centerY, 2)
+        < pow(range, 2) ){
+        // add marker id
+          activated.add(id);
+      }
+    });
+    return activated;
   }
 
   // ===========================================================================

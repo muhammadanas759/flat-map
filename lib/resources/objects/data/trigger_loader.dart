@@ -1,8 +1,13 @@
 import 'dart:async';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
+
 import 'package:flatmapp/resources/extensions.dart';
+import 'package:flatmapp/resources/objects/data/markers_loader.dart';
+
+import 'package:geolocator/geolocator.dart';
+import 'package:watcher/watcher.dart';
 
 import 'package:volume/volume.dart';
 
@@ -11,6 +16,8 @@ import 'package:volume/volume.dart';
 class TriggerLoader {
   // ===========================================================================
   // init variables
+  MarkerLoader _markerLoader;
+
   // geolocator API: https://pub.dev/documentation/geolocator/latest/geolocator/Geolocator-class.html
   Geolocator _geolocator = Geolocator();
   LocationOptions locationOptions = LocationOptions(
@@ -28,18 +35,55 @@ class TriggerLoader {
   // notifications on location change
   FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
 
+  // list of previously activated markers
+  List<String> _activatedNow = [];
+  List<String> _activatedPreviously = [];
+
   TriggerLoader(
       Geolocator _passedGeolocator,
+      MarkerLoader _passedMarkerLoader,
       FlutterLocalNotificationsPlugin passedFlutterLocalNotificationsPlugin
   ) {
 
     _geolocator = _passedGeolocator;
+    _markerLoader = _passedMarkerLoader;
     _flutterLocalNotificationsPlugin = passedFlutterLocalNotificationsPlugin;
 
     // listen to position changes
     positionStream = _geolocator.getPositionStream(locationOptions).listen(
       (Position position){operatePositionChange(position: position);}
     );
+
+    // listen to marker storage file changes
+    _markerLoader.getFilePath().then((String path){
+      try {
+        // TODO add working watcher on markers file - current one throws up
+        final watcher = FileWatcher(path);
+
+        // ignore or add somewhere subscription.cancel()
+        // so that app would be able to do some cleanup in stream
+        // ignore: unused_local_variable, cancel_subscriptions
+        final subscription = watcher.events.listen((event) {
+          // reload markers on file storage change
+          switch (event.type) {
+            case ChangeType.ADD:
+              print('Added file');
+              _markerLoader.loadMarkers();
+              break;
+            case ChangeType.MODIFY:
+              print('Modified');
+              _markerLoader.loadMarkers();
+              break;
+            case ChangeType.REMOVE:
+              print('Removed');
+              _markerLoader.loadMarkers();
+          }
+        });
+      } catch (e) {
+        // No specified type, handles all
+        print('Unknown error: $e');
+      }
+    });
   }
 
   Future<LatLng> getCurrentPosition() async {
@@ -104,11 +148,6 @@ class TriggerLoader {
   }
 
   // ===========================================================================
-
-  void operateIsolatedInput(){
-
-  }
-
   void operatePositionChange({Position position}){
     // operate position change
     print("POSITION CHANGE DETECTED");
@@ -117,17 +156,31 @@ class TriggerLoader {
         position.latitude.toString() + ', ' + position.longitude.toString()
     );
 
-    _showNotificationWithDefaultSound(
-      title: "POSITION CHANGE DETECTED",
-      content: "CITIZEN NR 26108, STAY AT HOME"
-    );
+    // get activated markers
+    _activatedNow = _markerLoader.getActivatedMarkers(position.toLatLng());
 
-    // TODO check if user entered any marker
-    // ignore: dead_code
-    if(false){
-      // get actions declared for this marker
+    // remove markers from previous tick that are not active
+    _activatedPreviously.removeWhere((item) => !_activatedNow.contains(item));
 
-      // operate these actions
+    print("activated now: $_activatedNow");
+    print("activated previously: $_activatedPreviously");
+
+    for (String markerId in _activatedNow) {
+      // if marker has not been activated earlier
+      if(!_activatedPreviously.contains(markerId)){
+
+        // TODO activate marker actions
+
+        _showNotificationWithDefaultSound(
+            title: "POSITION CHANGE DETECTED",
+            content: "CITIZEN NR 26108, STAY AT HOME"
+        );
+
+        print(_markerLoader.getMarkerActions(id: markerId));
+
+        // add marker to activated
+        _activatedPreviously.add(markerId);
+      }
     }
   }
 
