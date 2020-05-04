@@ -1,3 +1,5 @@
+import 'package:preferences/preference_service.dart';
+
 import 'text_styles.dart';
 
 import 'package:flutter/material.dart';
@@ -42,7 +44,9 @@ Drawer sideBarMenu(context){
         sideBarMenuElement(context, 'Community', Icon(Icons.language), '/community'),
         sideBarMenuElement(context, 'Settings', Icon(Icons.settings_applications), '/settings'),
         sideBarMenuElement(context, 'About', Icon(Icons.info_outline), '/about'),
-        sideBarMenuElement(context, 'Log In', Icon(Icons.subdirectory_arrow_right), '/login'),
+        PrefService.getString('token') == null ?
+        sideBarMenuElement(context, 'Log In', Icon(Icons.subdirectory_arrow_right), '/login'):
+        sideBarMenuElement(context, 'Log out', Icon(Icons.subdirectory_arrow_right), '/login'),
       ],
     ),
   );

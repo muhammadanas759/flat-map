@@ -3,6 +3,7 @@ import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:http/http.dart' as http;
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
+import 'package:flatmapp/resources/objects/data/net_loader.dart';
 
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -11,14 +12,17 @@ import 'package:preferences/preference_service.dart';
 
 
 class LogInRoute extends StatefulWidget {
+
   @override
   _LogInRouteState createState() => _LogInRouteState();
 }
 
 class _LogInRouteState extends State<LogInRoute> {
   String _serverURL = "http://64.227.122.119:8000";
+  NetLoader netLoader = NetLoader();
   final _formKey = GlobalKey<FormState>();
-  final Map<String, dynamic> _formData = {
+  final Map<String, dynamic> _formData =
+  {
     'username': '',
     'password': '',
   };
@@ -76,22 +80,41 @@ class _LogInRouteState extends State<LogInRoute> {
   }
 
   Future<void> _submitForm() async {
+    // validate form
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      // print(json.encode(_formData));
-      http.Response _response;
-      _response = await http.post(
-          _serverURL + "/api/account/login/",
-          headers: {"Content-type": "application/json"},
-          body: json.encode(_formData)
-      );
+      //print('FormData : ' + json.encode(_formData));
+      // send credentials to server and get the response
+      http.Response _response = await netLoader.sendToServer(
+          endpoint:'/api/account/login/', content:_formData);
+      //print('resonse:' + _response.body);
+      // if there is token in response
       if(json.decode(_response.body)["token"] != null)
         {
+          // save token to global variables
           PrefService.setString("token", json.decode(_response.body)["token"]);
+
+          // reset Widget
+          String initScreen = PrefService.get('start_page');
+          switch(initScreen) {
+            case 'About': {initScreen = '/about';} break;
+            case 'Community': {initScreen = '/community';} break;
+            case 'Log In': {initScreen = '/login';} break;
+            case 'Map': {initScreen = '/map';} break;
+            case 'Profile': {initScreen = '/profile';} break;
+            case 'Settings': {initScreen = '/settings';} break;
+            default: { throw Exception('wrong start_page value: $initScreen'); } break;
+          }
+          Navigator.pushNamed(context, initScreen);
         }
-      // print(PrefService.getString("token"));
+      //print('Token : ' + PrefService.getString("token"));
     }
   }
+
+  void _logOut(){
+    PrefService.setString('token', null);
+    Navigator.pushNamed(context, '/login');
+}
 
   Widget _logInForm(){
     return Form(
@@ -119,13 +142,36 @@ class _LogInRouteState extends State<LogInRoute> {
     );
   }
 
+  Widget _logOutForm(){
+    return Form(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+        SizedBox(height: 30),
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+          Text(
+            'Are you sure you want to log out?',
+            style: header(),
+            ),
+          ]
+        ),
+          SizedBox(height: 40),
+          textFieldButton(text: "Yes", onPressedMethod: _logOut),
+        ]
+      )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
 
       // BODY FORM
-      body: _logInForm(),
+      body: PrefService.getString('token') == null ? _logInForm() : _logOutForm(),
 
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
