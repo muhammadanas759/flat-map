@@ -47,7 +47,7 @@ dependencies:
   flutter_local_notifications:
   # background processing
   flutter_isolate: ^1.0.0+12
-  # custom ettings in file
+  # custom settings in file
   global_configuration: ^1.5.0
 
   # actions:

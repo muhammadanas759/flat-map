@@ -12,7 +12,7 @@ class TriggerLoader {
   // ===========================================================================
   // init variables
   // geolocator API: https://pub.dev/documentation/geolocator/latest/geolocator/Geolocator-class.html
-  Geolocator _geolocator;
+  Geolocator _geolocator = Geolocator();
   LocationOptions locationOptions = LocationOptions(
       accuracy: LocationAccuracy.high,
       timeInterval: 1000,
@@ -26,7 +26,7 @@ class TriggerLoader {
   StreamSubscription<Position> positionStream;
 
   // notifications on location change
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
 
   TriggerLoader(
       Geolocator _passedGeolocator,
@@ -34,7 +34,7 @@ class TriggerLoader {
   ) {
 
     _geolocator = _passedGeolocator;
-    flutterLocalNotificationsPlugin = passedFlutterLocalNotificationsPlugin;
+    _flutterLocalNotificationsPlugin = passedFlutterLocalNotificationsPlugin;
 
     // listen to position changes
     positionStream = _geolocator.getPositionStream(locationOptions).listen(
@@ -117,10 +117,10 @@ class TriggerLoader {
         position.latitude.toString() + ', ' + position.longitude.toString()
     );
 
-//    _showNotificationWithDefaultSound(
-//      title: "POSITION CHANGE DETECTED",
-//      content: "CITIZEN NR 26108, STAY AT HOME"
-//    );
+    _showNotificationWithDefaultSound(
+      title: "POSITION CHANGE DETECTED",
+      content: "CITIZEN NR 26108, STAY AT HOME"
+    );
 
     // TODO check if user entered any marker
     // ignore: dead_code
@@ -148,7 +148,7 @@ class TriggerLoader {
     var platformChannelSpecifics = new NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics
     );
-    await flutterLocalNotificationsPlugin.show(
+    await _flutterLocalNotificationsPlugin.show(
       0,
       title,
       content,
