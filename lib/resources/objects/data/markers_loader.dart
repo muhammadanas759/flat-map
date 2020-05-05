@@ -1,7 +1,7 @@
 import 'package:flatmapp/resources/objects/data/icons_loader.dart';
+import 'package:flatmapp/resources/objects/data/net_loader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -15,8 +15,6 @@ import 'package:preferences/preferences.dart';
 class MarkerLoader {
   // ===========================================================================
   //-------------------------- VARIABLES ---------------------------------------
-  // server address
-  String _serverURL = "http://64.227.122.119:8000";
 
   // list of marker data in strings
   Map<String, Map> markersDescriptions = <String, Map>{};
@@ -29,6 +27,10 @@ class MarkerLoader {
 
   // icons loader
   final IconsLoader iconsLoader = IconsLoader();
+
+  // internet connection gateway object
+  // ignore: unused_field
+  final NetLoader _netLoader = NetLoader();
 
   // ===========================================================================
   //-------------------------- LOADING METHODS ---------------------------------
@@ -186,46 +188,5 @@ class MarkerLoader {
 
   List<String> getMarkerActions({String id}){
     return markersDescriptions[id]['actions'];
-  }
-
-  // ===========================================================================
-  //-------------------------- NETWORK CONTENT ---------------------------------
-  Future<http.Response> postMarkers({
-    String endpoint, Map<String, Map> content
-  }) async {
-    http.Response _response;
-    _response = await http.post(
-        _serverURL + "/$endpoint",
-        headers: {"Content-type": "application/json"},
-        body: json.encode(content)
-    );
-
-    return _response;
-  }
-
-  // TODO add all endpoints from docs
-  Future<Map<String, Map<dynamic, dynamic>>> getMarkers({String endpoint}) async {
-    http.Response _response;
-    _response = await http.get(
-        _serverURL + "/$endpoint",
-        headers: {"Content-type": "application/json"},
-    );
-
-    return json.decode(_response.body);
-  }
-
-  void internetTest() async {
-    if(markersDescriptions == null){
-      await loadMarkers();
-    }
-
-    // post markers
-    await postMarkers(endpoint: "marker", content: markersDescriptions);
-
-    // get markers
-    Map<String, Map<dynamic, dynamic>> temp = await getMarkers(endpoint: "marker");
-
-    // analyse results
-    temp.forEach((String element, Map marker) => print(element));
   }
 }

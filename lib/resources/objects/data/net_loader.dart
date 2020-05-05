@@ -20,4 +20,15 @@ class NetLoader {
     );
     return _response;
   }
+
+  // TODO add all endpoints from docs
+  Future<Map<String, Map<dynamic, dynamic>>> getMarkers({String endpoint}) async {
+    http.Response _response;
+    _response = await http.get(
+      _serverURL + "/$endpoint",
+      headers: {"Content-type": "application/json"},
+    );
+
+    return json.decode(_response.body);
+  }
 }
