@@ -168,9 +168,10 @@ class TriggerLoader {
     // get activated markers
     _activatedNow = getActivatedMarkers(position.toLatLng());
 
-    // remove markers from previous tick that are not active
+    // TODO remove markers from previous tick that are not active
     // _activatedPreviously.removeWhere((item) => !_activatedNow.contains(item));
 
+    // TODO list of activated markers is delayed
     print("activated now: $_activatedNow");
     print("activated previously: $_activatedPreviously");
 
