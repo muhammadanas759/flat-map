@@ -18,8 +18,10 @@ class LogInRoute extends StatefulWidget {
 }
 
 class _LogInRouteState extends State<LogInRoute> {
-  String _serverURL = "http://64.227.122.119:8000";
+
+  // internet service
   NetLoader netLoader = NetLoader();
+
   final _formKey = GlobalKey<FormState>();
   final Map<String, dynamic> _formData =
   {
@@ -85,7 +87,7 @@ class _LogInRouteState extends State<LogInRoute> {
       _formKey.currentState.save();
       //print('FormData : ' + json.encode(_formData));
       // send credentials to server and get the response
-      http.Response _response = await netLoader.sendToServer(
+      http.Response _response = await netLoader.postToServer(
           endpoint:'/api/account/login/', content:_formData);
       //print('resonse:' + _response.body);
       // if there is token in response

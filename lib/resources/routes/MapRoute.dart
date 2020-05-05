@@ -40,8 +40,8 @@ class _MapRouteState extends State<MapRoute> {
   // map style preset
   final String _preset = PrefService.get('ui_theme');
 
-  // Current map zoom. Initial zoom will be 15, street level
-  double _currentZoom = 15;
+  // map zoom
+  double _currentZoom = 18;
 
   // Map loading flag
   bool _isMapLoading = true;

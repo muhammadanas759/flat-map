@@ -125,9 +125,9 @@ class TriggerLoader {
     }
   }
 
-  Future<double> getDistanceBetweenPositions({
+  Future<double> getDistanceBetweenPositions(
     LatLng position1, LatLng position2
-  }) async {
+  ) async {
     return await _geolocator.distanceBetween(
       position1.latitude, position1.longitude,
       position2.latitude, position2.longitude,
@@ -147,20 +147,29 @@ class TriggerLoader {
     );
   }
 
+  List<String> getActivatedMarkers(LatLng user) {
+    List<String> activated = [];
+
+    _markerLoader.markersDescriptions.forEach((String markerID, Map markerData) {
+      LatLng markerPos = LatLng(markerData['position_x'], markerData['position_y']);
+      double range = markerData['range'];
+
+      // check if marker should be activated
+      getDistanceBetweenPositions(user, markerPos).then((distance){
+        if( distance < range ){ activated.add(markerID); }
+      });
+    });
+    return activated;
+  }
+
   // ===========================================================================
-  void operatePositionChange({Position position}){
-    // operate position change
-    print("POSITION CHANGE DETECTED");
-    print(
-        position == null ? 'Unknown' :
-        position.latitude.toString() + ', ' + position.longitude.toString()
-    );
+  Future<void> operatePositionChange({Position position}) async {
 
     // get activated markers
-    _activatedNow = _markerLoader.getActivatedMarkers(position.toLatLng());
+    _activatedNow = getActivatedMarkers(position.toLatLng());
 
     // remove markers from previous tick that are not active
-    _activatedPreviously.removeWhere((item) => !_activatedNow.contains(item));
+    // _activatedPreviously.removeWhere((item) => !_activatedNow.contains(item));
 
     print("activated now: $_activatedNow");
     print("activated previously: $_activatedPreviously");
@@ -170,15 +179,15 @@ class TriggerLoader {
       if(!_activatedPreviously.contains(markerId)){
 
         // TODO activate marker actions
+        print("activated actions:");
+        print(_markerLoader.getMarkerActions(id: markerId));
 
         _showNotificationWithDefaultSound(
             title: "POSITION CHANGE DETECTED",
             content: "CITIZEN NR 26108, STAY AT HOME"
         );
 
-        print(_markerLoader.getMarkerActions(id: markerId));
-
-        // add marker to activated
+        // add marker to previously activated list
         _activatedPreviously.add(markerId);
       }
     }
@@ -217,7 +226,6 @@ class TriggerLoader {
   // https://pub.dev/packages/volume#-example-tab-
   // https://pub.dev/packages/flutter_blue
   // https://pub.dev/packages/connectivity
-
 
   // ===========================================================================
 }

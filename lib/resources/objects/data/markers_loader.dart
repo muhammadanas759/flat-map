@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flatmapp/resources/objects/data/icons_loader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -188,25 +186,6 @@ class MarkerLoader {
 
   List<String> getMarkerActions({String id}){
     return markersDescriptions[id]['actions'];
-  }
-
-  List<String> getActivatedMarkers(LatLng user){
-    List<String> activated = [];
-
-    markersDescriptions.forEach((String markerID, Map markerData) {
-      String id = markerID;
-      double centerX = markerData['position_x'];
-      double centerY = markerData['position_y'];
-      double range = markerData['range'];
-
-      // check if marker should be activated - circle equation
-      if( pow(user.latitude - centerX, 2) + pow(user.longitude - centerY, 2)
-        < pow(range, 2) ){
-        // add marker id
-          activated.add(id);
-      }
-    });
-    return activated;
   }
 
   // ===========================================================================
