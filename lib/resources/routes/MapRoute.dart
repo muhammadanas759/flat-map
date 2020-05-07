@@ -55,6 +55,7 @@ class _MapRouteState extends State<MapRoute> {
     'title': "temporary marker",
     'description': "marker presenting chosen position",
     'range': 10,
+    'actions': [],
   };
 
   @override
@@ -281,6 +282,33 @@ class _MapRouteState extends State<MapRoute> {
     );
   }
 
+  Widget _buildActionsList(BuildContext context) {
+
+    List<String> _actionsList = widget._markerLoader.getMarkerActions(
+        id: PrefService.get('selected_marker'));
+
+    return _actionsList == null ? SizedBox.shrink() :
+    ListView.builder(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      itemCount: _actionsList.length,
+      itemBuilder: (context, index) {
+        return Card( //                           <-- Card widget
+          child: ListTile(
+            title: Text(
+                _actionsList[index],
+                style: bodyText()
+            ),
+            trailing: Icon(Icons.keyboard_arrow_right),
+            onTap: () {
+              // TODO operate action tap on marker form
+            },
+          ),
+        );
+      },
+    );
+  }
+
   void _saveMarker(){
     // save form
     _formKey.currentState.save();
@@ -296,7 +324,8 @@ class _MapRouteState extends State<MapRoute> {
         icon: PrefService.get('selected_icon'),
         title: _formMarkerData['title'],
         description: _formMarkerData['description'],
-        range: _formMarkerData['range'].toDouble()
+        range: _formMarkerData['range'].toDouble(),
+        actions: PrefService.get('selected_action'),
       );
     });
 
@@ -355,28 +384,14 @@ class _MapRouteState extends State<MapRoute> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              RaisedButton(
-                elevation: 0.0,
-                color: Colors.green,
-                shape: RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(15.0),
-                  side: BorderSide(color: Colors.grey),
-                ),
-                padding: EdgeInsets.all(20.0),
-                onPressed: (){
-                  _saveMarker();
-                },
-                child: Text(
-                  "Add marker",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
+              textFieldButton(text: "Add marker", onPressedMethod: (){
+                // submit form and add marker to dictionary
+                _saveMarker();
+              }),
               SizedBox(width: 20),
               textFieldButton(text: "Add action", onPressedMethod: (){
-
+                // Navigate to the icons screen using a named route.
+                Navigator.pushNamed(context, '/actions');
               }),
             ],
           ),
@@ -385,7 +400,7 @@ class _MapRouteState extends State<MapRoute> {
           // TODO actions list
           // https://stackoverflow.com/questions/53908025/flutter-sortable-drag-and-drop-listview
           // https://api.flutter.dev/flutter/material/ReorderableListView-class.html
-
+          _buildActionsList(context),
         ],
       )
     );

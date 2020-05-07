@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/routes/ActionsRoute.dart';
 import 'package:flatmapp/resources/routes/LogInRoute.dart';
 import 'package:flatmapp/resources/routes/MapRoute.dart';
 import 'package:flatmapp/resources/routes/ProfileRoute.dart';
@@ -84,6 +85,7 @@ class MyApp extends StatelessWidget {
             '/about': (context) => AboutRoute(),
             '/login': (context) => LogInRoute(),
             '/icons': (context) => IconsRoute(),
+            '/actions': (context) => ActionsRoute(),
           },
         );
       }

@@ -3,6 +3,7 @@ import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 
 import 'package:flutter/material.dart';
+import 'package:preferences/preference_service.dart';
 
 
 class CommunityRoute extends StatefulWidget {
@@ -71,7 +72,10 @@ class _CommunityRouteState extends State<CommunityRoute> {
               leading: Icon(Icons.language),
             ),
 
-            _tabWidget(),
+            // community widget
+            PrefService.get('community_enabled') != true
+                ? textInfo('Community options are disabled' ?? '') :
+                  _tabWidget(),
 
             ListTile(
               title: Text(

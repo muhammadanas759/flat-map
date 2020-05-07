@@ -55,35 +55,35 @@ class TriggerLoader {
     );
 
     // listen to marker storage file changes
-    _markerLoader.getFilePath().then((String path){
-      try {
-        // TODO add working watcher on markers file - current one throws up
-        final watcher = FileWatcher(path);
-
-        // ignore or add somewhere subscription.cancel()
-        // so that app would be able to do some cleanup in stream
-        // ignore: unused_local_variable, cancel_subscriptions
-        final subscription = watcher.events.listen((event) {
-          // reload markers on file storage change
-          switch (event.type) {
-            case ChangeType.ADD:
-              print('Added file');
-              _markerLoader.loadMarkers();
-              break;
-            case ChangeType.MODIFY:
-              print('Modified');
-              _markerLoader.loadMarkers();
-              break;
-            case ChangeType.REMOVE:
-              print('Removed');
-              _markerLoader.loadMarkers();
-          }
-        });
-      } catch (e) {
-        // No specified type, handles all
-        print('Unknown error: $e');
-      }
-    });
+//    _markerLoader.getFilePath().then((String path){
+//      try {
+//        // TODO add working watcher on markers file - current one throws up
+//        final watcher = FileWatcher(path);
+//
+//        // ignore or add somewhere subscription.cancel()
+//        // so that app would be able to do some cleanup in stream
+//        // ignore: unused_local_variable, cancel_subscriptions
+//        final subscription = watcher.events.listen((event) {
+//          // reload markers on file storage change
+//          switch (event.type) {
+//            case ChangeType.ADD:
+//              print('Added file');
+//              _markerLoader.loadMarkers();
+//              break;
+//            case ChangeType.MODIFY:
+//              print('Modified');
+//              _markerLoader.loadMarkers();
+//              break;
+//            case ChangeType.REMOVE:
+//              print('Removed');
+//              _markerLoader.loadMarkers();
+//          }
+//        });
+//      } catch (e) {
+//        // No specified type, handles all
+//        print('Unknown error: $e');
+//      }
+//    });
   }
 
   Future<LatLng> getCurrentPosition() async {

@@ -114,16 +114,16 @@ class _ProfileRouteState extends State<ProfileRoute> {
                               Navigator.pushNamed(context, '/map');
                             },
                           ),
-                          IconButton(
-                            icon: Icon(Icons.edit),
-                            tooltip: 'Edit marker',
-                            onPressed: () {
-                              // set selected marker id for map screen
-                              PrefService.setString('selected_marker', _id);
-                              // Navigate to the profile screen using a named route.
-                              Navigator.pushNamed(context, '/map');
-                            },
-                          ),
+//                          IconButton(
+//                            icon: Icon(Icons.edit),
+//                            tooltip: 'Edit marker',
+//                            onPressed: () {
+//                              // set selected marker id for map screen
+//                              PrefService.setString('selected_marker', _id);
+//                              // Navigate to the profile screen using a named route.
+//                              Navigator.pushNamed(context, '/map');
+//                            },
+//                          ),
                           IconButton(
                             icon: Icon(Icons.delete_forever),
                             tooltip: 'Remove marker',
