@@ -147,17 +147,18 @@ class TriggerLoader {
     );
   }
 
-  List<String> getActivatedMarkers(LatLng user) {
+  Future<List<String>> getActivatedMarkers(LatLng user) async {
     List<String> activated = [];
 
-    _markerLoader.markersDescriptions.forEach((String markerID, Map markerData) {
-      LatLng markerPos = LatLng(markerData['position_x'], markerData['position_y']);
+    _markerLoader.markersDescriptions.forEach(
+            (String markerID, Map markerData) async {
+      LatLng markerPos = LatLng(markerData['position_x'],
+                                markerData['position_y']);
       double range = markerData['range'];
 
       // check if marker should be activated
-      getDistanceBetweenPositions(user, markerPos).then((distance){
-        if( distance < range ){ activated.add(markerID); }
-      });
+      double distance = await getDistanceBetweenPositions(user, markerPos);
+      if( distance < range ){ activated.add(markerID); }
     });
     return activated;
   }
@@ -166,31 +167,31 @@ class TriggerLoader {
   Future<void> operatePositionChange({Position position}) async {
 
     // get activated markers
-    _activatedNow = getActivatedMarkers(position.toLatLng());
+    _activatedNow = await getActivatedMarkers(position.toLatLng());
 
-    // TODO remove markers from previous tick that are not active
-    // _activatedPreviously.removeWhere((item) => !_activatedNow.contains(item));
+    // remove markers from previous tick that should not be activated again
+    _activatedNow.removeWhere((item) => !_activatedPreviously.contains(item));
+
+    // clear previous tick
+    _activatedPreviously = [];
 
     // TODO list of activated markers is delayed
     print("activated now: $_activatedNow");
     print("activated previously: $_activatedPreviously");
 
     for (String markerId in _activatedNow) {
-      // if marker has not been activated earlier
-      if(!_activatedPreviously.contains(markerId)){
+      // activate marker actions
+      print(markerId);
+      print("activated actions:");
+      print(_markerLoader.getMarkerActions(id: markerId));
 
-        // TODO activate marker actions
-        print("activated actions:");
-        print(_markerLoader.getMarkerActions(id: markerId));
+      _showNotificationWithDefaultSound(
+          title: "POSITION CHANGE DETECTED",
+          content: "CITIZEN NR 26108, STAY AT HOME"
+      );
 
-        _showNotificationWithDefaultSound(
-            title: "POSITION CHANGE DETECTED",
-            content: "CITIZEN NR 26108, STAY AT HOME"
-        );
-
-        // add marker to previously activated list
-        _activatedPreviously.add(markerId);
-      }
+      // add marker to previously activated list
+      _activatedPreviously.add(markerId);
     }
   }
 
