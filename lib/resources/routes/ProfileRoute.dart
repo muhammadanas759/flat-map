@@ -8,9 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
 
 
-// TODO SWIPE DOWN TO REFRESH
-// https://medium.com/flutterpub/adding-swipe-to-refresh-to-flutter-app-b234534f39a7
-
 class ProfileRoute extends StatefulWidget {
 
   // data loader

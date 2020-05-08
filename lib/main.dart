@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
             '/about': (context) => AboutRoute(),
             '/login': (context) => LogInRoute(),
             '/icons': (context) => IconsRoute(),
-            '/actions': (context) => ActionsRoute(),
+            '/actions': (context) => ActionsRoute(_markerLoader),
           },
         );
       }

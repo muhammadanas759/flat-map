@@ -42,7 +42,7 @@ class IconsRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(),
+      appBar: appBar(title: 'Choose icon for marker'),
       body:
       // BODY
       _iconsListView(context),

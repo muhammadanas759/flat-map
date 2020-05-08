@@ -93,7 +93,8 @@ class MarkerLoader {
           icon: markerData['icon'],
           title: markerData['title'],
           description: markerData['description'],
-          range: markerData['range']
+          range: markerData['range'],
+          actions: [],
       );
     });
   }
@@ -188,5 +189,9 @@ class MarkerLoader {
 
   List<String> getMarkerActions({String id}){
     return markersDescriptions[id]['actions'];
+  }
+
+  void addMarkerAction({String id, String action}) {
+    markersDescriptions[id]['actions'].add(action);
   }
 }

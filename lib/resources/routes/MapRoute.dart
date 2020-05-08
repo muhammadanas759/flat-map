@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/data/actions_loader.dart';
 import 'package:flatmapp/resources/objects/data/markers_loader.dart';
 
 import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
@@ -26,6 +27,8 @@ class MapRoute extends StatefulWidget {
 class _MapRouteState extends State<MapRoute> {
   // ===========================================================================
   // -------------------- INIT VARIABLES SECTION -------------------------------
+
+  ActionsLoader _actionsLoader = ActionsLoader();
 
   // google map controller
   final Completer<GoogleMapController> _mapController = Completer();
@@ -283,11 +286,22 @@ class _MapRouteState extends State<MapRoute> {
   }
 
   Widget _buildActionsList(BuildContext context) {
+    // TODO actions list
+    // https://stackoverflow.com/questions/53908025/flutter-sortable-drag-and-drop-listview
+    // https://api.flutter.dev/flutter/material/ReorderableListView-class.html
 
     List<String> _actionsList = widget._markerLoader.getMarkerActions(
         id: PrefService.get('selected_marker'));
 
-    return _actionsList == null ? SizedBox.shrink() :
+    return _actionsList == null ?
+    Card( //                           <-- Card widget
+      child: ListTile(
+        title: Text(
+            "no actions added",
+            style: bodyText()
+        ),
+      ),
+    ) :
     ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
@@ -295,6 +309,12 @@ class _MapRouteState extends State<MapRoute> {
       itemBuilder: (context, index) {
         return Card( //                           <-- Card widget
           child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: Colors.white,
+              backgroundImage: AssetImage(
+                  _actionsLoader.actionsMap[_actionsList[index]]
+              ),
+            ),
             title: Text(
                 _actionsList[index],
                 style: bodyText()
@@ -325,7 +345,6 @@ class _MapRouteState extends State<MapRoute> {
         title: _formMarkerData['title'],
         description: _formMarkerData['description'],
         range: _formMarkerData['range'].toDouble(),
-        actions: PrefService.get('selected_action'),
       );
     });
 
@@ -397,9 +416,6 @@ class _MapRouteState extends State<MapRoute> {
           ),
           SizedBox(width: 10),
 
-          // TODO actions list
-          // https://stackoverflow.com/questions/53908025/flutter-sortable-drag-and-drop-listview
-          // https://api.flutter.dev/flutter/material/ReorderableListView-class.html
           _buildActionsList(context),
         ],
       )
