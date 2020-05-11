@@ -9,7 +9,6 @@ import 'package:preferences/preferences.dart';
 
 
 class ActionsRoute extends StatefulWidget {
-
   // data loader
   MarkerLoader _markerLoader = MarkerLoader();
   ActionsRoute(this._markerLoader, {Key key}): super(key: key);
@@ -40,8 +39,8 @@ class _ActionsRouteState extends State<ActionsRoute> {
             trailing: Icon(Icons.keyboard_arrow_right),
             onTap: () {
               // add action to the selected marker id
-              String _id = PrefService.get('selected_marker');
-              widget._markerLoader.addMarkerAction(id: _id, action: key);
+              widget._markerLoader.addMarkerAction(
+                  id: PrefService.get('selected_marker'), action: key);
               // Navigate back
               Navigator.pop(context);
             },

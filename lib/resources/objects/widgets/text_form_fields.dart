@@ -47,7 +47,7 @@ class CounterFormField extends FormField<int> {
 
   CounterFormField({
     FormFieldSetter<int> onSaved,
-    int initialValue = 20,
+    int initialValue,
     bool autoValidate = false
   }) : super(
       onSaved: onSaved,

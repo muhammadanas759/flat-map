@@ -38,6 +38,7 @@ main() async {
     'ui_theme': 'light',
     'selected_marker': 'temporary',
     'selected_icon': 'default',
+    'selected_action': []
   });
 
   // get start page

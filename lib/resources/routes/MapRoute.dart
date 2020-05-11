@@ -138,7 +138,7 @@ class _MapRouteState extends State<MapRoute> {
   // update camera position basing on selected marker
   CameraPosition updateCameraPosition(){
     return CameraPosition(
-      target: widget._markerLoader.getMarker(
+      target: widget._markerLoader.getGoogleMarker(
           id: PrefService.get('selected_marker')
       ).position,
       zoom: _currentZoom,
@@ -168,9 +168,9 @@ class _MapRouteState extends State<MapRoute> {
   // ===========================================================================
   // -------------------- MARKER FORM WIDGET SECTION ---------------------------
   void updateFormData(){
-    var temp = widget._markerLoader.markersDescriptions[
-      PrefService.get('selected_marker')
-    ];
+    var temp = widget._markerLoader.getMarkerDescription(
+      id: PrefService.get('selected_marker')
+    );
     // set marker data to temporary marker
     if (temp != null){
       _formMarkerData['title'] = temp['title'];
@@ -275,7 +275,6 @@ class _MapRouteState extends State<MapRoute> {
   }
 
   Widget _buildMarkerRangeField() {
-
     return CounterFormField(
       // initialValue: _formMarkerData['range'],
       initialValue: widget._markerLoader.getRange(
@@ -290,8 +289,9 @@ class _MapRouteState extends State<MapRoute> {
     // https://stackoverflow.com/questions/53908025/flutter-sortable-drag-and-drop-listview
     // https://api.flutter.dev/flutter/material/ReorderableListView-class.html
 
-    String _id = PrefService.get('selected_marker');
-    List<dynamic> _actionsList = widget._markerLoader.getMarkerActions(id: _id);
+    List<dynamic> _actionsList = widget._markerLoader.getMarkerActions(
+        id: PrefService.get('selected_marker')
+    );
 
     return Expanded(
       child: _actionsList == null ?
@@ -321,7 +321,7 @@ class _MapRouteState extends State<MapRoute> {
               ),
               trailing: Icon(Icons.keyboard_arrow_right),
               onTap: () {
-                // TODO operate action tap on marker form
+                // operate action tap on marker form
               },
             ),
           );
@@ -341,11 +341,14 @@ class _MapRouteState extends State<MapRoute> {
       widget._markerLoader.addMarker(
         id: _selectedMarkerId == 'temporary' ?
             widget._markerLoader.generateId() : _selectedMarkerId,
-        position: widget._markerLoader.getMarker(id: _selectedMarkerId).position,
+        position: widget._markerLoader.getGoogleMarker(
+            id: _selectedMarkerId
+        ).position,
         icon: PrefService.get('selected_icon'),
         title: _formMarkerData['title'],
         description: _formMarkerData['description'],
         range: _formMarkerData['range'].toDouble(),
+        actions: widget._markerLoader.getMarkerActions(id: _selectedMarkerId),
       );
     });
 
@@ -361,7 +364,7 @@ class _MapRouteState extends State<MapRoute> {
   }
 
   Widget _markerAddForm(context){
-    Marker tempMarker = widget._markerLoader.getMarker(
+    Marker tempMarker = widget._markerLoader.getGoogleMarker(
         id: PrefService.get('selected_marker')
     );
     return Form(

@@ -17,7 +17,7 @@ class MarkerLoader {
   //-------------------------- VARIABLES ---------------------------------------
 
   // list of marker data in strings
-  Map<String, Map> markersDescriptions = <String, Map>{};
+  Map<String, Map> _markersDescriptions = <String, Map>{};
 
   // google maps markers set
   Map<String, Marker> googleMarkers = <String, Marker>{};
@@ -52,7 +52,7 @@ class MarkerLoader {
       String markerStorage = await file.readAsString();
       // save it to map
       try{
-        markersDescriptions = Map<String, Map<dynamic, dynamic>>.from(
+        _markersDescriptions = Map<String, Map<dynamic, dynamic>>.from(
             json.decode(markerStorage)
         );
       } catch (error) {
@@ -78,7 +78,7 @@ class MarkerLoader {
   // translate descriptions to google map markers and zones
   void _descriptionsToObjects(){
     // for each marker description
-    markersDescriptions.forEach((String markerID, Map markerData) {
+    _markersDescriptions.forEach((String markerID, Map markerData) {
 
       String id = markerID;
       LatLng position = LatLng(
@@ -109,7 +109,7 @@ class MarkerLoader {
     String title, String description, double range, List<dynamic> actions
   }){
 
-    markersDescriptions[id] = {
+    _markersDescriptions[id] = {
       'position_x': position.latitude,
       'position_y': position.longitude,
       'range': range,
@@ -148,7 +148,7 @@ class MarkerLoader {
   }
 
   void removeMarker({String id}){
-    markersDescriptions.remove(id);
+    _markersDescriptions.remove(id);
     googleMarkers.remove(id);
     zones.remove(id);
 
@@ -163,7 +163,7 @@ class MarkerLoader {
     // save markersDescription
     final directory = await getApplicationDocumentsDirectory();
     final file = new File('${directory.path}/marker_storage.json');
-    String markerStorage = json.encode(markersDescriptions);
+    String markerStorage = json.encode(_markersDescriptions);
     await file.writeAsString(markerStorage);
   }
   
@@ -179,8 +179,16 @@ class MarkerLoader {
     );
   }
 
-  Marker getMarker({String id}){
+  Map<String, dynamic> getMarkerDescription({String id}){
+    return Map<String, dynamic>.from(_markersDescriptions[id]);
+  }
+
+  Marker getGoogleMarker({String id}){
     return googleMarkers[id];
+  }
+
+  List<String> getDescriptionsKeys(){
+    return _markersDescriptions.keys.toList();
   }
 
   int getRange({String id}){
@@ -188,13 +196,13 @@ class MarkerLoader {
   }
 
   List<dynamic> getMarkerActions({String id}){
-    return markersDescriptions[id]['actions'];
+    return _markersDescriptions[id]['actions'];
   }
 
   void addMarkerAction({String id, String action}) {
-    if(markersDescriptions[id]['actions'] == null){
-      markersDescriptions[id]['actions'] = [];
+    if(_markersDescriptions[id]['actions'] == null){
+      _markersDescriptions[id]['actions'] = [];
     }
-    markersDescriptions[id]['actions'].add(action);
+    _markersDescriptions[id]['actions'].add(action);
   }
 }

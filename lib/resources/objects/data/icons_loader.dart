@@ -51,6 +51,7 @@ class IconsLoader {
 
     return await BitmapDescriptor.fromAssetImage(
       ImageConfiguration(
+        // TODO: after flutter update markers refuse to be resized like that
         // size: Size(targetWidth, targetWidth),
       ),
       markerImageLocal[name],

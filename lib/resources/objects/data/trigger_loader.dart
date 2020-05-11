@@ -150,8 +150,8 @@ class TriggerLoader {
   Future<List<String>> getActivatedMarkers(LatLng user) async {
     List<String> activated = [];
 
-    _markerLoader.markersDescriptions.forEach(
-            (String markerID, Map markerData) async {
+    _markerLoader.getDescriptionsKeys().forEach((String markerID) async {
+      var markerData = _markerLoader.getMarkerDescription(id: markerID);
       LatLng markerPos = LatLng(markerData['position_x'],
                                 markerData['position_y']);
       double range = markerData['range'];

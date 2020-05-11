@@ -69,17 +69,20 @@ class _ProfileRouteState extends State<ProfileRoute> {
   }
 
   Widget listMarkers(BuildContext context) {
-    if (widget._markerLoader.markersDescriptions.length > 0){
-      return SingleChildScrollView(child:
+    List<String> _markersDescriptionsKeys = widget._markerLoader.getDescriptionsKeys();
+
+    if (_markersDescriptionsKeys.length > 0){
+      return Expanded(
+        child:
           ListView.builder(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
-            itemCount: widget._markerLoader.markersDescriptions.length,
+            itemCount: _markersDescriptionsKeys.length,
             itemBuilder: (context, index) {
 
               // marker data for card
-              var _id = widget._markerLoader.markersDescriptions.keys.elementAt(index);
-              var _marker = widget._markerLoader.markersDescriptions[_id];
+              var _id = _markersDescriptionsKeys.elementAt(index);
+              var _marker = widget._markerLoader.getMarkerDescription(id: _id);
 
               // marker expandable card
               return _id == 'temporary' ? SizedBox.shrink() : Card(
@@ -150,10 +153,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
-      body:
-      // BODY
-      SingleChildScrollView(
-        child: new Column(
+      body: Column(
           children: <Widget>[
             ListTile(
               title: Text('Profile', style: header()),
@@ -172,7 +172,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
 
             ListTile(
               title: Text('Active markers: #'
-                  '${widget._markerLoader.markersDescriptions.length - 1}',
+                  '${widget._markerLoader.getDescriptionsKeys().length - 1}',
                   style: bodyText()
               ),
               leading: Icon(Icons.bookmark_border),
@@ -189,7 +189,6 @@ class _ProfileRouteState extends State<ProfileRoute> {
             ),
           ],
         ),
-      ),
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
     );
