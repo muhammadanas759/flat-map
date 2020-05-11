@@ -16,6 +16,7 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_isolate/flutter_isolate.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 
 // store chosen starting route
@@ -52,6 +53,12 @@ main() async {
   }
 
   await _markerLoader.loadMarkers();
+
+  // check permission
+  if (!(await Permission.location.request().isGranted)) {
+    // request access to location
+    Permission.location.request();
+  }
 
   // initiate isolated subprocess
   // ignore: unused_local_variable

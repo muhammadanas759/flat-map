@@ -51,7 +51,7 @@ class IconsLoader {
 
     return await BitmapDescriptor.fromAssetImage(
       ImageConfiguration(
-        size: Size(targetWidth, targetWidth),
+        // size: Size(targetWidth, targetWidth),
       ),
       markerImageLocal[name],
     );

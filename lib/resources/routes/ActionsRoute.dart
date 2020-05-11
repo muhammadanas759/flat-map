@@ -40,8 +40,8 @@ class _ActionsRouteState extends State<ActionsRoute> {
             trailing: Icon(Icons.keyboard_arrow_right),
             onTap: () {
               // add action to the selected marker id
-              widget._markerLoader.addMarkerAction(
-                  id: PrefService.get('selected_marker'), action: key);
+              String _id = PrefService.get('selected_marker');
+              widget._markerLoader.addMarkerAction(id: _id, action: key);
               // Navigate back
               Navigator.pop(context);
             },

@@ -7,7 +7,7 @@ import 'package:flatmapp/resources/extensions.dart';
 import 'package:flatmapp/resources/objects/data/markers_loader.dart';
 
 import 'package:geolocator/geolocator.dart';
-import 'package:watcher/watcher.dart';
+// import 'package:watcher/watcher.dart';
 
 import 'package:volume/volume.dart';
 

@@ -290,42 +290,43 @@ class _MapRouteState extends State<MapRoute> {
     // https://stackoverflow.com/questions/53908025/flutter-sortable-drag-and-drop-listview
     // https://api.flutter.dev/flutter/material/ReorderableListView-class.html
 
-    List<String> _actionsList = widget._markerLoader.getMarkerActions(
-        id: PrefService.get('selected_marker'));
+    String _id = PrefService.get('selected_marker');
+    List<dynamic> _actionsList = widget._markerLoader.getMarkerActions(id: _id);
 
-    return _actionsList == null ?
-    Card( //                           <-- Card widget
-      child: ListTile(
-        title: Text(
-            "no actions added",
-            style: bodyText()
-        ),
-      ),
-    ) :
-    ListView.builder(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      itemCount: _actionsList.length,
-      itemBuilder: (context, index) {
-        return Card( //                           <-- Card widget
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.white,
-              backgroundImage: AssetImage(
-                  _actionsLoader.actionsMap[_actionsList[index]]
-              ),
-            ),
-            title: Text(
-                _actionsList[index],
-                style: bodyText()
-            ),
-            trailing: Icon(Icons.keyboard_arrow_right),
-            onTap: () {
-              // TODO operate action tap on marker form
-            },
+    return Expanded(
+      child: _actionsList == null ?
+      Card( //                           <-- Card widget
+        child: ListTile(
+          title: Text(
+              "no actions added",
+              style: bodyText()
           ),
-        );
-      },
+        ),
+      ) :
+      ListView.builder(
+        shrinkWrap: true,
+        itemCount: _actionsList.length,
+        itemBuilder: (context, index) {
+          return Card( //                           <-- Card widget
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.white,
+                backgroundImage: AssetImage(
+                  _actionsLoader.actionsMap[_actionsList[index]]
+                ),
+              ),
+              title: Text(
+                  _actionsList[index],
+                  style: bodyText()
+              ),
+              trailing: Icon(Icons.keyboard_arrow_right),
+              onTap: () {
+                // TODO operate action tap on marker form
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 

@@ -94,7 +94,7 @@ class MarkerLoader {
           title: markerData['title'],
           description: markerData['description'],
           range: markerData['range'],
-          actions: [],
+          actions: markerData['actions'],
       );
     });
   }
@@ -106,7 +106,7 @@ class MarkerLoader {
   // add or edit marker
   void addMarker({
     String id, LatLng position, String icon,
-    String title, String description, double range, List<String> actions
+    String title, String description, double range, List<dynamic> actions
   }){
 
     markersDescriptions[id] = {
@@ -187,11 +187,14 @@ class MarkerLoader {
     return zones[id].radius.toInt();
   }
 
-  List<String> getMarkerActions({String id}){
+  List<dynamic> getMarkerActions({String id}){
     return markersDescriptions[id]['actions'];
   }
 
   void addMarkerAction({String id, String action}) {
+    if(markersDescriptions[id]['actions'] == null){
+      markersDescriptions[id]['actions'] = [];
+    }
     markersDescriptions[id]['actions'].add(action);
   }
 }
