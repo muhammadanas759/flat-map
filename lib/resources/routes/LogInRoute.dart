@@ -87,7 +87,7 @@ class _LogInRouteState extends State<LogInRoute> {
       _formKey.currentState.save();
       //print('FormData : ' + json.encode(_formData));
       // send credentials to server and get the response
-      http.Response _response = await netLoader.postToServer(
+      http.Response _response = await netLoader.postForToken(
           endpoint:'/api/account/login/', content:_formData);
       //print('resonse:' + _response.body);
       // if there is token in response

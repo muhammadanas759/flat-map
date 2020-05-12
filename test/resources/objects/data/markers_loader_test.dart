@@ -19,8 +19,8 @@ Future<void> main() async {
           range: 12.5
       );
 
-      //print(markerLoader.markersDescriptions);
-      //print(markerLoader.zones);
+      print(markerLoader.markersDescriptions);
+      print(markerLoader.zones);
 
       expect(markerLoader.markersDescriptions["test1"]["position_x"], -43.0);
       expect(markerLoader.markersDescriptions["test1"]["position_y"], 170.0);

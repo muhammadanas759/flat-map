@@ -80,7 +80,7 @@ class MyApp extends StatelessWidget {
             // When navigating to the "/name" route, build the NameRoute widget.
             '/map': (context) => MapRoute(_markerLoader),
             '/profile': (context) => ProfileRoute(_markerLoader),
-            '/community': (context) => CommunityRoute(),
+            '/community': (context) => CommunityRoute(_markerLoader),
             '/settings': (context) => SettingsRoute(),
             '/about': (context) => AboutRoute(),
             '/login': (context) => LogInRoute(),
