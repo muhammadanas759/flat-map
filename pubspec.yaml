@@ -23,7 +23,7 @@ dependencies:
   # internet requests
   http: ^0.12.0+4
   # file saving
-  permission_handler: ^4.0.0
+  permission_handler: ^5.0.0+hotfix.5
   # easy settings route
   preferences: ^5.0.2
   # dynamic theme service
@@ -46,7 +46,7 @@ dependencies:
   # push notifications
   flutter_local_notifications:
   # background processing
-  flutter_isolate: ^1.0.0+12
+  flutter_isolate: ^1.0.0+13
   # custom settings in file
   global_configuration: ^1.5.0
   # watch for file changes
@@ -60,6 +60,7 @@ dev_dependencies:
   flutter_driver:
     sdk: flutter
   test: any
+  effective_dart: ^1.0.0
   flutter_test:
     sdk: flutter
 

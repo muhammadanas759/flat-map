@@ -1,14 +1,15 @@
-import 'package:flatmapp/resources/objects/data/icons_loader.dart';
-import 'package:flatmapp/resources/objects/data/net_loader.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flatmapp/resources/objects/loaders/icons_loader.dart';
+import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 
 import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+import 'package:path_provider/path_provider.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:preferences/preferences.dart';
 
 
@@ -17,7 +18,7 @@ class MarkerLoader {
   //-------------------------- VARIABLES ---------------------------------------
 
   // list of marker data in strings
-  Map<String, Map> markersDescriptions = <String, Map>{};
+  Map<String, Map> _markersDescriptions = <String, Map>{};
 
   // google maps markers set
   Map<String, Marker> googleMarkers = <String, Marker>{};
@@ -37,8 +38,14 @@ class MarkerLoader {
 
   Future<String> getFilePath() async {
     // get file storage path
-    final directory = await getApplicationDocumentsDirectory();
-    return '${directory.path}/marker_storage.json';
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      return '${directory.path}/marker_storage.json';
+    } on FileSystemException catch (e) {
+      // file error
+      print('File processing error: $e');
+      return '';
+    }
   }
 
   // load markers from local storage
@@ -52,7 +59,7 @@ class MarkerLoader {
       String markerStorage = await file.readAsString();
       // save it to map
       try{
-        markersDescriptions = Map<String, Map<dynamic, dynamic>>.from(
+        _markersDescriptions = Map<String, Map<dynamic, dynamic>>.from(
             json.decode(markerStorage)
         );
       } catch (error) {
@@ -78,7 +85,7 @@ class MarkerLoader {
   // translate descriptions to google map markers and zones
   void _descriptionsToObjects(){
     // for each marker description
-    markersDescriptions.forEach((String markerID, Map markerData) {
+    _markersDescriptions.forEach((String markerID, Map markerData) {
 
       String id = markerID;
       LatLng position = LatLng(
@@ -94,7 +101,7 @@ class MarkerLoader {
           title: markerData['title'],
           description: markerData['description'],
           range: markerData['range'],
-          actions: [],
+          actions: markerData['actions'],
       );
     });
   }
@@ -106,10 +113,10 @@ class MarkerLoader {
   // add or edit marker
   void addMarker({
     String id, LatLng position, String icon,
-    String title, String description, double range, List<String> actions
+    String title, String description, double range, List<dynamic> actions
   }){
 
-    markersDescriptions[id] = {
+    _markersDescriptions[id] = {
       'position_x': position.latitude,
       'position_y': position.longitude,
       'range': range,
@@ -148,7 +155,7 @@ class MarkerLoader {
   }
 
   void removeMarker({String id}){
-    markersDescriptions.remove(id);
+    _markersDescriptions.remove(id);
     googleMarkers.remove(id);
     zones.remove(id);
 
@@ -161,9 +168,9 @@ class MarkerLoader {
   void saveMarkers() async {
 
     // save markersDescription
-    final directory = await getApplicationDocumentsDirectory();
-    final file = new File('${directory.path}/marker_storage.json');
-    String markerStorage = json.encode(markersDescriptions);
+    final path_ = await getFilePath();
+    final file = new File(path_);
+    String markerStorage = json.encode(_markersDescriptions);
     await file.writeAsString(markerStorage);
   }
   
@@ -172,26 +179,40 @@ class MarkerLoader {
       id: "temporary",
       position: position,
       icon: 'default',
-      title: "temporary marker",
-      description: "marker presenting chosen position",
+// TODO decide which one ought to be kept
+//      title: "temporary marker",
+//      description: "marker presenting chosen position",
+      title: "",
+      description: "",
       range: 10,
       actions: [],
     );
   }
 
-  Marker getMarker({String id}){
+  Map<String, dynamic> getMarkerDescription({String id}){
+    return Map<String, dynamic>.from(_markersDescriptions[id]);
+  }
+
+  Marker getGoogleMarker({String id}){
     return googleMarkers[id];
+  }
+
+  List<String> getDescriptionsKeys(){
+    return _markersDescriptions.keys.toList();
   }
 
   int getRange({String id}){
     return zones[id].radius.toInt();
   }
 
-  List<String> getMarkerActions({String id}){
-    return markersDescriptions[id]['actions'];
+  List<dynamic> getMarkerActions({String id}){
+    return _markersDescriptions[id]['actions'];
   }
 
   void addMarkerAction({String id, String action}) {
-    markersDescriptions[id]['actions'].add(action);
+    if(_markersDescriptions[id]['actions'] == null){
+      _markersDescriptions[id]['actions'] = [];
+    }
+    _markersDescriptions[id]['actions'].add(action);
   }
 }

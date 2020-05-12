@@ -3,7 +3,7 @@ import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:http/http.dart' as http;
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
-import 'package:flatmapp/resources/objects/data/net_loader.dart';
+import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 
 import 'package:flutter/material.dart';
 import 'dart:convert';

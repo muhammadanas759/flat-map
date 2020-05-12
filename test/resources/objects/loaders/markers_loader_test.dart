@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flatmapp/resources/objects/data/markers_loader.dart';
+import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:preferences/preference_service.dart';
 
 Future<void> main() async {
@@ -22,12 +22,14 @@ Future<void> main() async {
       print(markerLoader.markersDescriptions);
       print(markerLoader.zones);
 
-      expect(markerLoader.markersDescriptions["test1"]["position_x"], -43.0);
-      expect(markerLoader.markersDescriptions["test1"]["position_y"], 170.0);
-      expect(markerLoader.markersDescriptions["test1"]["title"], "test markter 1");
-      expect(markerLoader.markersDescriptions["test1"]["description"], "marker presenting chosen position 1");
-      expect(markerLoader.markersDescriptions["test1"]["range"], 12.5);
-      expect(markerLoader.markersDescriptions["test1"]["icon"], "default");
+      Map<String, dynamic> _marker = markerLoader.getMarkerDescription(id: "test1");
+
+      expect(_marker["position_x"], -43.0);
+      expect(_marker["position_y"], 170.0);
+      expect(_marker["title"], "test markter 1");
+      expect(_marker["description"], "marker presenting chosen position 1");
+      expect(_marker["range"], 12.5);
+      expect(_marker["icon"], "default");
 
     });
     test('Simple removing marker test', () {
@@ -71,8 +73,10 @@ Future<void> main() async {
           range: 12.5
       );
 
-      expect(markerLoader.markersDescriptions["test1"]["position_x"], 70.0);
-      expect(markerLoader.markersDescriptions["test1"]["position_y"], 20.0);
+      Map<String, dynamic> _marker = markerLoader.getMarkerDescription(id: "test1");
+
+      expect(_marker["position_x"], 70.0);
+      expect(_marker["position_y"], 20.0);
 
       markerLoader.addMarker(
           id: "test1",
@@ -83,8 +87,8 @@ Future<void> main() async {
           range: 12.5
       );
 
-      expect(markerLoader.markersDescriptions["test1"]["position_x"], -73.0);
-      expect(markerLoader.markersDescriptions["test1"]["position_y"], 120.0);
+      expect(_marker["position_x"], -73.0);
+      expect(_marker["position_y"], 120.0);
     });
   });
 }

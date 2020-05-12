@@ -7,7 +7,7 @@ import 'package:flatmapp/resources/routes/CommunityRoute.dart';
 import 'package:flatmapp/resources/routes/SettingsRoute.dart';
 import 'package:flatmapp/resources/routes/AboutRoute.dart';
 
-import 'package:flatmapp/resources/objects/data/markers_loader.dart';
+import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/isolated_subprocess.dart';
 
 import 'package:flutter/material.dart';
@@ -16,6 +16,7 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_isolate/flutter_isolate.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 
 // store chosen starting route
@@ -37,6 +38,7 @@ main() async {
     'ui_theme': 'light',
     'selected_marker': 'temporary',
     'selected_icon': 'default',
+    'selected_action': []
   });
 
   // get start page
@@ -52,6 +54,12 @@ main() async {
   }
 
   await _markerLoader.loadMarkers();
+
+  // check permission
+  if (!(await Permission.location.request().isGranted)) {
+    // request access to location
+    Permission.location.request();
+  }
 
   // initiate isolated subprocess
   // ignore: unused_local_variable
