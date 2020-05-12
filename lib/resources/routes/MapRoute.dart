@@ -438,6 +438,7 @@ class _MapRouteState extends State<MapRoute> {
       PrefService.get('map_enabled') != true
         ? textInfo('Map is disabled' ?? '')
         : Stack(
+        fit: StackFit.expand,
         children: <Widget>[
           // Map loading indicator
           Opacity(
@@ -460,14 +461,15 @@ class _MapRouteState extends State<MapRoute> {
             controller: _slidingFormController,
             panel: _markerAddForm(context),
             body: Opacity(
-                opacity: _isMapLoading ? 0 : 1,
-                // Google Map widget
+              opacity: _isMapLoading ? 0 : 1,
+              // Google Map widget
+              child: Container(
                 child: _googleMapWidget(),
               ),
+            ),
           ),
         ],
       ),
-
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
     );

@@ -172,8 +172,10 @@ class MarkerLoader {
       id: "temporary",
       position: position,
       icon: 'default',
-      title: "temporary marker",
-      description: "marker presenting chosen position",
+//      title: "temporary marker",
+//      description: "marker presenting chosen position",
+      title: "",
+      description: "",
       range: 10,
       actions: [],
     );
