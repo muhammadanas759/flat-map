@@ -7,7 +7,7 @@ import 'package:flatmapp/resources/routes/CommunityRoute.dart';
 import 'package:flatmapp/resources/routes/SettingsRoute.dart';
 import 'package:flatmapp/resources/routes/AboutRoute.dart';
 
-import 'package:flatmapp/resources/objects/data/markers_loader.dart';
+import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/isolated_subprocess.dart';
 
 import 'package:flutter/material.dart';

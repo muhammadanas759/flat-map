@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flatmapp/resources/objects/data/markers_loader.dart';
+import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:preferences/preference_service.dart';
 
 Future<void> main() async {

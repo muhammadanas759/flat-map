@@ -1,5 +1,5 @@
-import 'package:flatmapp/resources/objects/data/actions_loader.dart';
-import 'package:flatmapp/resources/objects/data/markers_loader.dart';
+import 'package:flatmapp/resources/objects/loaders/actions_loader.dart';
+import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 
 import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
@@ -147,7 +147,7 @@ class _MapRouteState extends State<MapRoute> {
 
   Widget _googleMapWidget(){
     return GoogleMap(
-      myLocationEnabled: true,
+      myLocationEnabled: false,
       mapToolbarEnabled: false,
       initialCameraPosition: updateCameraPosition(),
       markers: Set<Marker>.of(widget._markerLoader.googleMarkers.values),

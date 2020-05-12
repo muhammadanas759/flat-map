@@ -1,14 +1,15 @@
-import 'package:flatmapp/resources/objects/data/icons_loader.dart';
-import 'package:flatmapp/resources/objects/data/net_loader.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flatmapp/resources/objects/loaders/icons_loader.dart';
+import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 
 import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+import 'package:path_provider/path_provider.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:preferences/preferences.dart';
 
 
@@ -37,8 +38,14 @@ class MarkerLoader {
 
   Future<String> getFilePath() async {
     // get file storage path
-    final directory = await getApplicationDocumentsDirectory();
-    return '${directory.path}/marker_storage.json';
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      return '${directory.path}/marker_storage.json';
+    } on FileSystemException catch (e) {
+      // file error
+      print('File processing error: $e');
+      return '';
+    }
   }
 
   // load markers from local storage
@@ -161,8 +168,8 @@ class MarkerLoader {
   void saveMarkers() async {
 
     // save markersDescription
-    final directory = await getApplicationDocumentsDirectory();
-    final file = new File('${directory.path}/marker_storage.json');
+    final path_ = await getFilePath();
+    final file = new File(path_);
     String markerStorage = json.encode(_markersDescriptions);
     await file.writeAsString(markerStorage);
   }
@@ -172,6 +179,7 @@ class MarkerLoader {
       id: "temporary",
       position: position,
       icon: 'default',
+// TODO decide which one ought to be kept
 //      title: "temporary marker",
 //      description: "marker presenting chosen position",
       title: "",

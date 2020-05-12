@@ -1,5 +1,5 @@
-import 'package:flatmapp/resources/objects/data/markers_loader.dart';
-import 'package:flatmapp/resources/objects/data/trigger_loader.dart';
+import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
+import 'package:flatmapp/resources/objects/loaders/trigger_loader.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
