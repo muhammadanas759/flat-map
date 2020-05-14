@@ -2,12 +2,10 @@ import 'package:flatmapp/resources/extensions.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:watcher/watcher.dart';
 import 'package:volume/volume.dart';
 
 
@@ -16,6 +14,9 @@ class TriggerLoader {
   // ===========================================================================
   // init variables
   MarkerLoader _markerLoader;
+
+  // load file every x minutes
+  Timer timer;
 
   // geolocator API: https://pub.dev/documentation/geolocator/latest/geolocator/Geolocator-class.html
   Geolocator _geolocator = Geolocator();
@@ -53,41 +54,10 @@ class TriggerLoader {
       (Position position){operatePositionChange(position: position);}
     );
 
-    // listen to marker storage file changes
-    try {
-      _markerLoader.getFilePath().then((String path){
-        // TODO add working watcher on markers file - current one throws up
-        // final watcher = FileWatcher(path);
-        final watcher = FileWatcher('/data/user/0/deadsmond.net.flatmapp/app_flutter/marker_storage.json');
-
-        // ignore or add somewhere subscription.cancel()
-        // so that app would be able to do some cleanup in stream
-        // ignore: unused_local_variable, cancel_subscriptions
-        final subscription = watcher.events.listen((event) {
-          // reload markers on file storage change
-          switch (event.type) {
-            case ChangeType.ADD:
-              print('Added file');
-              _markerLoader.loadMarkers();
-              break;
-            case ChangeType.MODIFY:
-              print('Modified file');
-              _markerLoader.loadMarkers();
-              break;
-            case ChangeType.REMOVE:
-              print('Removed file');
-              _markerLoader.loadMarkers();
-          }
-        });
-      });
-
-    } on FileSystemException catch (e) {
-      // file error
-      print('File processing error: $e');
-    } catch (e) {
-      // No specified type, handles all
-      print('Unknown error: $e');
-    }
+    // TODO listen to marker storage file changes
+    // load markers every 2 minutes - temporary solution
+    timer = Timer.periodic(Duration(seconds: 120),
+            (Timer t) => _markerLoader.loadMarkers());
   }
 
   Future<LatLng> getCurrentPosition() async {
@@ -170,6 +140,7 @@ class TriggerLoader {
   // ===========================================================================
   Future<void> operatePositionChange({Position position}) async {
 
+    // TODO get correct list of markers to activate
     // get activated markers
     _activatedNow = await getActivatedMarkers(position.toLatLng());
 
@@ -183,16 +154,32 @@ class TriggerLoader {
     print("activated now: $_activatedNow");
     print("activated previously: $_activatedPreviously");
 
+    // TODO operate all actions possible
     for (String markerId in _activatedNow) {
       // activate marker actions
-      print(markerId);
+      print("activated marker: $markerId");
       print("activated actions:");
-      print(_markerLoader.getMarkerActions(id: markerId));
 
-      _showNotificationWithDefaultSound(
-          title: "POSITION CHANGE DETECTED",
-          content: "CITIZEN NR 26108, STAY AT HOME"
-      );
+      for(String action in _markerLoader.getMarkerActions(id: markerId)){
+        switch (action) {
+          case "mute":
+            mutePhone();
+            _showNotificationWithDefaultSound(
+              title: "POSITION CHANGE DETECTED",
+              content: "CITIZEN NR 26108, STAY AT HOME"
+            );
+            break;
+          case "notification":
+            _showNotificationWithDefaultSound(
+                title: "POSITION CHANGE DETECTED",
+                content: "CITIZEN NR 26108, STAY AT HOME"
+            );
+            break;
+          default:
+            print("default action not recognized : $action");
+            break;
+        }
+      }
 
       // add marker to previously activated list
       _activatedPreviously.add(markerId);
