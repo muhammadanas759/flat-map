@@ -284,13 +284,53 @@ class _MapRouteState extends State<MapRoute> {
     );
   }
 
+  Future<void> _raiseAlertDialog(BuildContext context, var id, var index) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+            title: Text("Remove action?"),
+            content: Text(
+                "You are about to remove action\n" + id
+            ),
+            actions: [
+              // set up the buttons
+              FlatButton(
+                child: Text("no nO NO"),
+                onPressed:  () {
+                  // dismiss alert
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text("HELL YEAH"),
+                onPressed:  () {
+                  // remove marker
+                  setState(() {
+                    widget._markerLoader.removeMarkerAction(id: id, index: index);
+                    // save markers state to file
+                    widget._markerLoader.saveMarkers();
+                  });
+                  // dismiss alert
+                  Navigator.of(context).pop();
+                },
+              ),
+            ]
+        );
+      },
+    );
+  }
+
   Widget _buildActionsList(BuildContext context) {
-    // TODO actions list
+    // actions list
     // https://stackoverflow.com/questions/53908025/flutter-sortable-drag-and-drop-listview
     // https://api.flutter.dev/flutter/material/ReorderableListView-class.html
 
+    var id = PrefService.get('selected_marker');
+
     List<dynamic> _actionsList = widget._markerLoader.getMarkerActions(
-        id: PrefService.get('selected_marker')
+        id: id
     );
 
     return Expanded(
@@ -319,9 +359,10 @@ class _MapRouteState extends State<MapRoute> {
                   _actionsList[index],
                   style: bodyText()
               ),
-              trailing: Icon(Icons.keyboard_arrow_right),
+              trailing: Icon(Icons.delete_forever),
               onTap: () {
-                // operate action tap on marker form
+                // remove action with alert dialog
+                _raiseAlertDialog(context, id, index);
               },
             ),
           );

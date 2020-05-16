@@ -5,18 +5,19 @@ Flutter geolocation manager. Choose actions and set their geolocation trigger.
 Previous versions:
 * **v0.1:** google map example created
 * **v0.2:** basic interface introduced
-
-**Current version:**
 * **v0.3:** basic geotrigger
 
+**Current version:**
+* **v0.4:** parallel processing introduced
+
 Incoming versions:
-* **v0.4:** server communication
-* **v0.5:** rebuild
-* **v0.6:** actions recommendation system
-* **v0.7:** interface enhancements
-* **v0.8:** new actions package
-* **v0.9:** rebuild
-* **v1.0:** release
+
+* **v0.5:** server communication
+* **v0.6:** beta release
+* **v0.7:** multiple marker category adding system
+* **v0.8:** interface enhancements
+* **v0.9:** rebuild, new actions package
+* **v1.0:** full release
 
 
 ## Getting Started

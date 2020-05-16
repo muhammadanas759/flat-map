@@ -26,7 +26,7 @@ void triggerEntryPoint(String message) async {
 
   // check permission
   _geolocator.checkGeolocationPermissionStatus().then((permission){
-    // TODO check permission status
+    // check permission status
     if(permission != GeolocationStatus.granted){
       print("GEOLOCATION PERMISSION IS NOT GRANTED YET");
     }

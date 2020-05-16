@@ -161,13 +161,45 @@ class _ProfileRouteState extends State<ProfileRoute> {
             ),
 
             ListTile(
-              title: Text('E-mail:', style: bodyText()),
-              leading: Icon(Icons.mail_outline),
+              title: Text(
+                'Username: ' + PrefService.getString("login"),
+                style: bodyText(),
+              ),
+              leading: Icon(Icons.laptop),
+              onTap: (){
+                // TODO move to change form
+              },
             ),
 
             ListTile(
-              title: Text('Username:', style: bodyText()),
-              leading: Icon(Icons.laptop),
+              title: Text(
+                'Change user login and/or password',
+                style: bodyText(),
+              ),
+              trailing: Icon(Icons.keyboard_arrow_right),
+              onLongPress: (){
+                // TODO move to change form
+              },
+            ),
+            ListTile(
+              title: Text(
+                'Back up markers to server',
+                style: bodyText(),
+              ),
+              trailing: Icon(Icons.backup),
+              onLongPress: (){
+                // TODO back up markers
+              },
+            ),
+            ListTile(
+              title: Text(
+                'Download markers from server',
+                style: bodyText(),
+              ),
+              trailing: Icon(Icons.file_download),
+              onLongPress: (){
+                // TODO download markers
+              },
             ),
 
             ListTile(
