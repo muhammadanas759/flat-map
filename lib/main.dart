@@ -38,7 +38,8 @@ main() async {
     'ui_theme': 'light',
     'selected_marker': 'temporary',
     'selected_icon': 'default',
-    'selected_action': []
+    'selected_action': [],
+    'isolate_port': 0,
   });
 
   // get start page
@@ -67,6 +68,9 @@ main() async {
       triggerEntryPoint,
       "message"
   );
+
+  PrefService.setString('isolate_port', isolate.controlPort.toString());
+  print("isolate control port: " + isolate.controlPort.toString());
 
   runApp(MyApp());
 }
