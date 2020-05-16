@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:flatmapp/resources/objects/data/actions_loader.dart';
-import 'package:flatmapp/resources/objects/data/markers_loader.dart';
-import 'package:flatmapp/resources/objects/data/net_loader.dart';
+import 'package:flatmapp/resources/objects/loaders/actions_loader.dart';
+import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
+import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 import 'package:http/http.dart' as http;
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
@@ -22,28 +22,30 @@ class CommunityRoute extends StatefulWidget {
 }
 
 class _CommunityRouteState extends State<CommunityRoute> {
-  NetLoader netLoader = NetLoader();
+//  NetLoader netLoader = NetLoader();
 
   // TODO zapis znaczników do bazy
   void _postBackup()
   {
     print('post backup');
-    print(widget._markerLoader.markersDescriptions);
-    for(String key in widget._markerLoader.markersDescriptions.keys)
-      {
-        if(key != 'temporary')
-          print(widget._markerLoader.markersDescriptions[key]);
-
-      }
+//    print(widget._markerLoader.markersDescriptions);
+//    for(String key in widget._markerLoader.markersDescriptions.keys)
+//      {
+//        if(key != 'temporary')
+//          print(widget._markerLoader.markersDescriptions[key]);
+//
+//      }
   }
 
+  // TODO odczyt znaczników z bazy
   Future<void> _getBackup()
   async {
-    http.Response _response = await netLoader.getMarkers(endpoint: "api/backup/trigger/");
-    for(var object in jsonDecode(_response.body))
-      {
-        print(object);
-      }
+    print('get backup');
+//    http.Response _response = await netLoader.getMarkers(endpoint: "api/backup/trigger/");
+//    for(var object in jsonDecode(_response.body))
+//      {
+//        print(object);
+//      }
   }
 
   Widget _tabWidget(){

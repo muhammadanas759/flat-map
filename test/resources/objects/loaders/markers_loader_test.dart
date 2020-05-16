@@ -19,9 +19,6 @@ Future<void> main() async {
           range: 12.5
       );
 
-      print(markerLoader.markersDescriptions);
-      print(markerLoader.zones);
-
       Map<String, dynamic> _marker = markerLoader.getMarkerDescription(id: "test1");
 
       expect(_marker["position_x"], -43.0);
@@ -57,7 +54,8 @@ Future<void> main() async {
       markerLoader.removeMarker(
           id: "test1"
       );
-
+      List<String> _keys = markerLoader.getDescriptionsKeys();
+      expect(_keys.indexOf("test1"), -1);
       expect(markerLoader.googleMarkers["test1"], null);
       expect(markerLoader.zones["test1"], null);
       });
@@ -86,6 +84,8 @@ Future<void> main() async {
           description: "marker presenting chosen position 1",
           range: 12.5
       );
+
+      _marker = markerLoader.getMarkerDescription(id: "test1");
 
       expect(_marker["position_x"], -73.0);
       expect(_marker["position_y"], 120.0);
