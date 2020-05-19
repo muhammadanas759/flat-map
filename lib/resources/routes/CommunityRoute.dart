@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:flatmapp/resources/objects/loaders/actions_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 import 'package:http/http.dart' as http;
@@ -22,30 +19,36 @@ class CommunityRoute extends StatefulWidget {
 }
 
 class _CommunityRouteState extends State<CommunityRoute> {
-//  NetLoader netLoader = NetLoader();
+
+  NetLoader netLoader = NetLoader();
 
   // TODO zapis znaczników do bazy
-  void _postBackup()
-  {
-    print('post backup');
-//    print(widget._markerLoader.markersDescriptions);
-//    for(String key in widget._markerLoader.markersDescriptions.keys)
-//      {
-//        if(key != 'temporary')
-//          print(widget._markerLoader.markersDescriptions[key]);
-//
+  Future<void> postBackup() async {
+    http.Response _response = await netLoader.postToServer(
+      endpoint: "/api/backup/trigger/",
+      content: widget._markerLoader.getMarkersDescriptions(),
+    );
+
+    print(_response.body);
+
+//    for(String key in _markersDescriptions.keys) {
+//      if(key != 'temporary'){
+//        print(_markersDescriptions[key]);
 //      }
+//    }
   }
 
   // TODO odczyt znaczników z bazy
-  Future<void> _getBackup()
-  async {
-    print('get backup');
-//    http.Response _response = await netLoader.getMarkers(endpoint: "api/backup/trigger/");
-//    for(var object in jsonDecode(_response.body))
-//      {
-//        print(object);
-//      }
+  Future<void> getBackup() async {
+    Map<String, Map> _markersDescriptions = await netLoader.getFromServer(
+      endpoint: "/api/backup/trigger/",
+    );
+
+    _markersDescriptions.forEach((key, value) {
+      print(value);
+    });
+
+    widget._markerLoader.saveMarkersFromBackup(content: _markersDescriptions);
   }
 
   Widget _tabWidget(){
@@ -57,20 +60,6 @@ class _CommunityRouteState extends State<CommunityRoute> {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                RaisedButton(
-                  onPressed: _postBackup,
-                  child: Text('Backup your markers'),
-                ),
-                SizedBox(width: 10),
-                RaisedButton(
-                  onPressed: _getBackup,
-                  child: Text('Get markers from Backup'),
-                ),
-              ]
-            ),
             Container(
               child: TabBar(
                 tabs: [
@@ -121,10 +110,33 @@ class _CommunityRouteState extends State<CommunityRoute> {
               leading: Icon(Icons.language),
             ),
 
-            // community widget
+            // community dependent widgets
             PrefService.get('community_enabled') != true
-                ? textInfo('Community options are disabled' ?? '') :
-                  _tabWidget(),
+                ? SizedBox.shrink() : ListTile(
+              title: Text(
+                'Back up your markers to server',
+                style: bodyText(),
+              ),
+              trailing: Icon(Icons.backup),
+              onLongPress: (){
+                postBackup();
+              },
+            ),
+
+            PrefService.get('community_enabled') != true
+                ? SizedBox.shrink() : ListTile(
+              title: Text(
+                'Get your markers from Backup',
+                style: bodyText(),
+              ),
+              trailing: Icon(Icons.file_download),
+              onLongPress: (){
+                getBackup();
+              },
+            ),
+
+//            PrefService.get('community_enabled') != true
+//                ? textInfo('Community options are disabled' ?? '') : _tabWidget(),
 
             ListTile(
               title: Text(
