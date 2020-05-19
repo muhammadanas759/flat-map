@@ -44,7 +44,7 @@ Drawer sideBarMenu(context){
         sideBarMenuElement(context, 'Community', Icon(Icons.language), '/community'),
         sideBarMenuElement(context, 'Settings', Icon(Icons.settings_applications), '/settings'),
         sideBarMenuElement(context, 'About', Icon(Icons.info_outline), '/about'),
-        PrefService.getString('token') == null ?
+        PrefService.getString('token') == '' ?
         sideBarMenuElement(context, 'Log In', Icon(Icons.subdirectory_arrow_right), '/login'):
         sideBarMenuElement(context, 'Log out', Icon(Icons.subdirectory_arrow_right), '/login'),
       ],

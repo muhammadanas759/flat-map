@@ -42,7 +42,8 @@ main() async {
     'selected_icon': 'default',
     'selected_action': [],
     'isolate_port': 0,
-    'token': null,
+    'token': '',
+    'login': '',
   });
 
   // get start page

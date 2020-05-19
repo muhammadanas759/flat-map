@@ -87,10 +87,11 @@ class _LogInRouteState extends State<LogInRoute> {
       _formKey.currentState.save();
       //print('FormData : ' + json.encode(_formData));
       // send credentials to server and get the response
-      http.Response _response = await netLoader.postForToken(
+      http.Response _response = await netLoader.postToServer(
           endpoint:'/api/account/login/', content:_formData);
       //print('resonse:' + _response.body);
       // if there is token in response
+      print(_response.body);
       if(json.decode(_response.body)["token"] != null)
         {
           // save token to global variables
@@ -114,7 +115,7 @@ class _LogInRouteState extends State<LogInRoute> {
   }
 
   void _logOut(){
-    PrefService.setString('token', null);
+    PrefService.setString('token', '');
     Navigator.pushNamed(context, '/login');
 }
 
@@ -173,7 +174,7 @@ class _LogInRouteState extends State<LogInRoute> {
       appBar: appBar(),
 
       // BODY FORM
-      body: PrefService.getString('token') == null ? _logInForm() : _logOutForm(),
+      body: PrefService.getString('token') == '' ? _logInForm() : _logOutForm(),
 
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
