@@ -181,26 +181,6 @@ class _ProfileRouteState extends State<ProfileRoute> {
                 // TODO move to change form
               },
             ),
-            ListTile(
-              title: Text(
-                'Back up markers to server',
-                style: bodyText(),
-              ),
-              trailing: Icon(Icons.backup),
-              onLongPress: (){
-                // TODO back up markers
-              },
-            ),
-            ListTile(
-              title: Text(
-                'Download markers from server',
-                style: bodyText(),
-              ),
-              trailing: Icon(Icons.file_download),
-              onLongPress: (){
-                // TODO download markers
-              },
-            ),
 
             ListTile(
               title: Text('Active markers: #'

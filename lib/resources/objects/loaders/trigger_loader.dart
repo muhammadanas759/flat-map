@@ -146,7 +146,7 @@ class TriggerLoader {
     _activatedNow = await getActivatedMarkers(position.toLatLng());
 
     // remove markers from previous tick that should not be activated again
-    _activatedNow.removeWhere((item) => !_activatedPreviously.contains(item));
+    _activatedNow.removeWhere((item) => _activatedPreviously.contains(item));
 
     // clear previous tick
     _activatedPreviously = [];

@@ -175,6 +175,12 @@ class MarkerLoader {
     String markerStorage = json.encode(_markersDescriptions);
     await file.writeAsString(markerStorage);
   }
+
+  // save markers to local storage
+  void saveMarkersFromBackup({Map<String, Map> content}) async {
+    _markersDescriptions = content;
+    saveMarkers();
+  }
   
   void addTemporaryMarker(LatLng position){
     addMarker(
@@ -190,6 +196,10 @@ class MarkerLoader {
 
   Map<String, dynamic> getMarkerDescription({String id}){
     return Map<String, dynamic>.from(_markersDescriptions[id]);
+  }
+
+  Map<String, Map> getMarkersDescriptions(){
+    return _markersDescriptions;
   }
 
   Marker getGoogleMarker({String id}){

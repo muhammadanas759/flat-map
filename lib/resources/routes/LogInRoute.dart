@@ -12,7 +12,6 @@ import 'package:preferences/preference_service.dart';
 
 
 class LogInRoute extends StatefulWidget {
-
   @override
   _LogInRouteState createState() => _LogInRouteState();
 }
@@ -23,8 +22,7 @@ class _LogInRouteState extends State<LogInRoute> {
   NetLoader netLoader = NetLoader();
 
   final _formKey = GlobalKey<FormState>();
-  final Map<String, dynamic> _formData =
-  {
+  final Map<String, dynamic> _formData = {
     'username': '',
     'password': '',
   };
@@ -87,37 +85,46 @@ class _LogInRouteState extends State<LogInRoute> {
       _formKey.currentState.save();
       //print('FormData : ' + json.encode(_formData));
       // send credentials to server and get the response
-      http.Response _response = await netLoader.postToServer(
-          endpoint:'/api/account/login/', content:_formData);
-      //print('resonse:' + _response.body);
-      // if there is token in response
-      print(_response.body);
-      if(json.decode(_response.body)["token"] != null)
-        {
-          // save token to global variables
-          PrefService.setString("token", json.decode(_response.body)["token"]);
+      http.Response _response = await netLoader.getToken(
+          endpoint: '/api/account/login/',
+          content: _formData
+      );
 
-          // reset Widget
-          String initScreen = PrefService.get('start_page');
-          switch(initScreen) {
-            case 'About': {initScreen = '/about';} break;
-            case 'Community': {initScreen = '/community';} break;
-            case 'Log In': {initScreen = '/login';} break;
-            case 'Map': {initScreen = '/map';} break;
-            case 'Profile': {initScreen = '/profile';} break;
-            case 'Settings': {initScreen = '/settings';} break;
-            default: { throw Exception('wrong start_page value: $initScreen'); } break;
-          }
-          Navigator.pushNamed(context, initScreen);
+      //print('resonse:' + _response.body);
+
+      String _token = json.decode(_response.body)["token"];
+
+      // if there is token in response
+      if(_token != null) {
+        // save token to global variables
+        PrefService.setString("token", _token);
+
+        // reset Widget
+        String initScreen = PrefService.get('start_page');
+        switch(initScreen) {
+          case 'About': {initScreen = '/about';} break;
+          case 'Community': {initScreen = '/community';} break;
+          case 'Log In': {initScreen = '/login';} break;
+          case 'Map': {initScreen = '/map';} break;
+          case 'Profile': {initScreen = '/profile';} break;
+          case 'Settings': {initScreen = '/settings';} break;
+          default: { throw Exception('wrong start_page value: $initScreen'); } break;
         }
-      //print('Token : ' + PrefService.getString("token"));
+
+        Navigator.pushNamed(context, initScreen);
+      } else {
+        // there is no token in response
+        print("No token detected!");
+        print(_response.body);
+        print(PrefService.getString("token"));
+      }
     }
   }
 
   void _logOut(){
     PrefService.setString('token', '');
     Navigator.pushNamed(context, '/login');
-}
+  }
 
   Widget _logInForm(){
     return Form(
