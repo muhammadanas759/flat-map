@@ -124,15 +124,16 @@ class TriggerLoader {
   Future<List<String>> getActivatedMarkers(LatLng user) async {
     List<String> activated = [];
 
-    _markerLoader.getDescriptionsKeys().forEach((String markerID) async {
+    _markerLoader.getDescriptionsKeys().forEach((String markerID){
       var markerData = _markerLoader.getMarkerDescription(id: markerID);
       LatLng markerPos = LatLng(markerData['position_x'],
                                 markerData['position_y']);
       double range = markerData['range'];
 
       // check if marker should be activated
-      double distance = await getDistanceBetweenPositions(user, markerPos);
-      if( distance < range ){ activated.add(markerID); }
+      getDistanceBetweenPositions(user, markerPos).then((distance){
+        if( distance < range ){ activated.add(markerID); }
+      });
     });
     return activated;
   }
