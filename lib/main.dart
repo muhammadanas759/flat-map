@@ -11,6 +11,7 @@ import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/isolated_subprocess.dart';
 
 import 'package:flutter/material.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:preferences/preferences.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 
@@ -31,6 +32,7 @@ final MarkerLoader _markerLoader = MarkerLoader();
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await PrefService.init(prefix: 'pref_');
+  await GlobalConfiguration().loadFromAsset("app_settings");
 
   PrefService.setDefaultValues({
     'project_description': 'FlatMapp prototype',
@@ -40,6 +42,7 @@ main() async {
     'selected_icon': 'default',
     'selected_action': [],
     'isolate_port': 0,
+    'token': null,
   });
 
   // get start page

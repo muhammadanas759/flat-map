@@ -30,7 +30,6 @@ class MarkerLoader {
   final IconsLoader iconsLoader = IconsLoader();
 
   // internet connection gateway object
-  // ignore: unused_field
   final NetLoader _netLoader = NetLoader();
 
   // ===========================================================================
@@ -51,14 +50,16 @@ class MarkerLoader {
   // load markers from local storage
   Future loadMarkers() async {
     String path = await getFilePath();
-    // if marker storage does exist
 
+    // if marker storage does exist
     if (await File(path).exists()){
+
       // get storage content
       final file = File(path);
       String markerStorage = await file.readAsString();
-      // save it to map
+
       try{
+        // save it to map
         _markersDescriptions = Map<String, Map<dynamic, dynamic>>.from(
             json.decode(markerStorage)
         );
@@ -106,6 +107,7 @@ class MarkerLoader {
     });
   }
 
+  // generate unique id for markers
   String generateId(){
     return UniqueKey().toString();
   }
@@ -179,9 +181,6 @@ class MarkerLoader {
       id: "temporary",
       position: position,
       icon: 'default',
-// TODO decide which one ought to be kept
-//      title: "temporary marker",
-//      description: "marker presenting chosen position",
       title: "",
       description: "",
       range: 10,
@@ -214,5 +213,22 @@ class MarkerLoader {
       _markersDescriptions[id]['actions'] = [];
     }
     _markersDescriptions[id]['actions'].add(action);
+  }
+
+  void removeMarkerAction({String id, int index}) {
+    if(_markersDescriptions[id]['actions'][index] != null){
+      _markersDescriptions[id]['actions'].removeAt(index);
+    } else {
+      print("no action to remove at index $index from marker $id");
+    }
+  }
+
+  // ======================== NET CONTENT ======================================
+  void postBackup(){
+    _netLoader.postToServer(endpoint: "/backup", content: _markersDescriptions);
+  }
+
+  void getBackup(){
+    _netLoader.postToServer(endpoint: "/backup", content: _markersDescriptions);
   }
 }

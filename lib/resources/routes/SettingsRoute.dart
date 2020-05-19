@@ -77,9 +77,6 @@ class _SettingsRouteState extends State<SettingsRoute> {
 
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
-
-      // NAVIGATION BAR
-      // floatingActionButton: navigationBarButton(context),
     );
   }
 }

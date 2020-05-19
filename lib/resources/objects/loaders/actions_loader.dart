@@ -2,11 +2,13 @@
 
 // class providing paths to markers actions
 class ActionsLoader {
+
   final Map<String, String> actionsMap = {
     'mute': 'assets/actions/speaker.png',
     'bluetooth': 'assets/actions/bluetooth.png',
     'notification': 'assets/actions/notification.png',
   };
+
   final Map<String, String> unusedActionsMap = {
     'audience': 'assets/actions/audience.png',
     'block-microphone': 'assets/actions/block-microphone.png',

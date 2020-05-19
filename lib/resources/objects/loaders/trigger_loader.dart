@@ -15,7 +15,7 @@ class TriggerLoader {
   // init variables
   MarkerLoader _markerLoader;
 
-  // load file every x minutes
+  // timer as workaround to load file every x minutes
   Timer timer;
 
   // geolocator API: https://pub.dev/documentation/geolocator/latest/geolocator/Geolocator-class.html
@@ -164,10 +164,6 @@ class TriggerLoader {
         switch (action) {
           case "mute":
             mutePhone();
-            _showNotificationWithDefaultSound(
-              title: "POSITION CHANGE DETECTED",
-              content: "CITIZEN NR 26108, STAY AT HOME"
-            );
             break;
           case "notification":
             _showNotificationWithDefaultSound(

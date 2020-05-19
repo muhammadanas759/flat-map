@@ -54,9 +54,6 @@ class AboutRoute extends StatelessWidget {
 
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
-
-      // NAVIGATION BAR
-      // floatingActionButton: navigationBarButton(context),
     );
   }
 }
