@@ -90,8 +90,6 @@ class _LogInRouteState extends State<LogInRoute> {
           content: _formData
       );
 
-      //print('resonse:' + _response.body);
-
       String _token = json.decode(_response.body)["token"];
 
       // if there is token in response

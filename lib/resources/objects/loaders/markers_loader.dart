@@ -223,6 +223,7 @@ class MarkerLoader {
       _markersDescriptions[id]['actions'] = [];
     }
     _markersDescriptions[id]['actions'].add(action);
+    saveMarkers();
   }
 
   void removeMarkerAction({String id, int index}) {
