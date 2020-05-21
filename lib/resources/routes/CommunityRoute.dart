@@ -1,6 +1,7 @@
+import 'dart:io';
+
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
-import 'package:http/http.dart' as http;
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
@@ -22,39 +23,39 @@ class _CommunityRouteState extends State<CommunityRoute> {
 
   NetLoader netLoader = NetLoader();
 
-  // TODO zapis znaczników do bazy
+  // zapis znaczników do bazy
   Future<void> postBackup() async {
-
-    print(widget._markerLoader.getMarkersDescriptions());
-
-    http.Response _response = await netLoader.postToServer(
-      endpoint: "/api/backup/trigger/",
-      content: widget._markerLoader.getMarkersDescriptions(),
-    );
-
-    print(_response.body);
-
-//    for(String key in _markersDescriptions.keys) {
-//      if(key != 'temporary'){
-//        print(_markersDescriptions[key]);
-//      }
-//    }
+    try{
+      await netLoader.postToServer(
+        endpoint: "/api/backup/trigger/",
+        content: widget._markerLoader.getMarkersDescriptions(),
+      );
+    } on HttpException catch (e) {
+      print(e);
+    }
   }
 
   // TODO odczyt znaczników z bazy
   Future<void> getBackup() async {
-    Map<String, Map> _markersDescriptions = await netLoader.getFromServer(
-      endpoint: "/api/backup/trigger/",
-    );
+    try{
+      Map<String, Map> _markersDescriptions = await netLoader.getFromServer(
+        endpoint: "/api/backup/trigger/",
+      );
 
-    _markersDescriptions.forEach((key, value) {
-      print(value);
-    });
+      _markersDescriptions.forEach((key, value) {
+        print(value);
+      });
 
-    widget._markerLoader.saveMarkersFromBackup(content: _markersDescriptions);
+      widget._markerLoader.saveMarkersFromBackup(content: _markersDescriptions);
+    } on HttpException catch (e) {
+      print(e);
+    } on Exception catch (e) {
+      print(e);
+    }
   }
 
   Widget _tabWidget(){
+    Color _color = (PrefService.get('ui_theme') == 'dark') ? Colors.white : Colors.black;
     return SizedBox(
       height: 300.0,
       child: DefaultTabController(
@@ -66,9 +67,9 @@ class _CommunityRouteState extends State<CommunityRoute> {
             Container(
               child: TabBar(
                 tabs: [
-                  Tab(icon: Icon(Icons.directions_car)),
-                  Tab(icon: Icon(Icons.directions_transit)),
-                  Tab(icon: Icon(Icons.directions_bike)),
+                  Tab(icon: Icon(Icons.directions_car, color: _color)),
+                  Tab(icon: Icon(Icons.directions_transit, color: _color)),
+                  Tab(icon: Icon(Icons.directions_bike, color: _color)),
                 ],
               ),
             ),
@@ -100,6 +101,8 @@ class _CommunityRouteState extends State<CommunityRoute> {
       appBar: appBar(),
       body:
       // BODY
+      PrefService.getString('token') == ''
+          ? textInfo('You need to log in to use community options.' ?? '') :
       SingleChildScrollView(
         child: new Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -138,8 +141,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
               },
             ),
 
-//            PrefService.get('community_enabled') != true
-//                ? textInfo('Community options are disabled' ?? '') : _tabWidget(),
+            _tabWidget(),
 
             ListTile(
               title: Text(

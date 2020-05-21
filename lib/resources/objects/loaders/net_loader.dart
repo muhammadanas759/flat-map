@@ -6,10 +6,19 @@ import 'package:global_configuration/global_configuration.dart';
 import 'package:preferences/preferences.dart';
 
 
-// https://pub.dev/packages/global_configuration
 class NetLoader {
 
   String _serverURL = GlobalConfiguration().getString("server_url");
+
+  void analyseResponse(http.Response response){
+    if(response.statusCode >= 300){
+      throw HttpException(response.body);
+    }
+    // verify if response can be parsed
+    if(!(json.decode(response.body) is Map)){
+      throw Exception("Can not decode response body to correct JSON\n\n" + response.body);
+    }
+  }
 
   Future<http.Response> postToServer({
     String endpoint, Map<String, dynamic> content
@@ -17,15 +26,18 @@ class NetLoader {
 
     String _token = PrefService.getString('token');
 
-    http.Response _response;
-    _response = await http.post(
-      _serverURL + "$endpoint",
+    http.Response _response = await http.post(
+      _serverURL + endpoint,
       headers: {
         "Content-type": "application/json",
         HttpHeaders.authorizationHeader: "Token $_token",
       },
       body: json.encode(content)
     );
+
+    // verify response
+    analyseResponse(_response);
+
     return _response;
   }
 
@@ -33,14 +45,17 @@ class NetLoader {
     String endpoint, Map<String, dynamic> content
   }) async {
 
-    http.Response _response;
-    _response = await http.post(
-        _serverURL + "$endpoint",
+    http.Response _response = await http.post(
+        _serverURL + endpoint,
         headers: {
           "Content-type": "application/json",
         },
         body: json.encode(content)
     );
+
+    // verify response
+    analyseResponse(_response);
+
     return _response;
   }
 
@@ -49,12 +64,15 @@ class NetLoader {
     String _token = PrefService.getString('token');
 
     http.Response _response = await http.get(
-      _serverURL + "/$endpoint",
+      _serverURL + endpoint,
       headers: {
         "Content-type": "application/json",
         HttpHeaders.authorizationHeader: "Token $_token",
       },
     );
+
+    // verify response
+    analyseResponse(_response);
 
     return json.decode(_response.body);
   }

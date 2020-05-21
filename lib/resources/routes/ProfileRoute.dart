@@ -160,6 +160,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
               leading: Icon(Icons.account_circle),
             ),
 
+            PrefService.getString('token') == '' ? SizedBox.shrink() :
             ListTile(
               title: Text(
                 'Username: ' + PrefService.getString("login"),
@@ -171,6 +172,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
               },
             ),
 
+            PrefService.getString('token') == '' ? SizedBox.shrink() :
             ListTile(
               title: Text(
                 'Change user login and/or password',

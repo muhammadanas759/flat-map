@@ -83,7 +83,7 @@ class _LogInRouteState extends State<LogInRoute> {
     // validate form
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      //print('FormData : ' + json.encode(_formData));
+
       // send credentials to server and get the response
       http.Response _response = await netLoader.getToken(
           endpoint: '/api/account/login/',
@@ -96,20 +96,11 @@ class _LogInRouteState extends State<LogInRoute> {
       if(_token != null) {
         // save token to global variables
         PrefService.setString("token", _token);
+        // save login to global variables
+        PrefService.setString("login", _formData['username']);
 
-        // reset Widget
-        String initScreen = PrefService.get('start_page');
-        switch(initScreen) {
-          case 'About': {initScreen = '/about';} break;
-          case 'Community': {initScreen = '/community';} break;
-          case 'Log In': {initScreen = '/login';} break;
-          case 'Map': {initScreen = '/map';} break;
-          case 'Profile': {initScreen = '/profile';} break;
-          case 'Settings': {initScreen = '/settings';} break;
-          default: { throw Exception('wrong start_page value: $initScreen'); } break;
-        }
-
-        Navigator.pushNamed(context, initScreen);
+        // reset view
+        resetView(context);
       } else {
         // there is no token in response
         print("No token detected!");
@@ -142,7 +133,10 @@ class _LogInRouteState extends State<LogInRoute> {
                 SizedBox(width: 20),
                 textFieldButton(text: "Sign up", onPressedMethod: _submitForm),
                 SizedBox(width: 20),
-                textFieldButton(text: "Use as guest", onPressedMethod: _submitForm),
+                textFieldButton(
+                  text: "Use as guest",
+                  onPressedMethod: (){resetView(context);}
+                ),
               ],
             ),
           ],
@@ -173,13 +167,34 @@ class _LogInRouteState extends State<LogInRoute> {
     );
   }
 
+  void resetView(BuildContext context){
+    // reset Widget
+    String initScreen = PrefService.get('start_page');
+    switch(initScreen) {
+      case 'About': {initScreen = '/about';} break;
+      case 'Community': {initScreen = '/community';} break;
+      case 'Log In': {initScreen = '/login';} break;
+      case 'Map': {initScreen = '/map';} break;
+      case 'Profile': {initScreen = '/profile';} break;
+      case 'Settings': {initScreen = '/settings';} break;
+      default: { throw Exception('wrong start_page value: $initScreen'); } break;
+    }
+
+    Navigator.pushNamed(context, initScreen);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
 
       // BODY FORM
-      body: PrefService.getString('token') == '' ? _logInForm() : _logOutForm(),
+      body:
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child:  PrefService.getString('token') == '' ?
+            _logInForm() : _logOutForm(),
+      ),
 
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),

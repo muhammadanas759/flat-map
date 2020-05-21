@@ -1,5 +1,4 @@
 import 'package:flatmapp/resources/objects/loaders/icons_loader.dart';
-import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 
 import 'dart:convert';
 import 'dart:io';
@@ -28,9 +27,6 @@ class MarkerLoader {
 
   // icons loader
   final IconsLoader iconsLoader = IconsLoader();
-
-  // internet connection gateway object
-  final NetLoader _netLoader = NetLoader();
 
   // ===========================================================================
   //-------------------------- LOADING METHODS ---------------------------------
@@ -232,14 +228,5 @@ class MarkerLoader {
     } else {
       print("no action to remove at index $index from marker $id");
     }
-  }
-
-  // ======================== NET CONTENT ======================================
-  void postBackup(){
-    _netLoader.postToServer(endpoint: "/backup", content: _markersDescriptions);
-  }
-
-  void getBackup(){
-    _netLoader.postToServer(endpoint: "/backup", content: _markersDescriptions);
   }
 }

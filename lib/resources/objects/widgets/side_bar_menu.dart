@@ -41,12 +41,14 @@ Drawer sideBarMenu(context){
         ),
         sideBarMenuElement(context, 'Map', Icon(Icons.location_on), '/map'),
         sideBarMenuElement(context, 'Profile', Icon(Icons.account_circle), '/profile'),
-        sideBarMenuElement(context, 'Community', Icon(Icons.language), '/community'),
+        PrefService.getString('token') == '' ?
+          SizedBox.shrink():
+          sideBarMenuElement(context, 'Community', Icon(Icons.language), '/community'),
         sideBarMenuElement(context, 'Settings', Icon(Icons.settings_applications), '/settings'),
         sideBarMenuElement(context, 'About', Icon(Icons.info_outline), '/about'),
         PrefService.getString('token') == '' ?
-        sideBarMenuElement(context, 'Log In', Icon(Icons.subdirectory_arrow_right), '/login'):
-        sideBarMenuElement(context, 'Log out', Icon(Icons.subdirectory_arrow_right), '/login'),
+          sideBarMenuElement(context, 'Log In', Icon(Icons.subdirectory_arrow_right), '/login'):
+          sideBarMenuElement(context, 'Log out', Icon(Icons.subdirectory_arrow_right), '/login'),
       ],
     ),
   );
