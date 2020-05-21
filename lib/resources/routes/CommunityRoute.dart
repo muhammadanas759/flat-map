@@ -24,6 +24,9 @@ class _CommunityRouteState extends State<CommunityRoute> {
 
   // TODO zapis znaczników do bazy
   Future<void> postBackup() async {
+
+    print(widget._markerLoader.getMarkersDescriptions());
+
     http.Response _response = await netLoader.postToServer(
       endpoint: "/api/backup/trigger/",
       content: widget._markerLoader.getMarkersDescriptions(),
