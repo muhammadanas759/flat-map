@@ -284,7 +284,8 @@ class _MapRouteState extends State<MapRoute> {
     );
   }
 
-  Future<void> _raiseAlertDialog(BuildContext context, var id, var index) async {
+  Future<void> _raiseAlertDialog(
+      BuildContext context, var id, var index, String description) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -292,7 +293,7 @@ class _MapRouteState extends State<MapRoute> {
         return AlertDialog(
             title: Text("Remove action?"),
             content: Text(
-                "You are about to remove action\n" + id
+                "You are about to remove action\n" + description
             ),
             actions: [
               // set up the buttons
@@ -362,7 +363,7 @@ class _MapRouteState extends State<MapRoute> {
               trailing: Icon(Icons.delete_forever),
               onTap: () {
                 // remove action with alert dialog
-                _raiseAlertDialog(context, id, index);
+                _raiseAlertDialog(context, id, index, _actionsList[index]);
               },
             ),
           );

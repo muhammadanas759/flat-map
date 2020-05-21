@@ -92,6 +92,10 @@ class CounterFormField extends FormField<int> {
                 ],
               ),
             ),
+            Text(
+              "m",
+              style: bodyText(),
+            ),
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () {

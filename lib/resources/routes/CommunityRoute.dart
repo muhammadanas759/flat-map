@@ -143,12 +143,6 @@ class _CommunityRouteState extends State<CommunityRoute> {
 
             _tabWidget(),
 
-            ListTile(
-              title: Text(
-                'FlatMapp Team @ 2020',
-                style: footer(),
-              ),
-            ),
           ],
         ),
       ),
