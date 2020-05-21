@@ -149,19 +149,28 @@ class _LogInRouteState extends State<LogInRoute> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-        SizedBox(height: 30),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-          Text(
-            'Are you sure you want to log out?',
-            style: header(),
-            ),
-          ]
-        ),
-          SizedBox(height: 40),
-          textFieldButton(text: "Yes", onPressedMethod: _logOut),
+          SizedBox(height: 30),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+            Text(
+              'Are you sure you want to log out?',
+              style: header(),
+              ),
+            ]
+          ),
+            SizedBox(height: 40),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              textFieldButton(text: "No", onPressedMethod: (){
+                resetView(context);
+              }),
+              textFieldButton(text: "Yes", onPressedMethod: _logOut),
+              ]
+          )
         ]
       )
     );
