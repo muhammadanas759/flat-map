@@ -121,8 +121,7 @@ class TriggerLoader {
     );
   }
 
-  Future<List<String>> getActivatedMarkers(LatLng user) async {
-    List<String> activated = [];
+  Future<void> getActivatedMarkers(LatLng user) async {
 
     _markerLoader.getDescriptionsKeys().forEach((String markerID){
       var markerData = _markerLoader.getMarkerDescription(id: markerID);
@@ -132,10 +131,17 @@ class TriggerLoader {
 
       // check if marker should be activated
       getDistanceBetweenPositions(user, markerPos).then((distance){
-        if( distance < range ){ activated.add(markerID); }
+        if( distance < range ){
+          if(!_activatedNow.contains(markerID) && !_activatedPreviously.contains(markerID))
+          _activatedNow.add(markerID);
+        }
+        else
+          {
+            if(_activatedPreviously.contains(markerID))
+              _activatedPreviously.removeAt(_activatedPreviously.indexOf(markerID));
+          }
       });
     });
-    return activated;
   }
 
   // ===========================================================================
@@ -143,13 +149,11 @@ class TriggerLoader {
 
     // TODO get correct list of markers to activate
     // get activated markers
-    _activatedNow = await getActivatedMarkers(position.toLatLng());
+
+    await getActivatedMarkers(position.toLatLng());
 
     // remove markers from previous tick that should not be activated again
     _activatedNow.removeWhere((item) => _activatedPreviously.contains(item));
-
-    // clear previous tick
-    _activatedPreviously = [];
 
     // TODO list of activated markers is delayed
     print("activated now: $_activatedNow");
