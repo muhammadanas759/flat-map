@@ -175,12 +175,25 @@ class _ProfileRouteState extends State<ProfileRoute> {
             PrefService.getString('token') == '' ? SizedBox.shrink() :
             ListTile(
               title: Text(
-                'Change user login and/or password',
+                'Change password',
                 style: bodyText(),
               ),
               trailing: Icon(Icons.keyboard_arrow_right),
+              leading: Icon(Icons.compare_arrows),
               onLongPress: (){
                 // TODO move to change form
+              },
+            ),
+            PrefService.getString('token') == '' ? SizedBox.shrink() :
+            ListTile(
+              title: Text(
+                'Erase account from system',
+                style: bodyText(),
+              ),
+              trailing: Icon(Icons.keyboard_arrow_right),
+              leading: Icon(Icons.remove_circle),
+              onLongPress: (){
+                // TODO move to remove form
               },
             ),
 
