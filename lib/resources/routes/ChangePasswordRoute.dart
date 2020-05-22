@@ -91,14 +91,32 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
             ),
             SizedBox(height: 20),
             Row(
-              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                textFieldButton(text: "Do it", onPressedMethod: _submitForm),
+                Expanded(
+                  child: ListTile(
+                    title: Text(
+                      'Change password',
+                      style: bodyText(),
+                    ),
+                    leading: Icon(Icons.check),
+                    onLongPress: (){
+                      _submitForm();
+                    },
+                  ),
+                ),
                 SizedBox(width: 20),
-                textFieldButton(text: "Don't do it",
-                  onPressedMethod: (){
-                    Navigator.of(context).pop();
-                  }
+                Expanded(
+                  child: ListTile(
+                    title: Text(
+                      'Don\'t do it',
+                      style: bodyText(),
+                      textAlign: TextAlign.right,
+                    ),
+                    trailing: Icon(Icons.close),
+                    onLongPress: (){
+                      Navigator.of(context).pop();
+                    },
+                  ),
                 ),
               ],
             ),

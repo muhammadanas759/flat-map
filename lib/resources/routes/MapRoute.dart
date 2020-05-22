@@ -184,33 +184,6 @@ class _MapRouteState extends State<MapRoute> {
     _formDescriptionController.text = _formMarkerData['description'];
   }
 
-  Widget _closeFormButton(){
-    return Material(
-      child: Ink(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.lightGreen, width: 5.0),
-          color: Colors.green,
-          shape: BoxShape.circle,
-        ),
-        child: InkWell(
-          //This keeps the splash effect within the circle
-          borderRadius: BorderRadius.circular(1000.0),
-          child: Padding(
-            padding:EdgeInsets.all(1.0),
-            child: IconButton(
-              icon: Icon(Icons.keyboard_arrow_down),
-              color: Colors.white,
-              tooltip: 'Close form',
-              onPressed: () {
-                _closePanel(context);
-              },
-            ),
-          ),
-        ),
-      )
-    );
-  }
-
   Widget _iconChangeButton(){
     return Expanded(
       child: SizedBox(
@@ -340,34 +313,44 @@ class _MapRouteState extends State<MapRoute> {
       Card( //                           <-- Card widget
         child: ListTile(
           title: Text(
-              "no actions added",
-              style: bodyText()
+            "no actions added",
+            style: bodyText()
           ),
         ),
       ) :
       ListView.builder(
         shrinkWrap: true,
-        itemCount: _actionsList.length,
+        itemCount: _actionsList.length + 1,
         itemBuilder: (context, index) {
-          return Card( //                           <-- Card widget
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-                backgroundImage: AssetImage(
-                  _actionsLoader.actionsMap[_actionsList[index]]
-                ),
-              ),
-              title: Text(
-                  _actionsList[index],
-                  style: bodyText()
-              ),
-              trailing: Icon(Icons.delete_forever),
-              onTap: () {
-                // remove action with alert dialog
-                _raiseAlertDialog(context, id, index, _actionsList[index]);
+          if (index == _actionsList.length){
+            // add last element - card "add marker"
+            return addActionCard(
+              tooltip: "Add action",
+              onPressedMethod: () {
+                _addAction();
               },
-            ),
-          );
+            );
+          } else {
+            return Card( //                           <-- Card widget
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  backgroundImage: AssetImage(
+                      _actionsLoader.actionsMap[_actionsList[index]]
+                  ),
+                ),
+                title: Text(
+                    _actionsList[index],
+                    style: bodyText()
+                ),
+                trailing: Icon(Icons.delete_forever),
+                onTap: () {
+                  // remove action with alert dialog
+                  _raiseAlertDialog(context, id, index, _actionsList[index]);
+                },
+              ),
+            );
+          }
         },
       ),
     );
@@ -413,6 +396,11 @@ class _MapRouteState extends State<MapRoute> {
     _slidingFormController.close();
   }
 
+  void _addAction(){
+    // Navigate to the icons screen using a named route.
+    Navigator.pushNamed(context, '/actions');
+  }
+
   Widget _markerAddForm(context){
     Marker tempMarker = widget._markerLoader.getGoogleMarker(
         id: PrefService.get('selected_marker')
@@ -434,7 +422,7 @@ class _MapRouteState extends State<MapRoute> {
                 overflow: TextOverflow.ellipsis,
                 style: bodyText(),
               ),
-              _closeFormButton(),
+              closeFormButton(onPressedMethod: (){_closePanel(context);}),
             ],
           ),
           SizedBox(height: 10),
@@ -454,21 +442,62 @@ class _MapRouteState extends State<MapRoute> {
           ),
 
           SizedBox(height: 10),
+//          Row(
+//            mainAxisSize: MainAxisSize.min,
+//            children: <Widget>[
+//              textFieldButton(text: "Add marker", onPressedMethod: (){
+//                // submit form and add marker to dictionary
+//                _saveMarker();
+//              }),
+//              SizedBox(width: 20),
+//              textFieldButton(text: "Add action", onPressedMethod: _addAction)
+//            ],
+//          ),
+//          SizedBox(width: 10),
+
           Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              textFieldButton(text: "Add marker", onPressedMethod: (){
-                // submit form and add marker to dictionary
-                _saveMarker();
-              }),
-              SizedBox(width: 20),
-              textFieldButton(text: "Add action", onPressedMethod: (){
-                // Navigate to the icons screen using a named route.
-                Navigator.pushNamed(context, '/actions');
-              }),
+              Expanded(
+                child: new Container(
+                    margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                    child: Divider(
+                      // color: Colors.black,
+                      // height: 36,
+                    )),
+              ),
             ],
           ),
           SizedBox(width: 10),
+
+          ListTile(
+            title: Text('Add marker', style: bodyText()),
+            leading: Icon(Icons.bookmark_border),
+            onTap: (){
+              // submit form and add marker to dictionary
+              _saveMarker();
+            }
+          ),
+
+          Row(children: <Widget>[
+            Expanded(
+              child: new Container(
+                  margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                  child: Divider(
+                    // color: Colors.black,
+                    // height: 36,
+                  )),
+            ),
+            Text("Actions List", style: bodyText()),
+            Expanded(
+              child: new Container(
+                  margin: const EdgeInsets.only(left: 20.0, right: 10.0),
+                  child: Divider(
+//                    color: Colors.black,
+//                    height: 36,
+                  )),
+            ),
+          ]),
 
           _buildActionsList(context),
         ],

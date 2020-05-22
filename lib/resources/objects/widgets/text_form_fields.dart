@@ -1,6 +1,7 @@
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:preferences/preferences.dart';
 
 
 InputDecoration textFieldStyle({
@@ -93,7 +94,7 @@ class CounterFormField extends FormField<int> {
               ),
             ),
             Text(
-              "m",
+              " m",
               style: bodyText(),
             ),
             IconButton(
@@ -122,4 +123,64 @@ Widget BackupTile({
   );
 }
 
+Widget addActionCard({String tooltip, Function onPressedMethod}){
+  Color _color = (PrefService.get('ui_theme') == 'dark') ? Colors.white : Colors.black;
+  return Container( //                           <-- Card widget
+    child: Opacity(
+      opacity: 0.2,
+      child: IconButton(
+        icon: Icon(Icons.add_circle_outline, size: 40,),
+        color: _color,
+        tooltip: tooltip,
+        onPressed: onPressedMethod
+      ),
+    ),
+    alignment: Alignment(0.0, 0.0),
+  );
+}
 
+//Widget closeFormButton({Function onPressedMethod}){
+//  Color _color = (PrefService.get('ui_theme') == 'dark') ? Colors.white : Colors.black;
+//  return Material(
+//      child: Ink(
+//        decoration: BoxDecoration(
+//          //border: Border.all(color: Colors.lightGreen, width: 5.0),
+//          //color: Colors.green,
+//          border: Border.all(
+//              color: _color,
+//              width: 5.0
+//          ),
+//          shape: BoxShape.circle,
+//        ),
+//        child: InkWell(
+//          //This keeps the splash effect within the circle
+//          borderRadius: BorderRadius.circular(1000.0),
+//          child: Padding(
+//            padding:EdgeInsets.all(1.0),
+//            child: IconButton(
+//              icon: Icon(Icons.keyboard_arrow_down, size: 40),
+//              color: _color,
+//              tooltip: 'Close form',
+//              onPressed: onPressedMethod,
+//            ),
+//          ),
+//        ),
+//      )
+//  );
+//}
+
+Widget closeFormButton({Function onPressedMethod}){
+  Color _color = (PrefService.get('ui_theme') == 'dark') ? Colors.white : Colors.black;
+  return Container(
+    child: Opacity(
+      opacity: 0.2,
+      child: IconButton(
+        icon: Icon(Icons.keyboard_arrow_down, size: 40),
+        color: _color,
+        tooltip: 'Close form',
+        onPressed: onPressedMethod,
+      ),
+    ),
+    alignment: Alignment(0.0, 0.0),
+  );
+}

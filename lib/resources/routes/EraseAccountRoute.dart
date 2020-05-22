@@ -72,14 +72,32 @@ class _EraseAccountRouteState extends State<EraseAccountRoute> {
             ),
             SizedBox(height: 20),
             Row(
-              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                textFieldButton(text: "Erase the account", onPressedMethod: _submitForm),
+                Expanded(
+                  child: ListTile(
+                    title: Text(
+                      'Erase the account',
+                      style: bodyText(),
+                    ),
+                    leading: Icon(Icons.cloud_off),
+                    onLongPress: (){
+                      _submitForm();
+                    },
+                  ),
+                ),
                 SizedBox(width: 20),
-                textFieldButton(text: "Don't do it",
-                  onPressedMethod: (){
-                    Navigator.of(context).pop();
-                  }
+                Expanded(
+                  child: ListTile(
+                    title: Text(
+                      'Don\'t do it',
+                      style: bodyText(),
+                      textAlign: TextAlign.right,
+                    ),
+                    trailing: Icon(Icons.keyboard_return),
+                    onLongPress: (){
+                      Navigator.of(context).pop();
+                    },
+                  ),
                 ),
               ],
             ),

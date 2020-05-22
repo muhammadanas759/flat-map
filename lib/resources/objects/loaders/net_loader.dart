@@ -82,7 +82,7 @@ class NetLoader {
 
   // TODO zapis znaczników do bazy
   Future<void> postBackup(MarkerLoader markerLoader) async {
-    if(PrefService.getString("cloud_enabled") == true) {
+    if(PrefService.get("cloud_enabled") == true) {
       try {
         await postToServer(
           endpoint: "/api/backup/trigger/",
@@ -91,12 +91,14 @@ class NetLoader {
       } on HttpException catch (e) {
         print(e);
       }
+    } else {
+      print("cloud save is not enabled");
     }
   }
 
   // TODO odczyt znaczników z bazy
   Future<void> getBackup(MarkerLoader markerLoader) async {
-    if(PrefService.getString("cloud_enabled") == true){
+    if(PrefService.get("cloud_enabled") == true){
       try{
         Map<String, Map> _markersDescriptions = await getFromServer(
           endpoint: "/api/backup/trigger/",

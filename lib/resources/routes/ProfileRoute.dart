@@ -7,6 +7,7 @@ import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:preferences/preferences.dart';
 
 
@@ -26,12 +27,16 @@ class _ProfileRouteState extends State<ProfileRoute> {
   IconsLoader _iconsLoader = IconsLoader();
 
   NetLoader netLoader = NetLoader();
+  
+  int _selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
   }
 
+  // ---------------------------------------------------------------------------
+  // ==================  ALERT DIALOGS =========================================
   Future<void> _raiseAlertDialogRemoveMarker(BuildContext context, var id, var _marker) async {
     return showDialog<void>(
       context: context,
@@ -108,8 +113,43 @@ class _ProfileRouteState extends State<ProfileRoute> {
       },
     );
   }
+  // ===========================================================================
+  // ---------------------------------------------------------------------------
+  // ======================= COLUMNS ===========================================
 
-  Widget listMarkers(BuildContext context) {
+  Widget _markersColumn(){
+    return Column(
+      children: <Widget>[
+        Tooltip(
+          message: "Remove all markers",
+          child: ListTile(
+            title: Text('Active markers: #'
+                '${widget._markerLoader.getDescriptionsKeys().length - 1}',
+                style: bodyText()
+            ),
+            leading: Icon(Icons.bookmark_border),
+            trailing: Icon(Icons.delete_forever),
+            onTap: (){
+              // remove all markers with alert dialog
+              _raiseAlertDialogRemoveAllMarkers(context);
+            },
+          ),
+        ),
+
+        // list of active markers
+        _listMarkers(context),
+
+        ListTile(
+          title: Text(
+            'FlatMapp Team @ 2020',
+            style: footer(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _listMarkers(BuildContext context) {
     List<String> _markersDescriptionsKeys = widget._markerLoader.getDescriptionsKeys();
 
     if (_markersDescriptionsKeys.length > 0){
@@ -118,57 +158,74 @@ class _ProfileRouteState extends State<ProfileRoute> {
           ListView.builder(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
-            itemCount: _markersDescriptionsKeys.length,
+            itemCount: _markersDescriptionsKeys.length + 1,
             itemBuilder: (context, index) {
+              if (index == _markersDescriptionsKeys.length){
+                // add last element - card "add marker"
+                return addActionCard(
+                  tooltip: "Add marker",
+                  onPressedMethod: () {
+                    // set temporary as selected marker
+                    PrefService.setString('selected_marker', "temporary");
+                    // Navigate to the profile screen using a named route.
+                    Navigator.pushNamed(context, '/map');
+                  },
+                );
+              } else {
+                // marker data for card
+                var _id = _markersDescriptionsKeys.elementAt(index);
+                var _marker = widget._markerLoader.getMarkerDescription(id: _id);
 
-              // marker data for card
-              var _id = _markersDescriptionsKeys.elementAt(index);
-              var _marker = widget._markerLoader.getMarkerDescription(id: _id);
-
-              // marker expandable card
-              return _id == 'temporary' ? SizedBox.shrink() : Card(
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      top: 5.0, left: 10.0, right: 10.0, bottom: 0.0
-                  ),
-                  child: ExpansionTile(
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      backgroundImage: AssetImage(
-                          _iconsLoader.markerImageLocal[_marker['icon']]
+                // don't add temporary marker to the list
+                if(_id == 'temporary'){
+                  return SizedBox.shrink();
+                } else {
+                  // add marker marker expandable card:
+                  return  Card(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: 5.0, left: 10.0, right: 10.0, bottom: 0.0
                       ),
-                    ),
-                    title: Text(_marker['title'], style: bodyText()),
-                    subtitle: Text(_marker['description'], style: footer()),
-                    trailing: Icon(Icons.keyboard_arrow_down),
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          IconButton(
-                            icon: Icon(Icons.location_searching),
-                            tooltip: 'Find marker',
-                            onPressed: () {
-                              // set selected marker id for map screen
-                              PrefService.setString('selected_marker', _id);
-                              // Navigate to the profile screen using a named route.
-                              Navigator.pushNamed(context, '/map');
-                            },
+                      child: ExpansionTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          backgroundImage: AssetImage(
+                              _iconsLoader.markerImageLocal[_marker['icon']]
                           ),
-                          IconButton(
-                            icon: Icon(Icons.delete_forever),
-                            tooltip: 'Remove marker',
-                            onPressed: () {
-                              // set up the AlertDialog
-                              _raiseAlertDialogRemoveMarker(context, _id, _marker);
-                            },
+                        ),
+                        title: Text(_marker['title'], style: bodyText()),
+                        subtitle: Text(_marker['description'], style: footer()),
+                        trailing: Icon(Icons.keyboard_arrow_down),
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              IconButton(
+                                icon: Icon(Icons.location_searching),
+                                tooltip: 'Find marker',
+                                onPressed: () {
+                                  // set selected marker id for map screen
+                                  PrefService.setString('selected_marker', _id);
+                                  // Navigate to the profile screen using a named route.
+                                  Navigator.pushNamed(context, '/map');
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.delete_forever),
+                                tooltip: 'Remove marker',
+                                onPressed: () {
+                                  // set up the AlertDialog
+                                  _raiseAlertDialogRemoveMarker(context, _id, _marker);
+                                },
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-              );
+                    ),
+                  );
+                }
+              }
             },
           ),
       );
@@ -180,113 +237,129 @@ class _ProfileRouteState extends State<ProfileRoute> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar(),
-      body: Column(
+  Widget _profileColumn(){
+    return PrefService.get('token') == '' ?
+    textInfo('You need to log in to use Profile' ?? '') :
+    Column(
+      children: <Widget>[
+        ListTile(
+          title: Text('Profile', style: header()),
+          leading: Icon(Icons.account_circle),
+        ),
+
+        Tooltip(
+          message: "Change username",
+          child: ListTile(
+            title: Text(
+              'Username: ' + PrefService.getString("login"),
+              style: bodyText(),
+            ),
+            leading: Icon(Icons.laptop),
+            onTap: (){
+              // TODO move to change form
+            },
+          ),
+        ),
+
+        BackupTile(
+            text: 'Back up your markers to server',
+            icon: Icon(Icons.backup),
+            onLongPressMethod: (){
+              netLoader.postBackup(widget._markerLoader);
+            }
+        ),
+
+        BackupTile(
+            text: 'Get your markers from Backup',
+            icon: Icon(Icons.file_download),
+            onLongPressMethod: (){
+              netLoader.getBackup(widget._markerLoader);
+            }
+        ),
+
+        ExpansionTile(
+          leading: Icon(Icons.laptop),
+          title: Text("Change user data", style: bodyText()),
+          trailing: Icon(Icons.keyboard_arrow_down),
           children: <Widget>[
             ListTile(
-              title: Text('Profile', style: header()),
-              leading: Icon(Icons.account_circle),
-            ),
-
-            PrefService.getString('token') == '' ? SizedBox.shrink() :
-            Tooltip(
-              message: "Change username",
-              child: ListTile(
-                title: Text(
-                  'Username: ' + PrefService.getString("login"),
-                  style: bodyText(),
-                ),
-                leading: Icon(Icons.laptop),
-                onTap: (){
-                  // TODO move to change form
-                },
+              title: Text(
+                'Change password',
+                style: bodyText(),
               ),
+              // leading: Icon(Icons.keyboard_arrow_right),
+              trailing: Icon(Icons.compare_arrows),
+              onLongPress: (){
+                // move to change form
+                Navigator.pushNamed(context, '/change_password');
+              },
             ),
-
-            // community dependent widgets
-            PrefService.getString('token') == '' ?
-            SizedBox.shrink() :
-            ExpansionTile(
-              leading: Icon(Icons.laptop),
-              title: Text("Change user data", style: bodyText()),
-              trailing: Icon(Icons.keyboard_arrow_down),
-              children: <Widget>[
-                ListTile(
-                  title: Text(
-                    'Change password',
-                    style: bodyText(),
-                  ),
-                  // leading: Icon(Icons.keyboard_arrow_right),
-                  trailing: Icon(Icons.compare_arrows),
-                  onLongPress: (){
-                    // move to change form
-                    Navigator.pushNamed(context, '/change_password');
-                  },
-                ),
-
-                BackupTile(
-                    text: 'Back up your markers to server',
-                    icon: Icon(Icons.backup),
-                    onLongPressMethod: (){
-                      netLoader.postBackup(widget._markerLoader);
-                    }
-                ),
-
-                BackupTile(
-                    text: 'Get your markers from Backup',
-                    icon: Icon(Icons.file_download),
-                    onLongPressMethod: (){
-                      netLoader.getBackup(widget._markerLoader);
-                    }
-                ),
-
-                ListTile(
-                  title: Text(
-                    'Erase account from system',
-                    style: bodyText(),
-                  ),
-                  trailing: Icon(Icons.remove_circle),
-                  leading: Icon(Icons.remove_circle),
-                  onLongPress: (){
-                    // move to account removal form
-                    Navigator.pushNamed(context, '/erase_account');
-                  },
-                ),
-              ],
-            ),
-
-            Tooltip(
-              message: "Remove all markers",
-              child: ListTile(
-                title: Text('Active markers: #'
-                    '${widget._markerLoader.getDescriptionsKeys().length - 1}',
-                    style: bodyText()
-                ),
-                leading: Icon(Icons.bookmark_border),
-                trailing: Icon(Icons.delete_forever),
-                onTap: (){
-                  // remove all markers with alert dialog
-                  _raiseAlertDialogRemoveAllMarkers(context);
-                },
-              ),
-            ),
-
-            // list of active markers
-            listMarkers(context),
 
             ListTile(
               title: Text(
-                'FlatMapp Team @ 2020',
-                style: footer(),
+                'Erase account from system',
+                style: bodyText(),
               ),
+              trailing: Icon(Icons.remove_circle),
+              leading: Icon(Icons.remove_circle),
+              onLongPress: (){
+                // move to account removal form
+                Navigator.pushNamed(context, '/erase_account');
+              },
             ),
           ],
         ),
+
+        ListTile(
+          title: Text(
+            'FlatMapp Team @ 2020',
+            style: footer(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> _views = <Widget>[
+      _markersColumn(),
+      _profileColumn(),
+    ];
+    return Scaffold(
+      appBar: appBar(),
+      body: _views.elementAt(_selectedIndex),
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
+
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bookmark_border),
+            title: Text('Markers'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle, ),
+            title: Text('Profile'),
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.green,
+        onTap: (int index) {
+          if(index == 1 && PrefService.getString('token') == ''){
+            // show message
+            Fluttertoast.showToast(
+              msg: "You need to log in to use Profile",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+            );
+          } else {
+            setState(() {
+              _selectedIndex = index;
+            });
+          }
+        }
+      ),
     );
   }
 }
