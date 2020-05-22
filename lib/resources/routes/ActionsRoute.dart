@@ -42,7 +42,7 @@ class _ActionsRouteState extends State<ActionsRoute> {
               widget._markerLoader.addMarkerAction(
                   id: PrefService.get('selected_marker'), action: key);
               // Navigate back
-              Navigator.pop(context);
+              Navigator.of(context).pop();
             },
           ),
         );

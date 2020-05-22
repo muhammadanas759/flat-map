@@ -1,6 +1,7 @@
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
@@ -35,7 +36,6 @@ class _LogInRouteState extends State<LogInRoute> {
           labelTextStr: "Email",
           hintTextStr: "Your email goes here"
       ),
-      // ignore: missing_return
       validator: (String value) {
         if (!RegExp(
             r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
@@ -62,7 +62,6 @@ class _LogInRouteState extends State<LogInRoute> {
           hintTextStr: "Your password goes here"
       ),
       obscureText: false,
-      // ignore: missing_return
       validator: (String value) {
         if (value.isEmpty) {
           return 'Password can not be empty';
@@ -190,6 +189,13 @@ class _LogInRouteState extends State<LogInRoute> {
     }
 
     Navigator.pushNamed(context, initScreen);
+
+    // show message
+    Fluttertoast.showToast(
+      msg: "Logged in",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+    );
   }
 
   @override

@@ -67,7 +67,7 @@ class CounterFormField extends FormField<int> {
             IconButton(
               icon: Icon(Icons.remove),
               onPressed: () {
-                if(state.value > 1){
+                if (state.value > 1) {
                   state.didChange(state.value - 1);
                   _textInputController.text = state.value.toString();
                 }
@@ -77,7 +77,7 @@ class CounterFormField extends FormField<int> {
               width: 100,
               child: TextField(
                 controller: _textInputController..text = state.value.toString(),
-                onSubmitted: (String input){
+                onSubmitted: (String input) {
                   state.didChange(int.parse(input));
                   _textInputController.text = state.value.toString();
                 },
@@ -108,3 +108,18 @@ class CounterFormField extends FormField<int> {
       }
   );
 }
+
+Widget BackupTile({
+  String text, Icon icon, Function onLongPressMethod
+}){
+  return ListTile(
+    title: Text(
+      text,
+      style: bodyText(),
+    ),
+    trailing: icon,
+    onLongPress: onLongPressMethod,
+  );
+}
+
+

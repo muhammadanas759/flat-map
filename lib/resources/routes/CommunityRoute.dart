@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
+import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 
 import 'package:flutter/material.dart';
@@ -22,37 +21,6 @@ class CommunityRoute extends StatefulWidget {
 class _CommunityRouteState extends State<CommunityRoute> {
 
   NetLoader netLoader = NetLoader();
-
-  // zapis znaczników do bazy
-  Future<void> postBackup() async {
-    try{
-      await netLoader.postToServer(
-        endpoint: "/api/backup/trigger/",
-        content: widget._markerLoader.getMarkersDescriptions(),
-      );
-    } on HttpException catch (e) {
-      print(e);
-    }
-  }
-
-  // TODO odczyt znaczników z bazy
-  Future<void> getBackup() async {
-    try{
-      Map<String, Map> _markersDescriptions = await netLoader.getFromServer(
-        endpoint: "/api/backup/trigger/",
-      );
-
-      _markersDescriptions.forEach((key, value) {
-        print(value);
-      });
-
-      widget._markerLoader.saveMarkersFromBackup(content: _markersDescriptions);
-    } on HttpException catch (e) {
-      print(e);
-    } on Exception catch (e) {
-      print(e);
-    }
-  }
 
   Widget _tabWidget(){
     Color _color = (PrefService.get('ui_theme') == 'dark') ? Colors.white : Colors.black;
@@ -117,28 +85,20 @@ class _CommunityRouteState extends State<CommunityRoute> {
             ),
 
             // community dependent widgets
-            PrefService.get('community_enabled') != true
-                ? SizedBox.shrink() : ListTile(
-              title: Text(
-                'Back up your markers to server',
-                style: bodyText(),
-              ),
-              trailing: Icon(Icons.backup),
-              onLongPress: (){
-                postBackup();
-              },
+            BackupTile(
+                text: 'Back up your markers to server',
+                icon: Icon(Icons.backup),
+                onLongPressMethod: (){
+                  netLoader.postBackup(widget._markerLoader);
+                }
             ),
 
-            PrefService.get('community_enabled') != true
-                ? SizedBox.shrink() : ListTile(
-              title: Text(
-                'Get your markers from Backup',
-                style: bodyText(),
-              ),
-              trailing: Icon(Icons.file_download),
-              onLongPress: (){
-                getBackup();
-              },
+            BackupTile(
+                text: 'Get your markers from Backup',
+                icon: Icon(Icons.file_download),
+                onLongPressMethod: (){
+                  netLoader.getBackup(widget._markerLoader);
+                }
             ),
 
             _tabWidget(),

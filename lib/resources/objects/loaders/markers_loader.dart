@@ -229,4 +229,21 @@ class MarkerLoader {
       print("no action to remove at index $index from marker $id");
     }
   }
+
+  Future<void> removeAllMarkers() async {
+    // from non-persistent storage
+    _markersDescriptions.clear();
+    googleMarkers.clear();
+    zones.clear();
+
+    // from persistent storage
+    String path = await getFilePath();
+    // if marker storage does exist
+    if (await File(path).exists()){
+      // create new one
+      File(path).writeAsString('');
+      // add temporary marker
+      addTemporaryMarker(LatLng(69.420, 69.420));
+    }
+  }
 }

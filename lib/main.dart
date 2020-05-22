@@ -1,4 +1,6 @@
 import 'package:flatmapp/resources/routes/ActionsRoute.dart';
+import 'package:flatmapp/resources/routes/ChangePasswordRoute.dart';
+import 'package:flatmapp/resources/routes/EraseAccountRoute.dart';
 import 'package:flatmapp/resources/routes/LogInRoute.dart';
 import 'package:flatmapp/resources/routes/MapRoute.dart';
 import 'package:flatmapp/resources/routes/ProfileRoute.dart';
@@ -85,7 +87,9 @@ class MyApp extends StatelessWidget {
     return new DynamicTheme(
       defaultBrightness: Brightness.light,
       data: (brightness) => new ThemeData(
-          brightness: brightness, accentColor: Colors.green),
+          brightness: brightness,
+          accentColor: Colors.green
+      ),
       themedWidgetBuilder: (context, theme){
         return MaterialApp(
           title: 'FlatMApp',
@@ -102,6 +106,8 @@ class MyApp extends StatelessWidget {
             '/login': (context) => LogInRoute(),
             '/icons': (context) => IconsRoute(),
             '/actions': (context) => ActionsRoute(_markerLoader),
+            '/change_password': (context) => ChangePasswordRoute(),
+            '/erase_account': (context) => EraseAccountRoute(),
           },
         );
       }

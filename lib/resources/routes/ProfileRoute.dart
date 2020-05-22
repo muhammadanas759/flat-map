@@ -1,7 +1,9 @@
 import 'package:flatmapp/resources/objects/loaders/icons_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
+import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
+import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 
 import 'package:flutter/material.dart';
@@ -23,12 +25,14 @@ class _ProfileRouteState extends State<ProfileRoute> {
 
   IconsLoader _iconsLoader = IconsLoader();
 
+  NetLoader netLoader = NetLoader();
+
   @override
   void initState() {
     super.initState();
   }
 
-  Future<void> _raiseAlertDialog(BuildContext context, var id, var _marker) async {
+  Future<void> _raiseAlertDialogRemoveMarker(BuildContext context, var id, var _marker) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -68,6 +72,43 @@ class _ProfileRouteState extends State<ProfileRoute> {
     );
   }
 
+  Future<void> _raiseAlertDialogRemoveAllMarkers(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+            title: Text("Remove ALL markers?"),
+            content: Text(
+                "You are about to remove all markers \n"
+                    "from local storage.\n"
+            ),
+            actions: [
+              // set up the buttons
+              FlatButton(
+                child: Text("no nO NO"),
+                onPressed:  () {
+                  // dismiss alert
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text("REMOVE. THEM. ALL."),
+                onPressed:  () {
+                  // remove all markers
+                  setState(() {
+                    widget._markerLoader.removeAllMarkers();
+                  });
+                  // dismiss alert
+                  Navigator.of(context).pop();
+                },
+              ),
+            ]
+        );
+      },
+    );
+  }
+
   Widget listMarkers(BuildContext context) {
     List<String> _markersDescriptionsKeys = widget._markerLoader.getDescriptionsKeys();
 
@@ -99,7 +140,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
                     ),
                     title: Text(_marker['title'], style: bodyText()),
                     subtitle: Text(_marker['description'], style: footer()),
-                    trailing: Icon(Icons.keyboard_arrow_right),
+                    trailing: Icon(Icons.keyboard_arrow_down),
                     children: <Widget>[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -114,22 +155,12 @@ class _ProfileRouteState extends State<ProfileRoute> {
                               Navigator.pushNamed(context, '/map');
                             },
                           ),
-//                          IconButton(
-//                            icon: Icon(Icons.edit),
-//                            tooltip: 'Edit marker',
-//                            onPressed: () {
-//                              // set selected marker id for map screen
-//                              PrefService.setString('selected_marker', _id);
-//                              // Navigate to the profile screen using a named route.
-//                              Navigator.pushNamed(context, '/map');
-//                            },
-//                          ),
                           IconButton(
                             icon: Icon(Icons.delete_forever),
                             tooltip: 'Remove marker',
                             onPressed: () {
                               // set up the AlertDialog
-                              _raiseAlertDialog(context, _id, _marker);
+                              _raiseAlertDialogRemoveMarker(context, _id, _marker);
                             },
                           ),
                         ],
@@ -161,48 +192,86 @@ class _ProfileRouteState extends State<ProfileRoute> {
             ),
 
             PrefService.getString('token') == '' ? SizedBox.shrink() :
-            ListTile(
-              title: Text(
-                'Username: ' + PrefService.getString("login"),
-                style: bodyText(),
+            Tooltip(
+              message: "Change username",
+              child: ListTile(
+                title: Text(
+                  'Username: ' + PrefService.getString("login"),
+                  style: bodyText(),
+                ),
+                leading: Icon(Icons.laptop),
+                onTap: (){
+                  // TODO move to change form
+                },
               ),
+            ),
+
+            // community dependent widgets
+            PrefService.getString('token') == '' ?
+            SizedBox.shrink() :
+            ExpansionTile(
               leading: Icon(Icons.laptop),
-              onTap: (){
-                // TODO move to change form
-              },
+              title: Text("Change user data", style: bodyText()),
+              trailing: Icon(Icons.keyboard_arrow_down),
+              children: <Widget>[
+                ListTile(
+                  title: Text(
+                    'Change password',
+                    style: bodyText(),
+                  ),
+                  // leading: Icon(Icons.keyboard_arrow_right),
+                  trailing: Icon(Icons.compare_arrows),
+                  onLongPress: (){
+                    // move to change form
+                    Navigator.pushNamed(context, '/change_password');
+                  },
+                ),
+
+                BackupTile(
+                    text: 'Back up your markers to server',
+                    icon: Icon(Icons.backup),
+                    onLongPressMethod: (){
+                      netLoader.postBackup(widget._markerLoader);
+                    }
+                ),
+
+                BackupTile(
+                    text: 'Get your markers from Backup',
+                    icon: Icon(Icons.file_download),
+                    onLongPressMethod: (){
+                      netLoader.getBackup(widget._markerLoader);
+                    }
+                ),
+
+                ListTile(
+                  title: Text(
+                    'Erase account from system',
+                    style: bodyText(),
+                  ),
+                  trailing: Icon(Icons.remove_circle),
+                  leading: Icon(Icons.remove_circle),
+                  onLongPress: (){
+                    // move to account removal form
+                    Navigator.pushNamed(context, '/erase_account');
+                  },
+                ),
+              ],
             ),
 
-            PrefService.getString('token') == '' ? SizedBox.shrink() :
-            ListTile(
-              title: Text(
-                'Change password',
-                style: bodyText(),
+            Tooltip(
+              message: "Remove all markers",
+              child: ListTile(
+                title: Text('Active markers: #'
+                    '${widget._markerLoader.getDescriptionsKeys().length - 1}',
+                    style: bodyText()
+                ),
+                leading: Icon(Icons.bookmark_border),
+                trailing: Icon(Icons.delete_forever),
+                onTap: (){
+                  // remove all markers with alert dialog
+                  _raiseAlertDialogRemoveAllMarkers(context);
+                },
               ),
-              trailing: Icon(Icons.keyboard_arrow_right),
-              leading: Icon(Icons.compare_arrows),
-              onLongPress: (){
-                // TODO move to change form
-              },
-            ),
-            PrefService.getString('token') == '' ? SizedBox.shrink() :
-            ListTile(
-              title: Text(
-                'Erase account from system',
-                style: bodyText(),
-              ),
-              trailing: Icon(Icons.keyboard_arrow_right),
-              leading: Icon(Icons.remove_circle),
-              onLongPress: (){
-                // TODO move to remove form
-              },
-            ),
-
-            ListTile(
-              title: Text('Active markers: #'
-                  '${widget._markerLoader.getDescriptionsKeys().length - 1}',
-                  style: bodyText()
-              ),
-              leading: Icon(Icons.bookmark_border),
             ),
 
             // list of active markers

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:global_configuration/global_configuration.dart';
@@ -75,5 +76,49 @@ class NetLoader {
     analyseResponse(_response);
 
     return json.decode(_response.body);
+  }
+
+  // ------------------------------------------------------------------------
+
+  // TODO zapis znaczników do bazy
+  Future<void> postBackup(MarkerLoader markerLoader) async {
+    if(PrefService.getString("cloud_enabled") == true) {
+      try {
+        await postToServer(
+          endpoint: "/api/backup/trigger/",
+          content: markerLoader.getMarkersDescriptions(),
+        );
+      } on HttpException catch (e) {
+        print(e);
+      }
+    }
+  }
+
+  // TODO odczyt znaczników z bazy
+  Future<void> getBackup(MarkerLoader markerLoader) async {
+    if(PrefService.getString("cloud_enabled") == true){
+      try{
+        Map<String, Map> _markersDescriptions = await getFromServer(
+          endpoint: "/api/backup/trigger/",
+        );
+
+        _markersDescriptions.forEach((key, value) {
+          print(value);
+        });
+
+        markerLoader.saveMarkersFromBackup(content: _markersDescriptions);
+      } on HttpException catch (e) {
+        print(e);
+      } on Exception catch (e) {
+        print(e);
+      }
+    } else {
+      print("cloud save is not enabled");
+    }
+  }
+
+  // TODO zmiana hasła
+  Future<http.Response> changePassword(Map<String, dynamic> content) async {
+    return null;
   }
 }

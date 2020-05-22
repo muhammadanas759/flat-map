@@ -5,6 +5,7 @@ import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter/material.dart';
@@ -396,6 +397,13 @@ class _MapRouteState extends State<MapRoute> {
 
     // close form panel
     _closePanel(context);
+
+    // show message
+    Fluttertoast.showToast(
+      msg: "Added marker",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+    );
   }
 
   void _closePanel(context){
