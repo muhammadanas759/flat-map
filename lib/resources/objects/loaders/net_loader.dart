@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:global_configuration/global_configuration.dart';
@@ -24,7 +25,7 @@ class NetLoader {
   }
 
   Future<http.Response> postToServer({
-    String endpoint, Map<String, dynamic> content
+    String endpoint, List<Map<String, dynamic>> content
   }) async {
 
     String _token = PrefService.getString('token');
@@ -62,7 +63,7 @@ class NetLoader {
     return _response;
   }
 
-  Future<Map<String, Map<dynamic, dynamic>>> getFromServer({String endpoint}) async {
+  Future<List<Map<String, dynamic>>> getFromServer({String endpoint}) async {
 
     String _token = PrefService.getString('token');
 
@@ -81,14 +82,32 @@ class NetLoader {
   }
 
   // ------------------------------------------------------------------------
-
   // TODO zapis znaczników do bazy
   Future<void> postBackup(BuildContext context, MarkerLoader markerLoader) async {
     if(PrefService.get("cloud_enabled") == true) {
       try {
+
+        List<Map<String, dynamic>> parsedMarkers = [];
+
+        // parse markers to form acceptable in server interface
+        markerLoader.getMarkersDescriptions().forEach((key, value) {
+          parsedMarkers.add({
+            "Action_Name": value['actions'],
+            "position_x": value['position_x'],
+            "position_y": value['position_y'],
+            "_range": value['range'],
+            "action_position": 9999,
+            "title": value['title'],
+            "icon": value['icon'],
+            "description": value['description'],
+            "action_detail": "",
+          });
+        });
+
+        // send parsed markers
         await postToServer(
           endpoint: "/api/backup/trigger/",
-          content: markerLoader.getMarkersDescriptions(),
+          content: parsedMarkers,
         );
       } on HttpException catch (e) {
         print(e);
@@ -111,15 +130,24 @@ class NetLoader {
   Future<void> getBackup(BuildContext context, MarkerLoader markerLoader) async {
     if(PrefService.get("cloud_enabled") == true){
       try{
-        Map<String, Map> _markersDescriptions = await getFromServer(
+        List<Map<String, dynamic>> parsedMarkers = await getFromServer(
           endpoint: "/api/backup/trigger/",
         );
 
-        _markersDescriptions.forEach((key, value) {
-          print(value);
-        });
+        // TODO unlock in final version
+        // markerLoader.removeAllMarkers();
 
-        markerLoader.saveMarkersFromBackup(content: _markersDescriptions);
+        parsedMarkers.forEach((marker) {
+          markerLoader.addMarker(
+            id: marker['id'],
+            position: LatLng(marker['position_x'], marker['position_y']),
+            icon: marker['icon'],
+            title: marker['title'],
+            description: marker['description'],
+            range: marker['range'],
+            actions: marker['Action_Name'],
+          );
+        });
       } on HttpException catch (e) {
         print(e);
         Fluttertoast.showToast(
