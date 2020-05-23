@@ -126,15 +126,57 @@ class _LogInRouteState extends State<LogInRoute> {
             _buildPasswordField(),
             SizedBox(height: 20),
             Row(
-              mainAxisSize: MainAxisSize.min,
+              // mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                textFieldButton(text: "Log in", onPressedMethod: _submitForm),
+//                textFieldButton(text: "Log in", onPressedMethod: _submitForm),
+//                SizedBox(width: 20),
+//                textFieldButton(text: "Sign up", onPressedMethod: _submitForm),
+//                SizedBox(width: 20),
+//                textFieldButton(
+//                  text: "Use as guest",
+//                  onPressedMethod: (){resetView(context);}
+//                ),
+
+                Expanded(
+                  child: ListTile(
+                    title: Text(
+                      'Log in',
+                      style: bodyText(),
+                      textAlign: TextAlign.left,
+                    ),
+                    leading: Icon(Icons.input),
+                    onLongPress: (){
+                      _submitForm();
+                    },
+                  ),
+                ),
                 SizedBox(width: 20),
-                textFieldButton(text: "Sign up", onPressedMethod: _submitForm),
+                Expanded(
+                  child: ListTile(
+                    title: Text(
+                      'Register',
+                      style: bodyText(),
+                      textAlign: TextAlign.center,
+                    ),
+                    trailing: Icon(Icons.queue),
+                    onLongPress: (){
+                      _submitForm();
+                    },
+                  ),
+                ),
                 SizedBox(width: 20),
-                textFieldButton(
-                  text: "Use as guest",
-                  onPressedMethod: (){resetView(context);}
+                Expanded(
+                  child: ListTile(
+                    title: Text(
+                      'Use as guest',
+                      style: bodyText(),
+                      textAlign: TextAlign.right,
+                    ),
+                    trailing: Icon(Icons.cloud_off),
+                    onLongPress: (){
+                      Navigator.of(context).pop();
+                    },
+                  ),
                 ),
               ],
             ),

@@ -39,7 +39,7 @@ class _EraseAccountRouteState extends State<EraseAccountRoute> {
     return Form(
         key: _formKey,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             SizedBox(height: 20),
             Text(

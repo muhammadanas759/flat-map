@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:global_configuration/global_configuration.dart';
@@ -81,7 +83,7 @@ class NetLoader {
   // ------------------------------------------------------------------------
 
   // TODO zapis znaczników do bazy
-  Future<void> postBackup(MarkerLoader markerLoader) async {
+  Future<void> postBackup(BuildContext context, MarkerLoader markerLoader) async {
     if(PrefService.get("cloud_enabled") == true) {
       try {
         await postToServer(
@@ -90,14 +92,23 @@ class NetLoader {
         );
       } on HttpException catch (e) {
         print(e);
+        Fluttertoast.showToast(
+          msg: "Error: server could not process backup",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
       }
     } else {
-      print("cloud save is not enabled");
+      Fluttertoast.showToast(
+        msg: "Cloud save is not enabled in Settings - advanced",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+      );
     }
   }
 
   // TODO odczyt znaczników z bazy
-  Future<void> getBackup(MarkerLoader markerLoader) async {
+  Future<void> getBackup(BuildContext context, MarkerLoader markerLoader) async {
     if(PrefService.get("cloud_enabled") == true){
       try{
         Map<String, Map> _markersDescriptions = await getFromServer(
@@ -111,11 +122,25 @@ class NetLoader {
         markerLoader.saveMarkersFromBackup(content: _markersDescriptions);
       } on HttpException catch (e) {
         print(e);
+        Fluttertoast.showToast(
+          msg: "Error: server could not process backup",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
       } on Exception catch (e) {
         print(e);
+        Fluttertoast.showToast(
+          msg: "Error: something went wrong during download",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
       }
     } else {
-      print("cloud save is not enabled");
+      Fluttertoast.showToast(
+        msg: "Cloud save is not enabled in Settings - advanced",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+      );
     }
   }
 

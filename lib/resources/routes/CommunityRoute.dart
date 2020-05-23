@@ -89,7 +89,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
                 text: 'Back up your markers to server',
                 icon: Icon(Icons.backup),
                 onLongPressMethod: (){
-                  netLoader.postBackup(widget._markerLoader);
+                  netLoader.postBackup(context, widget._markerLoader);
                 }
             ),
 
@@ -97,7 +97,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
                 text: 'Get your markers from Backup',
                 icon: Icon(Icons.file_download),
                 onLongPressMethod: (){
-                  netLoader.getBackup(widget._markerLoader);
+                  netLoader.getBackup(context, widget._markerLoader);
                 }
             ),
 

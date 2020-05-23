@@ -1,6 +1,7 @@
 import 'package:flatmapp/resources/objects/loaders/icons_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
+// import 'package:flatmapp/resources/objects/widgets/actions_list.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
@@ -26,7 +27,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
 
   IconsLoader _iconsLoader = IconsLoader();
 
-  NetLoader netLoader = NetLoader();
+  NetLoader _netLoader = NetLoader();
   
   int _selectedIndex = 0;
 
@@ -113,18 +114,22 @@ class _ProfileRouteState extends State<ProfileRoute> {
       },
     );
   }
+
   // ===========================================================================
   // ---------------------------------------------------------------------------
   // ======================= COLUMNS ===========================================
 
   Widget _markersColumn(){
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Tooltip(
           message: "Remove all markers",
           child: ListTile(
-            title: Text('Active markers: #'
-                '${widget._markerLoader.getDescriptionsKeys().length - 1}',
+            title: Text('Active markers: #' + (
+              widget._markerLoader.getDescriptionsKeys().length - 1 > 0 ?
+              '${widget._markerLoader.getDescriptionsKeys().length - 1}' : '0'
+            ),
                 style: bodyText()
             ),
             leading: Icon(Icons.bookmark_border),
@@ -151,6 +156,8 @@ class _ProfileRouteState extends State<ProfileRoute> {
 
   Widget _listMarkers(BuildContext context) {
     List<String> _markersDescriptionsKeys = widget._markerLoader.getDescriptionsKeys();
+
+    // ActionsList _actionsList = ActionsList(widget._markerLoader);
 
     if (_markersDescriptionsKeys.length > 0){
       return Expanded(
@@ -220,6 +227,8 @@ class _ProfileRouteState extends State<ProfileRoute> {
                               ),
                             ],
                           ),
+                          // TODO add actions list to marker card in Profile
+                          // _actionsList.buildActionsList(context, _id),
                         ],
                       ),
                     ),
@@ -265,7 +274,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
             text: 'Back up your markers to server',
             icon: Icon(Icons.backup),
             onLongPressMethod: (){
-              netLoader.postBackup(widget._markerLoader);
+              _netLoader.postBackup(context, widget._markerLoader);
             }
         ),
 
@@ -273,7 +282,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
             text: 'Get your markers from Backup',
             icon: Icon(Icons.file_download),
             onLongPressMethod: (){
-              netLoader.getBackup(widget._markerLoader);
+              _netLoader.getBackup(context, widget._markerLoader);
             }
         ),
 
