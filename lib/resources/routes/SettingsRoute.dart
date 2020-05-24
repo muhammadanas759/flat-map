@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
@@ -13,6 +14,8 @@ class SettingsRoute extends StatefulWidget {
 }
 
 class _SettingsRouteState extends State<SettingsRoute> {
+
+  // NetLoader _netLoader = NetLoader();
 
   PreferencePage easyPreferences(){
     return PreferencePage([
@@ -86,7 +89,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
               'remove_local',
               defaultVal: false,
               onEnable: () {
-                // TODO remove local markers
+                // TODO confirm to remove local markers
                 print("remove local markers");
               },
             ),
@@ -96,8 +99,9 @@ class _SettingsRouteState extends State<SettingsRoute> {
               'remove_backup',
               defaultVal: false,
               onEnable: () {
-                // TODO remove backup markers
+                // TODO confirm to remove backup markers
                 print("remove backup markers");
+                // _netLoader.removeBackup()
               },
             ),
             CheckboxPreference(
@@ -105,8 +109,8 @@ class _SettingsRouteState extends State<SettingsRoute> {
               'remove_account',
               defaultVal: false,
               onEnable: () {
-                // TODO remove account
-                print("remove account");
+                // move to account removal form
+                Navigator.pushNamed(context, '/erase_account');
               },
             ),
           ]),

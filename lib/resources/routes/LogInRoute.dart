@@ -61,7 +61,7 @@ class _LogInRouteState extends State<LogInRoute> {
           labelTextStr: "Password",
           hintTextStr: "Your password goes here"
       ),
-      obscureText: false,
+      obscureText: true,
       validator: (String value) {
         if (value.isEmpty) {
           return 'Password can not be empty';
@@ -145,7 +145,7 @@ class _LogInRouteState extends State<LogInRoute> {
                       textAlign: TextAlign.left,
                     ),
                     leading: Icon(Icons.input),
-                    onLongPress: (){
+                    onTap: (){
                       _submitForm();
                     },
                   ),
@@ -159,8 +159,8 @@ class _LogInRouteState extends State<LogInRoute> {
                       textAlign: TextAlign.center,
                     ),
                     trailing: Icon(Icons.queue),
-                    onLongPress: (){
-                      _submitForm();
+                    onTap: (){
+                      // TODO register procedure
                     },
                   ),
                 ),
@@ -173,7 +173,7 @@ class _LogInRouteState extends State<LogInRoute> {
                       textAlign: TextAlign.right,
                     ),
                     trailing: Icon(Icons.cloud_off),
-                    onLongPress: (){
+                    onTap: (){
                       Navigator.of(context).pop();
                     },
                   ),
@@ -203,15 +203,45 @@ class _LogInRouteState extends State<LogInRoute> {
           ),
             SizedBox(height: 40),
           Row(
-            mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              textFieldButton(text: "No", onPressedMethod: (){
-                resetView(context);
-              }),
-              textFieldButton(text: "Yes", onPressedMethod: _logOut),
-              ]
-          )
+              Expanded(
+                child: ListTile(
+                  title: Text(
+                    'Yes',
+                    style: bodyText(),
+                  ),
+                  leading: Icon(Icons.check),
+                  onTap: (){
+                    _logOut();
+                  },
+                ),
+              ),
+              SizedBox(width: 20),
+              Expanded(
+                child: ListTile(
+                  title: Text(
+                    'No',
+                    style: bodyText(),
+                    textAlign: TextAlign.right,
+                  ),
+                  trailing: Icon(Icons.close),
+                  onTap: (){
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ],
+          ),
+//          Row(
+//            mainAxisSize: MainAxisSize.max,
+//              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//            children: <Widget>[
+//              textFieldButton(text: "No", onPressedMethod: (){
+//                resetView(context);
+//              }),
+//              textFieldButton(text: "Yes", onPressedMethod: _logOut),
+//              ]
+//          )
         ]
       )
     );

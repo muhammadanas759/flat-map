@@ -38,46 +38,6 @@ class _ProfileRouteState extends State<ProfileRoute> {
 
   // ---------------------------------------------------------------------------
   // ==================  ALERT DIALOGS =========================================
-  Future<void> _raiseAlertDialogRemoveMarker(BuildContext context, var id, var _marker) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Remove marker?"),
-          content: Text(
-            "You are about to remove marker\n"
-            "${_marker['title']}\n"
-            "${_marker['description']}."
-          ),
-          actions: [
-            // set up the buttons
-            FlatButton(
-              child: Text("no nO NO"),
-              onPressed:  () {
-                // dismiss alert
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: Text("HELL YEAH"),
-              onPressed:  () {
-                // remove marker
-                setState(() {
-                  widget._markerLoader.removeMarker(id: id);
-                  // save markers state to file
-                  widget._markerLoader.saveMarkers();
-                });
-                // dismiss alert
-                Navigator.of(context).pop();
-              },
-            ),
-          ]
-        );
-      },
-    );
-  }
-
   Future<void> _raiseAlertDialogRemoveAllMarkers(BuildContext context) async {
     return showDialog<void>(
       context: context,
@@ -222,7 +182,8 @@ class _ProfileRouteState extends State<ProfileRoute> {
                                 tooltip: 'Remove marker',
                                 onPressed: () {
                                   // set up the AlertDialog
-                                  _raiseAlertDialogRemoveMarker(context, _id, _marker);
+                                  raiseAlertDialogRemoveMarker(
+                                      context, widget._markerLoader, _id);
                                 },
                               ),
                             ],
@@ -298,7 +259,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
               ),
               // leading: Icon(Icons.keyboard_arrow_right),
               trailing: Icon(Icons.compare_arrows),
-              onLongPress: (){
+              onTap: (){
                 // move to change form
                 Navigator.pushNamed(context, '/change_password');
               },
@@ -311,7 +272,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
               ),
               trailing: Icon(Icons.remove_circle),
               leading: Icon(Icons.remove_circle),
-              onLongPress: (){
+              onTap: (){
                 // move to account removal form
                 Navigator.pushNamed(context, '/erase_account');
               },

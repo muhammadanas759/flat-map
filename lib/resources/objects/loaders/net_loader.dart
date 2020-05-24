@@ -24,7 +24,7 @@ class NetLoader {
     }
   }
 
-  Future<http.Response> postToServer({
+  Future<http.Response> _postToServer({
     String endpoint, List<Map<String, dynamic>> content
   }) async {
 
@@ -37,6 +37,27 @@ class NetLoader {
         HttpHeaders.authorizationHeader: "Token $_token",
       },
       body: json.encode(content)
+    );
+
+    // verify response
+    analyseResponse(_response);
+
+    return _response;
+  }
+
+  Future<http.Response> _patchToServer({
+    String endpoint, Map<String, dynamic> content
+  }) async {
+
+    String _token = PrefService.getString('token');
+
+    http.Response _response = await http.patch(
+        _serverURL + endpoint,
+        headers: {
+          "Content-type": "application/json",
+          HttpHeaders.authorizationHeader: "Token $_token",
+        },
+        body: json.encode(content)
     );
 
     // verify response
@@ -63,7 +84,7 @@ class NetLoader {
     return _response;
   }
 
-  Future<List<Map<String, dynamic>>> getFromServer({String endpoint}) async {
+  Future<List<Map<String, dynamic>>> _getFromServer({String endpoint}) async {
 
     String _token = PrefService.getString('token');
 
@@ -80,6 +101,25 @@ class NetLoader {
 
     return json.decode(_response.body);
   }
+
+  Future<http.Response> _deleteToServer({String endpoint}) async {
+
+    String _token = PrefService.getString('token');
+
+    http.Response _response = await http.delete(
+      _serverURL + endpoint,
+      headers: {
+        "Content-type": "application/json",
+        HttpHeaders.authorizationHeader: "Token $_token",
+      },
+    );
+
+    // verify response
+    analyseResponse(_response);
+
+    return _response;
+  }
+
 
   // ------------------------------------------------------------------------
   // TODO zapis znaczników do bazy
@@ -105,7 +145,7 @@ class NetLoader {
         });
 
         // send parsed markers
-        await postToServer(
+        await _postToServer(
           endpoint: "/api/backup/trigger/",
           content: parsedMarkers,
         );
@@ -130,7 +170,7 @@ class NetLoader {
   Future<void> getBackup(BuildContext context, MarkerLoader markerLoader) async {
     if(PrefService.get("cloud_enabled") == true){
       try{
-        List<Map<String, dynamic>> parsedMarkers = await getFromServer(
+        List<Map<String, dynamic>> parsedMarkers = await _getFromServer(
           endpoint: "/api/backup/trigger/",
         );
 
@@ -139,7 +179,7 @@ class NetLoader {
 
         parsedMarkers.forEach((marker) {
           markerLoader.addMarker(
-            id: marker['id'],
+            id: markerLoader.generateId(),
             position: LatLng(marker['position_x'], marker['position_y']),
             icon: marker['icon'],
             title: marker['title'],
@@ -172,8 +212,76 @@ class NetLoader {
     }
   }
 
-  // TODO zmiana hasła
   Future<http.Response> changePassword(Map<String, dynamic> content) async {
-    return null;
+    try{
+      return await _patchToServer(
+        endpoint: "/api/account/login",
+        content: content,
+      );
+    } on HttpException catch (e) {
+      print(e);
+      Fluttertoast.showToast(
+        msg: "Error: server could not process data",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+      );
+      return http.Response("", 300);
+    } on Exception catch (e) {
+      print(e);
+      Fluttertoast.showToast(
+        msg: "Error: something went wrong",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+      );
+      return http.Response("", 300);
+    }
+  }
+
+  Future<http.Response> removeAccount() async {
+    try{
+      return await _deleteToServer(
+        endpoint: "/api/account/",
+      );
+    } on HttpException catch (e) {
+      print(e);
+      Fluttertoast.showToast(
+        msg: "Error: server could not process data",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+      );
+      return http.Response("", 300);
+    } on Exception catch (e) {
+      print(e);
+      Fluttertoast.showToast(
+        msg: "Error: something went wrong",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+      );
+      return http.Response("", 300);
+    }
+  }
+
+  Future<http.Response> removeBackup() async {
+    try{
+      return await _deleteToServer(
+        endpoint: "/api/backup/",
+      );
+    } on HttpException catch (e) {
+      print(e);
+      Fluttertoast.showToast(
+        msg: "Error: server could not process data",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+      );
+      return http.Response("", 300);
+    } on Exception catch (e) {
+      print(e);
+      Fluttertoast.showToast(
+        msg: "Error: something went wrong",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+      );
+      return http.Response("", 300);
+    }
   }
 }

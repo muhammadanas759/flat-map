@@ -5,7 +5,7 @@ import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 
 import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as http;
 
 
 class ChangePasswordRoute extends StatefulWidget {
@@ -21,9 +21,9 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
 
   final _formKey = GlobalKey<FormState>();
   final Map<String, dynamic> _formData = {
-    'password_old': '',
-    'password_new_1': '',
-    'password_new_2': '',
+    'old_password': '',
+    'new_password': '',
+    'new_password2': '',
   };
   final focusPasswordOld = FocusNode();
   final focusPasswordNew1= FocusNode();
@@ -39,8 +39,11 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
       ),
       obscureText: true,
       validator: (String value) {
-        if (form_var == "password_new_2" && value != _formData['password_new_1']) {
+        if (form_var == "new_password2" && value != _formData['new_password']) {
+          print("$value -- ${_formData['new_password']}");
           return 'Passwords do not match';
+        } else if(form_var == "new_password"){
+          _formData['new_password'] = value;
         }
         return null;
       },
@@ -53,7 +56,7 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
         if(focus_next != null){
           FocusScope.of(context).requestFocus(focus_next);
         } else {
-          _submitForm();
+          FocusScope.of(context).unfocus();
         }
       },
     );
@@ -69,7 +72,7 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
             _buildPasswordField(context,
                 label: "Old password",
                 hint: "Please provide your old password",
-                form_var: "password_old",
+                form_var: "old_password",
                 focus_current: focusPasswordOld,
                 focus_next: focusPasswordNew1
             ),
@@ -77,7 +80,7 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
             _buildPasswordField(context,
                 label: "New password",
                 hint: "Please provide your new password",
-                form_var: "password_new_1",
+                form_var: "new_password",
                 focus_current: focusPasswordNew1,
                 focus_next: focusPasswordNew2
             ),
@@ -85,7 +88,7 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
             _buildPasswordField(context,
                 label: "Repeat new password",
                 hint: "Please repeat your new password",
-                form_var: "password_new_2",
+                form_var: "new_password2",
                 focus_current: focusPasswordNew2,
                 focus_next: null
             ),
@@ -99,7 +102,7 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
                       style: bodyText(),
                     ),
                     leading: Icon(Icons.check),
-                    onLongPress: (){
+                    onTap: (){
                       _submitForm();
                     },
                   ),
@@ -113,7 +116,7 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
                       textAlign: TextAlign.right,
                     ),
                     trailing: Icon(Icons.close),
-                    onLongPress: (){
+                    onTap: (){
                       Navigator.of(context).pop();
                     },
                   ),
@@ -131,10 +134,11 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
       _formKey.currentState.save();
 
       // TODO send new password to server and get the response
-      // http.Response _response = await netLoader.changePassword(_formData);
-
-      // move back
-      Navigator.of(context).pop();
+      http.Response _response = await netLoader.changePassword(_formData);
+      if(200 <= _response.statusCode && _response.statusCode < 300){
+        // move back
+        Navigator.of(context).pop();
+      }
     }
   }
 

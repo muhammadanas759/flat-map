@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
@@ -8,7 +6,8 @@ import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:math';
 import 'package:fluttertoast/fluttertoast.dart';
 
 
@@ -80,7 +79,7 @@ class _EraseAccountRouteState extends State<EraseAccountRoute> {
                       style: bodyText(),
                     ),
                     leading: Icon(Icons.cloud_off),
-                    onLongPress: (){
+                    onTap: (){
                       _submitForm();
                     },
                   ),
@@ -94,7 +93,7 @@ class _EraseAccountRouteState extends State<EraseAccountRoute> {
                       textAlign: TextAlign.right,
                     ),
                     trailing: Icon(Icons.keyboard_return),
-                    onLongPress: (){
+                    onTap: (){
                       Navigator.of(context).pop();
                     },
                   ),
@@ -109,29 +108,19 @@ class _EraseAccountRouteState extends State<EraseAccountRoute> {
   Future<void> _submitForm() async {
     // validate form
     if (_formKey.currentState.validate()) {
-      //_formKey.currentState.save();
-
-      print("account erased successfully");
-
-      // TODO send new password to server and get the response
-      // http.Response _response = await netLoader.changePassword(_formData);
-
-      // move back
-      Navigator.of(context).pop();
-
-      // show message
-      Fluttertoast.showToast(
+      // send request to the server
+      http.Response _response = await netLoader.removeAccount();
+      if(200 <= _response.statusCode && _response.statusCode < 300){
+        // move back
+        Navigator.of(context).pop();
+        // show message
+        Fluttertoast.showToast(
           msg: "Account erased successfully",
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
-      );
+        );
+      }
     }
-//    else {
-//      setState(() {
-//        _formData['test_value'] = _randomCode();
-//        _formData['test_value_user'] = "";
-//      });
-//    }
   }
 
   @override

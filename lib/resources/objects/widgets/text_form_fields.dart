@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -119,7 +120,7 @@ Widget BackupTile({
       style: bodyText(),
     ),
     trailing: icon,
-    onLongPress: onLongPressMethod,
+    onTap: onLongPressMethod,
   );
 }
 
@@ -182,5 +183,46 @@ Widget closeFormButton({Function onPressedMethod}){
       ),
     ),
     alignment: Alignment(0.0, 0.0),
+  );
+}
+
+Future<void> raiseAlertDialogRemoveMarker(BuildContext context, MarkerLoader markerLoader, var id) async {
+
+  var _marker = markerLoader.getMarkerDescription(id: id);
+
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+          title: Text("Remove marker?"),
+          content: Text(
+              "You are about to remove marker\n"
+                  "${_marker['title']}\n"
+                  "${_marker['description']}."
+          ),
+          actions: [
+            // set up the buttons
+            FlatButton(
+              child: Text("no nO NO"),
+              onPressed:  () {
+                // dismiss alert
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text("HELL YEAH"),
+              onPressed:  () {
+                // remove marker
+                markerLoader.removeMarker(id: id);
+                // save markers state to file
+                markerLoader.saveMarkers();
+                // dismiss alert
+                Navigator.of(context).pop();
+              },
+            ),
+          ]
+      );
+    },
   );
 }

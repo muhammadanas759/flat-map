@@ -299,8 +299,9 @@ class _MapRouteState extends State<MapRoute> {
 
 
   Widget _markerAddForm(context){
+    var _id = PrefService.get('selected_marker');
     Marker tempMarker = widget._markerLoader.getGoogleMarker(
-        id: PrefService.get('selected_marker')
+        id: _id
     );
     ActionsList _actionsList = ActionsList(widget._markerLoader);
     return Form(
@@ -358,25 +359,50 @@ class _MapRouteState extends State<MapRoute> {
             children: <Widget>[
               Expanded(
                 child: new Container(
-                    margin: const EdgeInsets.only(left: 10.0, right: 20.0),
-                    child: Divider(
-                      // color: Colors.black,
-                      // height: 36,
-                    )),
+                  margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                  child: Divider(
+                    // color: Colors.black,
+                    // height: 36,
+                  )),
               ),
             ],
           ),
           SizedBox(width: 10),
-
-          ListTile(
-            title: Text('Add marker', style: bodyText()),
-            leading: Icon(Icons.bookmark_border),
-            onTap: (){
-              // submit form and add marker to dictionary
-              _saveMarker();
-            }
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: new Container(
+                  margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                  child: ListTile(
+                    title: PrefService.getString("selected_marker") == 'temporary' ?
+                    Text('Add marker', style: bodyText()) :
+                    Text('Save changes', style: bodyText()),
+                    leading: Icon(Icons.bookmark_border),
+                    onTap: (){
+                      // submit form and add marker to dictionary
+                      _saveMarker();
+                    }
+                  ),
+                ),
+              ),
+              PrefService.getString("selected_marker") == 'temporary' ?
+              SizedBox.shrink() :
+              Expanded(
+                child: new Container(
+                  margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                  child: ListTile(
+                      title: Text('Delete marker', style: bodyText()),
+                      trailing: Icon(Icons.delete_forever),
+                      onTap: (){
+                        // set up the AlertDialog
+                        raiseAlertDialogRemoveMarker(
+                            context, widget._markerLoader, _id);
+                      }
+                  ),
+                ),
+              ),
+            ]
           ),
-
           Row(children: <Widget>[
             Expanded(
               child: new Container(
@@ -410,6 +436,13 @@ class _MapRouteState extends State<MapRoute> {
   // -------------------- MAIN MAP WIDGET SECTION ------------------------------
   @override
   Widget build(BuildContext context) {
+
+    // add form radius
+    BorderRadiusGeometry radius = BorderRadius.only(
+      topLeft: Radius.circular(24.0),
+      topRight: Radius.circular(24.0),
+    );
+
     return Scaffold(
       appBar: appBar(),
       body:
@@ -434,8 +467,9 @@ class _MapRouteState extends State<MapRoute> {
 
           SlidingUpPanel(
             color: _preset == 'dark' ? Colors.black : Colors.white,
-            minHeight: 0,
-            padding: EdgeInsets.only(left: 30, right: 30),
+            minHeight: 30,
+            padding: EdgeInsets.only(left: 30, right: 30,),
+            borderRadius: radius,
             isDraggable: false,
             defaultPanelState: PanelState.CLOSED,
             controller: _slidingFormController,
@@ -445,6 +479,21 @@ class _MapRouteState extends State<MapRoute> {
               // Google Map widget
               child: Container(
                 child: _googleMapWidget(),
+              ),
+            ),
+            collapsed: InkWell(
+              onTap: () { _slidingFormController.open(); },
+              child: Container(
+              decoration: BoxDecoration(
+                color: _preset == 'dark' ? Colors.black : Colors.white,
+                borderRadius: radius,
+              ),
+                child: Center(
+                  child: Text(
+                    "Tap here to open form",
+                    style: bodyText(),
+                  ),
+                ),
               ),
             ),
           ),
