@@ -14,7 +14,6 @@ class TriggerLoader {
   // ===========================================================================
   // init variables
   MarkerLoader _markerLoader;
-
   // timer as workaround to load file every x minutes
   Timer timer;
 
@@ -44,11 +43,9 @@ class TriggerLoader {
       MarkerLoader _passedMarkerLoader,
       FlutterLocalNotificationsPlugin passedFlutterLocalNotificationsPlugin
   ) {
-
     _geolocator = _passedGeolocator;
     _markerLoader = _passedMarkerLoader;
     _flutterLocalNotificationsPlugin = passedFlutterLocalNotificationsPlugin;
-
     // listen to position changes
     positionStream = _geolocator.getPositionStream(locationOptions).listen(
       (Position position){operatePositionChange(position: position);}
@@ -147,18 +144,13 @@ class TriggerLoader {
   // ===========================================================================
   Future<void> operatePositionChange({Position position}) async {
 
-    // TODO get correct list of markers to activate
     // get activated markers
-
     await getActivatedMarkers(position.toLatLng());
 
-    // remove markers from previous tick that should not be activated again
-    _activatedNow.removeWhere((item) => _activatedPreviously.contains(item));
-
-    // TODO list of activated markers is delayed
+    print("all markers: ");
+    print(_markerLoader.getMarkersDescriptions());
     print("activated now: $_activatedNow");
     print("activated previously: $_activatedPreviously");
-
     // TODO operate all actions possible
     for (String markerId in _activatedNow) {
       // activate marker actions
@@ -185,6 +177,11 @@ class TriggerLoader {
       // add marker to previously activated list
       _activatedPreviously.add(markerId);
     }
+
+    // remove markers from current tick that were activated and should not be activated again
+    // now it's just for safety
+    _activatedNow.removeWhere((item) => _activatedPreviously.contains(item));
+
   }
 
   // ===========================================================================
@@ -214,7 +211,11 @@ class TriggerLoader {
   }
 
   void mutePhone() async {
-    await Volume.setVol(0, showVolumeUI: ShowVolumeUI.SHOW);
+    //current_volume = await Volume.getVol;
+
+    // TODO Mute phones returns null pointer exeption when called
+
+    await Volume.setVol(0);
   }
 
   // https://pub.dev/packages/volume#-example-tab-

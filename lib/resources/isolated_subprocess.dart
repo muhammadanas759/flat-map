@@ -17,6 +17,7 @@ void triggerEntryPoint(String message) async {
   final MarkerLoader _markerLoader = MarkerLoader();
   await _markerLoader.loadMarkers();
 
+
   // geolocator API:
   // https://pub.dev/documentation/geolocator/latest/geolocator/Geolocator-class.html
   Geolocator _geolocator = Geolocator();
