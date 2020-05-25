@@ -1,6 +1,8 @@
+import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:preferences/preferences.dart';
 
 
 InputDecoration textFieldStyle({
@@ -67,7 +69,7 @@ class CounterFormField extends FormField<int> {
             IconButton(
               icon: Icon(Icons.remove),
               onPressed: () {
-                if(state.value > 1){
+                if (state.value > 1) {
                   state.didChange(state.value - 1);
                   _textInputController.text = state.value.toString();
                 }
@@ -77,7 +79,7 @@ class CounterFormField extends FormField<int> {
               width: 100,
               child: TextField(
                 controller: _textInputController..text = state.value.toString(),
-                onSubmitted: (String input){
+                onSubmitted: (String input) {
                   state.didChange(int.parse(input));
                   _textInputController.text = state.value.toString();
                 },
@@ -93,7 +95,7 @@ class CounterFormField extends FormField<int> {
               ),
             ),
             Text(
-              "m",
+              " m",
               style: bodyText(),
             ),
             IconButton(
@@ -106,5 +108,121 @@ class CounterFormField extends FormField<int> {
           ],
         );
       }
+  );
+}
+
+Widget BackupTile({
+  String text, Icon icon, Function onLongPressMethod
+}){
+  return ListTile(
+    title: Text(
+      text,
+      style: bodyText(),
+    ),
+    trailing: icon,
+    onTap: onLongPressMethod,
+  );
+}
+
+Widget addActionCard({String tooltip, Function onPressedMethod}){
+  Color _color = (PrefService.get('ui_theme') == 'dark') ? Colors.white : Colors.black;
+  return Container( //                           <-- Card widget
+    child: Opacity(
+      opacity: 0.2,
+      child: IconButton(
+        icon: Icon(Icons.add_circle_outline, size: 40,),
+        color: _color,
+        tooltip: tooltip,
+        onPressed: onPressedMethod
+      ),
+    ),
+    alignment: Alignment(0.0, 0.0),
+  );
+}
+
+//Widget closeFormButton({Function onPressedMethod}){
+//  Color _color = (PrefService.get('ui_theme') == 'dark') ? Colors.white : Colors.black;
+//  return Material(
+//      child: Ink(
+//        decoration: BoxDecoration(
+//          //border: Border.all(color: Colors.lightGreen, width: 5.0),
+//          //color: Colors.green,
+//          border: Border.all(
+//              color: _color,
+//              width: 5.0
+//          ),
+//          shape: BoxShape.circle,
+//        ),
+//        child: InkWell(
+//          //This keeps the splash effect within the circle
+//          borderRadius: BorderRadius.circular(1000.0),
+//          child: Padding(
+//            padding:EdgeInsets.all(1.0),
+//            child: IconButton(
+//              icon: Icon(Icons.keyboard_arrow_down, size: 40),
+//              color: _color,
+//              tooltip: 'Close form',
+//              onPressed: onPressedMethod,
+//            ),
+//          ),
+//        ),
+//      )
+//  );
+//}
+
+Widget closeFormButton({Function onPressedMethod}){
+  Color _color = (PrefService.get('ui_theme') == 'dark') ? Colors.white : Colors.black;
+  return Container(
+    child: Opacity(
+      opacity: 0.2,
+      child: IconButton(
+        icon: Icon(Icons.keyboard_arrow_down, size: 40),
+        color: _color,
+        tooltip: 'Close form',
+        onPressed: onPressedMethod,
+      ),
+    ),
+    alignment: Alignment(0.0, 0.0),
+  );
+}
+
+Future<void> raiseAlertDialogRemoveMarker(BuildContext context, MarkerLoader markerLoader, var id) async {
+
+  var _marker = markerLoader.getMarkerDescription(id: id);
+
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+          title: Text("Remove marker?"),
+          content: Text(
+              "You are about to remove marker\n"
+                  "${_marker['title']}\n"
+                  "${_marker['description']}."
+          ),
+          actions: [
+            // set up the buttons
+            FlatButton(
+              child: Text("no nO NO"),
+              onPressed:  () {
+                // dismiss alert
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text("HELL YEAH"),
+              onPressed:  () {
+                // remove marker
+                markerLoader.removeMarker(id: id);
+                // save markers state to file
+                markerLoader.saveMarkers();
+                // dismiss alert
+                Navigator.of(context).pop();
+              },
+            ),
+          ]
+      );
+    },
   );
 }

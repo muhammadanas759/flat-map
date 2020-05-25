@@ -1,4 +1,6 @@
 import 'package:flatmapp/resources/routes/ActionsRoute.dart';
+import 'package:flatmapp/resources/routes/ChangePasswordRoute.dart';
+import 'package:flatmapp/resources/routes/EraseAccountRoute.dart';
 import 'package:flatmapp/resources/routes/LogInRoute.dart';
 import 'package:flatmapp/resources/routes/MapRoute.dart';
 import 'package:flatmapp/resources/routes/ProfileRoute.dart';
@@ -38,6 +40,7 @@ main() async {
     'project_description': 'FlatMapp prototype',
     'start_page': 'Map',
     'ui_theme': 'light',
+    "cloud_enabled": false,
     'selected_marker': 'temporary',
     'selected_icon': 'default',
     'selected_action': [],
@@ -49,12 +52,12 @@ main() async {
   // get start page
   initScreen = PrefService.get('start_page');
   switch(initScreen) {
-    case 'About': {initScreen = '/about';} break;
-    case 'Community': {initScreen = '/community';} break;
-    case 'Log In': {initScreen = '/login';} break;
     case 'Map': {initScreen = '/map';} break;
     case 'Profile': {initScreen = '/profile';} break;
+    case 'Community': {initScreen = '/community';} break;
     case 'Settings': {initScreen = '/settings';} break;
+    case 'About': {initScreen = '/about';} break;
+    case 'Log In': {initScreen = '/login';} break;
     default: { throw Exception('wrong start_page value: $initScreen'); } break;
   }
 
@@ -85,7 +88,9 @@ class MyApp extends StatelessWidget {
     return new DynamicTheme(
       defaultBrightness: Brightness.light,
       data: (brightness) => new ThemeData(
-          brightness: brightness, accentColor: Colors.green),
+          brightness: brightness,
+          accentColor: Colors.green
+      ),
       themedWidgetBuilder: (context, theme){
         return MaterialApp(
           title: 'FlatMApp',
@@ -102,9 +107,50 @@ class MyApp extends StatelessWidget {
             '/login': (context) => LogInRoute(),
             '/icons': (context) => IconsRoute(),
             '/actions': (context) => ActionsRoute(_markerLoader),
+            '/change_password': (context) => ChangePasswordRoute(),
+            '/erase_account': (context) => EraseAccountRoute(),
           },
+          home: Scaffold(
+            body: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+              child: _PageView(),
+            ),
+          ),
         );
       }
+    );
+  }
+}
+
+class _PageView extends StatefulWidget {
+  @override
+  _PageViewState createState() => _PageViewState();
+}
+
+class _PageViewState extends State<_PageView> {
+
+  PageController _pageViewController = PageController(
+    initialPage: 0,
+  );
+
+  @override
+  void dispose() {
+    _pageViewController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PageView(
+      controller: _pageViewController,
+      children: [
+        MapRoute(_markerLoader),
+        ProfileRoute(_markerLoader),
+        CommunityRoute(_markerLoader),
+        SettingsRoute(),
+        AboutRoute(),
+        LogInRoute(),
+      ],
     );
   }
 }

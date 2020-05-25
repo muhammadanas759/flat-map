@@ -1,10 +1,11 @@
-import 'package:flatmapp/resources/objects/loaders/actions_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
+import 'package:flatmapp/resources/objects/widgets/actions_list.dart';
 
 import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter/material.dart';
@@ -27,8 +28,6 @@ class MapRoute extends StatefulWidget {
 class _MapRouteState extends State<MapRoute> {
   // ===========================================================================
   // -------------------- INIT VARIABLES SECTION -------------------------------
-
-  ActionsLoader _actionsLoader = ActionsLoader();
 
   // google map controller
   final Completer<GoogleMapController> _mapController = Completer();
@@ -183,33 +182,6 @@ class _MapRouteState extends State<MapRoute> {
     _formDescriptionController.text = _formMarkerData['description'];
   }
 
-  Widget _closeFormButton(){
-    return Material(
-      child: Ink(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.lightGreen, width: 5.0),
-          color: Colors.green,
-          shape: BoxShape.circle,
-        ),
-        child: InkWell(
-          //This keeps the splash effect within the circle
-          borderRadius: BorderRadius.circular(1000.0),
-          child: Padding(
-            padding:EdgeInsets.all(1.0),
-            child: IconButton(
-              icon: Icon(Icons.keyboard_arrow_down),
-              color: Colors.white,
-              tooltip: 'Close form',
-              onPressed: () {
-                _closePanel(context);
-              },
-            ),
-          ),
-        ),
-      )
-    );
-  }
-
   Widget _iconChangeButton(){
     return Expanded(
       child: SizedBox(
@@ -284,94 +256,6 @@ class _MapRouteState extends State<MapRoute> {
     );
   }
 
-  Future<void> _raiseAlertDialog(
-      BuildContext context, var id, var index, String description) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-            title: Text("Remove action?"),
-            content: Text(
-                "You are about to remove action\n" + description
-            ),
-            actions: [
-              // set up the buttons
-              FlatButton(
-                child: Text("no nO NO"),
-                onPressed:  () {
-                  // dismiss alert
-                  Navigator.of(context).pop();
-                },
-              ),
-              FlatButton(
-                child: Text("HELL YEAH"),
-                onPressed:  () {
-                  // remove marker
-                  setState(() {
-                    widget._markerLoader.removeMarkerAction(id: id, index: index);
-                    // save markers state to file
-                    widget._markerLoader.saveMarkers();
-                  });
-                  // dismiss alert
-                  Navigator.of(context).pop();
-                },
-              ),
-            ]
-        );
-      },
-    );
-  }
-
-  Widget _buildActionsList(BuildContext context) {
-    // actions list
-    // https://stackoverflow.com/questions/53908025/flutter-sortable-drag-and-drop-listview
-    // https://api.flutter.dev/flutter/material/ReorderableListView-class.html
-
-    var id = PrefService.get('selected_marker');
-
-    List<dynamic> _actionsList = widget._markerLoader.getMarkerActions(
-        id: id
-    );
-
-    return Expanded(
-      child: _actionsList == null ?
-      Card( //                           <-- Card widget
-        child: ListTile(
-          title: Text(
-              "no actions added",
-              style: bodyText()
-          ),
-        ),
-      ) :
-      ListView.builder(
-        shrinkWrap: true,
-        itemCount: _actionsList.length,
-        itemBuilder: (context, index) {
-          return Card( //                           <-- Card widget
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-                backgroundImage: AssetImage(
-                  _actionsLoader.actionsMap[_actionsList[index]]
-                ),
-              ),
-              title: Text(
-                  _actionsList[index],
-                  style: bodyText()
-              ),
-              trailing: Icon(Icons.delete_forever),
-              onTap: () {
-                // remove action with alert dialog
-                _raiseAlertDialog(context, id, index, _actionsList[index]);
-              },
-            ),
-          );
-        },
-      ),
-    );
-  }
-
   void _saveMarker(){
     // save form
     _formKey.currentState.save();
@@ -396,6 +280,13 @@ class _MapRouteState extends State<MapRoute> {
 
     // close form panel
     _closePanel(context);
+
+    // show message
+    Fluttertoast.showToast(
+      msg: "Added marker",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+    );
   }
 
   void _closePanel(context){
@@ -405,10 +296,14 @@ class _MapRouteState extends State<MapRoute> {
     _slidingFormController.close();
   }
 
+
+
   Widget _markerAddForm(context){
+    var _id = PrefService.get('selected_marker');
     Marker tempMarker = widget._markerLoader.getGoogleMarker(
-        id: PrefService.get('selected_marker')
+        id: _id
     );
+    ActionsList _actionsList = ActionsList(widget._markerLoader);
     return Form(
       key: _formKey,
       child: Column(
@@ -426,7 +321,7 @@ class _MapRouteState extends State<MapRoute> {
                 overflow: TextOverflow.ellipsis,
                 style: bodyText(),
               ),
-              _closeFormButton(),
+              closeFormButton(onPressedMethod: (){_closePanel(context);}),
             ],
           ),
           SizedBox(height: 10),
@@ -446,23 +341,92 @@ class _MapRouteState extends State<MapRoute> {
           ),
 
           SizedBox(height: 10),
+//          Row(
+//            mainAxisSize: MainAxisSize.min,
+//            children: <Widget>[
+//              textFieldButton(text: "Add marker", onPressedMethod: (){
+//                // submit form and add marker to dictionary
+//                _saveMarker();
+//              }),
+//              SizedBox(width: 20),
+//              textFieldButton(text: "Add action", onPressedMethod: _addAction)
+//            ],
+//          ),
+//          SizedBox(width: 10),
+
           Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              textFieldButton(text: "Add marker", onPressedMethod: (){
-                // submit form and add marker to dictionary
-                _saveMarker();
-              }),
-              SizedBox(width: 20),
-              textFieldButton(text: "Add action", onPressedMethod: (){
-                // Navigate to the icons screen using a named route.
-                Navigator.pushNamed(context, '/actions');
-              }),
+              Expanded(
+                child: new Container(
+                  margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                  child: Divider(
+                    // color: Colors.black,
+                    // height: 36,
+                  )),
+              ),
             ],
           ),
           SizedBox(width: 10),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: new Container(
+                  margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                  child: ListTile(
+                    title: PrefService.getString("selected_marker") == 'temporary' ?
+                    Text('Add marker', style: bodyText()) :
+                    Text('Save changes', style: bodyText()),
+                    leading: Icon(Icons.bookmark_border),
+                    onTap: (){
+                      // submit form and add marker to dictionary
+                      _saveMarker();
+                    }
+                  ),
+                ),
+              ),
+              PrefService.getString("selected_marker") == 'temporary' ?
+              SizedBox.shrink() :
+              Expanded(
+                child: new Container(
+                  margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                  child: ListTile(
+                      title: Text('Delete marker', style: bodyText()),
+                      trailing: Icon(Icons.delete_forever),
+                      onTap: (){
+                        // set up the AlertDialog
+                        raiseAlertDialogRemoveMarker(
+                            context, widget._markerLoader, _id);
+                      }
+                  ),
+                ),
+              ),
+            ]
+          ),
+          Row(children: <Widget>[
+            Expanded(
+              child: new Container(
+                  margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                  child: Divider(
+                    // color: Colors.black,
+                    // height: 36,
+                  )),
+            ),
+            Text("Actions List", style: bodyText()),
+            Expanded(
+              child: new Container(
+                  margin: const EdgeInsets.only(left: 20.0, right: 10.0),
+                  child: Divider(
+//                    color: Colors.black,
+//                    height: 36,
+                  )),
+            ),
+          ]),
 
-          _buildActionsList(context),
+          _actionsList.buildActionsList(
+              context,
+              PrefService.getString("selected_marker")
+          ),
         ],
       )
     );
@@ -472,6 +436,13 @@ class _MapRouteState extends State<MapRoute> {
   // -------------------- MAIN MAP WIDGET SECTION ------------------------------
   @override
   Widget build(BuildContext context) {
+
+    // add form radius
+    BorderRadiusGeometry radius = BorderRadius.only(
+      topLeft: Radius.circular(24.0),
+      topRight: Radius.circular(24.0),
+    );
+
     return Scaffold(
       appBar: appBar(),
       body:
@@ -496,8 +467,9 @@ class _MapRouteState extends State<MapRoute> {
 
           SlidingUpPanel(
             color: _preset == 'dark' ? Colors.black : Colors.white,
-            minHeight: 0,
-            padding: EdgeInsets.only(left: 30, right: 30),
+            minHeight: 30,
+            padding: EdgeInsets.only(left: 30, right: 30,),
+            borderRadius: radius,
             isDraggable: false,
             defaultPanelState: PanelState.CLOSED,
             controller: _slidingFormController,
@@ -507,6 +479,21 @@ class _MapRouteState extends State<MapRoute> {
               // Google Map widget
               child: Container(
                 child: _googleMapWidget(),
+              ),
+            ),
+            collapsed: InkWell(
+              onTap: () { _slidingFormController.open(); },
+              child: Container(
+              decoration: BoxDecoration(
+                color: _preset == 'dark' ? Colors.black : Colors.white,
+                borderRadius: radius,
+              ),
+                child: Center(
+                  child: Text(
+                    "Tap here to open form",
+                    style: bodyText(),
+                  ),
+                ),
               ),
             ),
           ),

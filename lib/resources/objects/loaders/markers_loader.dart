@@ -28,6 +28,8 @@ class MarkerLoader {
   // icons loader
   final IconsLoader iconsLoader = IconsLoader();
 
+  final _firstCoordinates = LatLng(52.466791, 16.926939);
+
   // ===========================================================================
   //-------------------------- LOADING METHODS ---------------------------------
 
@@ -41,6 +43,13 @@ class MarkerLoader {
       print('File processing error: $e');
       return '';
     }
+  }
+
+  void _repairFile(String path){
+    // clear file
+    File(path).writeAsString('');
+    // add temporary marker
+    addTemporaryMarker(_firstCoordinates);
   }
 
   // load markers from local storage
@@ -63,16 +72,10 @@ class MarkerLoader {
         print(error);
         print('could not load marker descriptions from local storage...');
 
-        // clear file
-        File(path).writeAsString('');
-        // add temporary marker
-        addTemporaryMarker(LatLng(69.420, 69.420));
+        _repairFile(path);
       }
     } else {
-      // create new one
-      File(path).writeAsString('');
-      // add temporary marker
-      addTemporaryMarker(LatLng(69.420, 69.420));
+      _repairFile(path);
       print('local storage did not exist, created new one...');
     }
 
@@ -191,6 +194,9 @@ class MarkerLoader {
   }
 
   Map<String, dynamic> getMarkerDescription({String id}){
+    if(_markersDescriptions[id] == null){
+      getFilePath().then((path){_repairFile(path);});
+    }
     return Map<String, dynamic>.from(_markersDescriptions[id]);
   }
 
@@ -227,6 +233,23 @@ class MarkerLoader {
       _markersDescriptions[id]['actions'].removeAt(index);
     } else {
       print("no action to remove at index $index from marker $id");
+    }
+  }
+
+  Future<void> removeAllMarkers() async {
+    // from non-persistent storage
+    _markersDescriptions.clear();
+    googleMarkers.clear();
+    zones.clear();
+
+    // from persistent storage
+    String path = await getFilePath();
+    // if marker storage does exist
+    if (await File(path).exists()){
+      // create new one
+      File(path).writeAsString('');
+      // add temporary marker
+      addTemporaryMarker(_firstCoordinates);
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
@@ -36,7 +37,6 @@ class _LogInRouteState extends State<LogInRoute> {
           labelTextStr: "Email",
           hintTextStr: "Your email goes here"
       ),
-      // ignore: missing_return
       validator: (String value) {
         if (!RegExp(
             r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
@@ -62,8 +62,7 @@ class _LogInRouteState extends State<LogInRoute> {
           labelTextStr: "Password",
           hintTextStr: "Your password goes here"
       ),
-      obscureText: false,
-      // ignore: missing_return
+      obscureText: true,
       validator: (String value) {
         if (value.isEmpty) {
           return 'Password can not be empty';
@@ -129,15 +128,57 @@ class _LogInRouteState extends State<LogInRoute> {
             _buildPasswordField(),
             SizedBox(height: 20),
             Row(
-              mainAxisSize: MainAxisSize.min,
+              // mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                textFieldButton(text: "Log in", onPressedMethod: _submitForm),
+//                textFieldButton(text: "Log in", onPressedMethod: _submitForm),
+//                SizedBox(width: 20),
+//                textFieldButton(text: "Sign up", onPressedMethod: _submitForm),
+//                SizedBox(width: 20),
+//                textFieldButton(
+//                  text: "Use as guest",
+//                  onPressedMethod: (){resetView(context);}
+//                ),
+
+                Expanded(
+                  child: ListTile(
+                    title: Text(
+                      'Log in',
+                      style: bodyText(),
+                      textAlign: TextAlign.left,
+                    ),
+                    leading: Icon(Icons.input),
+                    onTap: (){
+                      _submitForm();
+                    },
+                  ),
+                ),
                 SizedBox(width: 20),
-                textFieldButton(text: "Sign up", onPressedMethod: _submitForm),
+                Expanded(
+                  child: ListTile(
+                    title: Text(
+                      'Register',
+                      style: bodyText(),
+                      textAlign: TextAlign.center,
+                    ),
+                    trailing: Icon(Icons.queue),
+                    onTap: (){
+                      // TODO register procedure
+                    },
+                  ),
+                ),
                 SizedBox(width: 20),
-                textFieldButton(
-                  text: "Use as guest",
-                  onPressedMethod: (){resetView(context);}
+                Expanded(
+                  child: ListTile(
+                    title: Text(
+                      'Use as guest',
+                      style: bodyText(),
+                      textAlign: TextAlign.right,
+                    ),
+                    trailing: Icon(Icons.cloud_off),
+                    onTap: (){
+                      Navigator.of(context).pop();
+                    },
+                  ),
                 ),
               ],
             ),
@@ -164,15 +205,45 @@ class _LogInRouteState extends State<LogInRoute> {
           ),
             SizedBox(height: 40),
           Row(
-            mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              textFieldButton(text: "No", onPressedMethod: (){
-                resetView(context);
-              }),
-              textFieldButton(text: "Yes", onPressedMethod: _logOut),
-              ]
-          )
+              Expanded(
+                child: ListTile(
+                  title: Text(
+                    'Yes',
+                    style: bodyText(),
+                  ),
+                  leading: Icon(Icons.check),
+                  onTap: (){
+                    _logOut();
+                  },
+                ),
+              ),
+              SizedBox(width: 20),
+              Expanded(
+                child: ListTile(
+                  title: Text(
+                    'No',
+                    style: bodyText(),
+                    textAlign: TextAlign.right,
+                  ),
+                  trailing: Icon(Icons.close),
+                  onTap: (){
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ],
+          ),
+//          Row(
+//            mainAxisSize: MainAxisSize.max,
+//              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//            children: <Widget>[
+//              textFieldButton(text: "No", onPressedMethod: (){
+//                resetView(context);
+//              }),
+//              textFieldButton(text: "Yes", onPressedMethod: _logOut),
+//              ]
+//          )
         ]
       )
     );
@@ -192,6 +263,13 @@ class _LogInRouteState extends State<LogInRoute> {
     }
 
     Navigator.pushNamed(context, initScreen);
+
+    // show message
+    Fluttertoast.showToast(
+      msg: "Logged in",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+    );
   }
 
   @override
