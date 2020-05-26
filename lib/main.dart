@@ -69,15 +69,15 @@ main() async {
     Permission.location.request();
   }
 
-  // initiate isolated subprocess
+  // initiate isolated subprocess TODO unlock subprocess after development
   // ignore: unused_local_variable
-  final isolate = await FlutterIsolate.spawn(
-      triggerEntryPoint,
-      "message"
-  );
-
-  PrefService.setString('isolate_port', isolate.controlPort.toString());
-  print("isolate control port: " + isolate.controlPort.toString());
+//    final isolate = await FlutterIsolate.spawn(
+//        triggerEntryPoint,
+//        ""
+//    );
+//
+//    PrefService.setString('isolate_port', isolate.controlPort.toString());
+//    print("isolate control port: " + isolate.controlPort.toString());
 
   runApp(MyApp());
 }
@@ -85,6 +85,17 @@ main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context){
+
+    // initiate isolated subprocess TODO remove or use test section
+    // ignore: unused_local_variable
+//    final isolate = await FlutterIsolate.spawn(
+//        triggerEntryPoint,
+//        context
+//    );
+//
+//    PrefService.setString('isolate_port', isolate.controlPort.toString());
+//    print("isolate control port: " + isolate.controlPort.toString());
+
     return new DynamicTheme(
       defaultBrightness: Brightness.light,
       data: (brightness) => new ThemeData(

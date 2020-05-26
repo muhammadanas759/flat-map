@@ -1,4 +1,6 @@
 import 'package:flatmapp/resources/objects/loaders/icons_loader.dart';
+import 'package:flatmapp/resources/objects/models/action.dart';
+import 'package:flatmapp/resources/objects/models/flatmapp_marker.dart';
 
 import 'dart:convert';
 import 'dart:io';
@@ -17,7 +19,7 @@ class MarkerLoader {
   //-------------------------- VARIABLES ---------------------------------------
 
   // list of marker data in strings
-  Map<String, Map> _markersDescriptions = <String, Map>{};
+  Map<String, FlatMappMarker> _markersDescriptions = <String, FlatMappMarker>{};
 
   // google maps markers set
   Map<String, Marker> googleMarkers = <String, Marker>{};
@@ -52,6 +54,16 @@ class MarkerLoader {
     addTemporaryMarker(_firstCoordinates);
   }
 
+  // save markers to local storage
+  void saveMarkers() async {
+
+    // save markersDescription
+    final path_ = await getFilePath();
+    final file = new File(path_);
+    String markerStorage = json.encode(_markersDescriptions);
+    await file.writeAsString(markerStorage);
+  }
+
   // load markers from local storage
   Future loadMarkers() async {
     String path = await getFilePath();
@@ -64,10 +76,19 @@ class MarkerLoader {
       String markerStorage = await file.readAsString();
 
       try{
-        // save it to map
-        _markersDescriptions = Map<String, Map<dynamic, dynamic>>.from(
-            json.decode(markerStorage)
-        );
+//        save it to map: throws
+//        type '_InternalLinkedHashMap<String, dynamic>'
+//        is not a subtype of type 'FlatMappMarker'.
+//        Requires cast method override in FlatMappMarker from _InternalLinkedHashMap<String, dynamic>.
+//        _markersDescriptions = Map<String, FlatMappMarker>.from(
+//            json.decode(markerStorage)
+//        );
+
+        Map<String, dynamic> jsonObj = json.decode(markerStorage);
+        jsonObj.forEach((key, value) {
+          _markersDescriptions[key] = FlatMappMarker.fromJson(value);
+        });
+
       } catch (error) {
         print(error);
         print('could not load marker descriptions from local storage...');
@@ -85,23 +106,23 @@ class MarkerLoader {
   // translate descriptions to google map markers and zones
   void _descriptionsToObjects(){
     // for each marker description
-    _markersDescriptions.forEach((String markerID, Map markerData) {
+    _markersDescriptions.forEach((String markerID, FlatMappMarker markerData) {
 
       String id = markerID;
       LatLng position = LatLng(
-          markerData['position_x'],
-          markerData['position_y']
+          markerData.position_x,
+          markerData.position_y
       );
 
       // add marker
       addMarker(
           id: id,
           position: position,
-          icon: markerData['icon'],
-          title: markerData['title'],
-          description: markerData['description'],
-          range: markerData['range'],
-          actions: markerData['actions'],
+          icon: markerData.icon,
+          title: markerData.title,
+          description: markerData.description,
+          range: markerData.range,
+          actions: markerData.actions,
       );
     });
   }
@@ -114,18 +135,19 @@ class MarkerLoader {
   // add or edit marker
   void addMarker({
     String id, LatLng position, String icon,
-    String title, String description, double range, List<dynamic> actions
+    String title, String description, double range, List<FlatMappAction> actions
   }){
 
-    _markersDescriptions[id] = {
-      'position_x': position.latitude,
-      'position_y': position.longitude,
-      'range': range,
-      'icon': icon,
-      'title': title,
-      'description': description,
-      'actions': actions,
-    };
+    _markersDescriptions[id] = FlatMappMarker(
+      position.latitude,
+      position.longitude,
+      range,
+      -420,
+      title,
+      description,
+      icon,
+      actions
+    );
 
     iconsLoader.getMarkerImage(icon).then((iconBitmap){
       googleMarkers[id] = Marker(
@@ -166,17 +188,7 @@ class MarkerLoader {
   }
 
   // save markers to local storage
-  void saveMarkers() async {
-
-    // save markersDescription
-    final path_ = await getFilePath();
-    final file = new File(path_);
-    String markerStorage = json.encode(_markersDescriptions);
-    await file.writeAsString(markerStorage);
-  }
-
-  // save markers to local storage
-  void saveMarkersFromBackup({Map<String, Map> content}) async {
+  void saveMarkersFromBackup({Map<String, FlatMappMarker> content}) async {
     _markersDescriptions = content;
     saveMarkers();
   }
@@ -193,14 +205,14 @@ class MarkerLoader {
     );
   }
 
-  Map<String, dynamic> getMarkerDescription({String id}){
+  FlatMappMarker getMarkerDescription({String id}){
     if(_markersDescriptions[id] == null){
       getFilePath().then((path){_repairFile(path);});
     }
-    return Map<String, dynamic>.from(_markersDescriptions[id]);
+    return _markersDescriptions[id];
   }
 
-  Map<String, Map> getMarkersDescriptions(){
+  Map<String, FlatMappMarker> getMarkersDescriptions(){
     return _markersDescriptions;
   }
 
@@ -217,20 +229,24 @@ class MarkerLoader {
   }
 
   List<dynamic> getMarkerActions({String id}){
-    return _markersDescriptions[id]['actions'];
+    return _markersDescriptions[id].actions;
   }
 
-  void addMarkerAction({String id, String action}) {
-    if(_markersDescriptions[id]['actions'] == null){
-      _markersDescriptions[id]['actions'] = [];
+  void addMarkerAction({String id, FlatMappAction action}) {
+    if(_markersDescriptions[id].actions == null){
+      _markersDescriptions[id].actions = [];
     }
-    _markersDescriptions[id]['actions'].add(action);
+
+    // update action position
+    action.action_position = (_markersDescriptions[id].actions.length + 1).toDouble();
+
+    _markersDescriptions[id].actions.add(action);
     saveMarkers();
   }
 
   void removeMarkerAction({String id, int index}) {
-    if(_markersDescriptions[id]['actions'][index] != null){
-      _markersDescriptions[id]['actions'].removeAt(index);
+    if(_markersDescriptions[id].actions[index] != null){
+      _markersDescriptions[id].actions.removeAt(index);
     } else {
       print("no action to remove at index $index from marker $id");
     }

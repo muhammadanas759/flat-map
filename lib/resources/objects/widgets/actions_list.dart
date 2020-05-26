@@ -1,5 +1,6 @@
 import 'package:flatmapp/resources/objects/loaders/actions_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
+import 'package:flatmapp/resources/objects/models/action.dart';
 import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 
@@ -63,11 +64,9 @@ class ActionsList {
     // https://stackoverflow.com/questions/53908025/flutter-sortable-drag-and-drop-listview
     // https://api.flutter.dev/flutter/material/ReorderableListView-class.html
 
-    // var id = PrefService.get('selected_marker');
-
     var _actionsLoader = ActionsLoader();
 
-    List<dynamic> _actionsList = _markerLoader.getMarkerActions(
+    List<FlatMappAction> _actionsList = _markerLoader.getMarkerActions(
       id: id
     );
 
@@ -99,17 +98,17 @@ class ActionsList {
                 leading: CircleAvatar(
                   backgroundColor: Colors.white,
                   backgroundImage: AssetImage(
-                      _actionsLoader.actionsMap[_actionsList[index]]
+                      _actionsLoader.actionsMap[_actionsList[index].icon]
                   ),
                 ),
                 title: Text(
-                    _actionsList[index],
+                    _actionsList[index].name,
                     style: bodyText()
                 ),
                 trailing: Icon(Icons.delete_forever),
                 onTap: () {
                   // remove action with alert dialog
-                  _raiseAlertDialog(context, id, index, _actionsList[index]);
+                  _raiseAlertDialog(context, id, index, _actionsList[index].name);
                 },
               ),
             );
@@ -118,6 +117,89 @@ class ActionsList {
       ),
     );
   }
+
+//  Widget buildActionsList(BuildContext context, String id) {
+//
+//    var _actionsLoader = ActionsLoader();
+//
+//    List<dynamic> _actionsList = _markerLoader.getMarkerActions(
+//        id: id
+//    );
+//
+//    print(_actionsList);
+//
+//    return Column(
+//      children: <Widget>[
+//        Expanded(
+//          child: _actionsList == null ?
+//          Card( //                           <-- Card widget
+//            child: ListTile(
+//              title: Text(
+//                  "no actions added",
+//                  style: bodyText()
+//              ),
+//            ),
+//          ) :
+//          ReorderableListView(
+//            children: _actionsList.map(
+//              (item) => ListTile(
+//                leading: CircleAvatar(
+//                  backgroundColor: Colors.white,
+//                  backgroundImage: AssetImage(
+//                      _actionsLoader.actionsMap[item['icon']]
+//                  ),
+//                ),
+//                title: Text(
+//                    item['title'],
+//                    style: bodyText()
+//                ),
+//                subtitle: Text(
+//                  item['description'],
+//                ),
+//                trailing: Icon(Icons.delete_forever),
+//                onTap: () {
+//                  // remove action with alert dialog
+//                  _raiseAlertDialog(
+//                      context, id, item, item['description']
+//                  );
+//                },
+//              )
+//            ).toList(),
+//            onReorder: (int start, int current) {
+//              // dragging from top to bottom
+//              if (start < current) {
+//                int end = current - 1;
+//                String startItem = _actionsList[start];
+//                int i = 0;
+//                int local = start;
+//                do {
+//                  _actionsList[local] = _actionsList[++local];
+//                  i++;
+//                } while (i < end - start);
+//                _actionsList[end] = startItem;
+//                _actionsList[end]['action_position '] = end;
+//              }
+//              // dragging from bottom to top
+//              else if (start > current) {
+//                String startItem = _actionsList[start];
+//                for (int i = start; i > current; i--) {
+//                  _actionsList[i] = _actionsList[i - 1];
+//                }
+//                _actionsList[current] = startItem;
+//                _actionsList[current]['action_position '] = current;
+//              }
+//            },
+//          ),
+//        ),
+//        addActionCard(
+//          tooltip: "Add action",
+//          onPressedMethod: () {
+//            addAction(context);
+//          },
+//        ),
+//      ],
+//    );
+//  }
 }
 
 

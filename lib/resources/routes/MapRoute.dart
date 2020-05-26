@@ -1,4 +1,5 @@
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
+import 'package:flatmapp/resources/objects/models/flatmapp_marker.dart';
 import 'package:flatmapp/resources/objects/widgets/actions_list.dart';
 
 import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
@@ -125,7 +126,6 @@ class _MapRouteState extends State<MapRoute> {
   Future _mapLongPress(LatLng position) async {
 
     // reload icon in form - requires setState update on preferences
-    // TODO THIS CAUSES Exception - NEED BETTER SOLUTION
     setState(() { });
 
     // update form
@@ -167,14 +167,14 @@ class _MapRouteState extends State<MapRoute> {
   // ===========================================================================
   // -------------------- MARKER FORM WIDGET SECTION ---------------------------
   void updateFormData(){
-    var temp = widget._markerLoader.getMarkerDescription(
+    FlatMappMarker temp = widget._markerLoader.getMarkerDescription(
       id: PrefService.get('selected_marker')
     );
     // set marker data to temporary marker
     if (temp != null){
-      _formMarkerData['title'] = temp['title'];
-      _formMarkerData['description'] = temp['description'];
-      _formMarkerData['range'] = temp['range'].toInt();
+      _formMarkerData['title'] = temp.title;
+      _formMarkerData['description'] = temp.description;
+      _formMarkerData['range'] = temp.range.toInt();
     }
 
     // update controllers
@@ -260,7 +260,7 @@ class _MapRouteState extends State<MapRoute> {
     // save form
     _formKey.currentState.save();
 
-    var _selectedMarkerId = PrefService.get('selected_marker');
+    String _selectedMarkerId = PrefService.get('selected_marker');
 
     setState(() {
       // adding a new marker to map
@@ -299,7 +299,7 @@ class _MapRouteState extends State<MapRoute> {
 
 
   Widget _markerAddForm(context){
-    var _id = PrefService.get('selected_marker');
+    String _id = PrefService.get('selected_marker');
     Marker tempMarker = widget._markerLoader.getGoogleMarker(
         id: _id
     );
@@ -339,21 +339,7 @@ class _MapRouteState extends State<MapRoute> {
               _buildMarkerRangeField(),
             ],
           ),
-
           SizedBox(height: 10),
-//          Row(
-//            mainAxisSize: MainAxisSize.min,
-//            children: <Widget>[
-//              textFieldButton(text: "Add marker", onPressedMethod: (){
-//                // submit form and add marker to dictionary
-//                _saveMarker();
-//              }),
-//              SizedBox(width: 20),
-//              textFieldButton(text: "Add action", onPressedMethod: _addAction)
-//            ],
-//          ),
-//          SizedBox(width: 10),
-
           Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -424,8 +410,8 @@ class _MapRouteState extends State<MapRoute> {
           ]),
 
           _actionsList.buildActionsList(
-              context,
-              PrefService.getString("selected_marker")
+            context,
+            PrefService.getString("selected_marker")
           ),
         ],
       )

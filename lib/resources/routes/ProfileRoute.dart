@@ -1,6 +1,7 @@
 import 'package:flatmapp/resources/objects/loaders/icons_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
+import 'package:flatmapp/resources/objects/models/flatmapp_marker.dart';
 // import 'package:flatmapp/resources/objects/widgets/actions_list.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
@@ -140,8 +141,8 @@ class _ProfileRouteState extends State<ProfileRoute> {
                 );
               } else {
                 // marker data for card
-                var _id = _markersDescriptionsKeys.elementAt(index);
-                var _marker = widget._markerLoader.getMarkerDescription(id: _id);
+                String _id = _markersDescriptionsKeys.elementAt(index);
+                FlatMappMarker _marker = widget._markerLoader.getMarkerDescription(id: _id);
 
                 // don't add temporary marker to the list
                 if(_id == 'temporary'){
@@ -157,11 +158,11 @@ class _ProfileRouteState extends State<ProfileRoute> {
                         leading: CircleAvatar(
                           backgroundColor: Colors.white,
                           backgroundImage: AssetImage(
-                              _iconsLoader.markerImageLocal[_marker['icon']]
+                              _iconsLoader.markerImageLocal[_marker.icon]
                           ),
                         ),
-                        title: Text(_marker['title'], style: bodyText()),
-                        subtitle: Text(_marker['description'], style: footer()),
+                        title: Text(_marker.title, style: bodyText()),
+                        subtitle: Text(_marker.description, style: footer()),
                         trailing: Icon(Icons.keyboard_arrow_down),
                         children: <Widget>[
                           Row(

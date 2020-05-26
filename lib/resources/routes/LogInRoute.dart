@@ -106,7 +106,6 @@ class _LogInRouteState extends State<LogInRoute> {
         // there is no token in response
         print("No token detected!");
         print(_response.body);
-        print(PrefService.getString("token"));
       }
     }
   }

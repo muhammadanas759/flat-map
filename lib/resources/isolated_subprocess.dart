@@ -4,19 +4,21 @@ import 'package:flatmapp/resources/objects/loaders/trigger_loader.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
 
+import 'package:flutter/material.dart';
+
 
 // https://pub.dev/packages/flutter_isolate
 // =============================================================================
 // -------------------- TRIGGER ISOLATE SECTION --------------------------------
 
 // This function happens in the isolate
-void triggerEntryPoint(String message) async {
+// void triggerEntryPoint(BuildContext context) async { TODO remove or use test section
+void triggerEntryPoint(var message) async {
   // THIS IS "MAIN" FOR SUBPROCESS
 
   // marker loader init
   final MarkerLoader _markerLoader = MarkerLoader();
   await _markerLoader.loadMarkers();
-
 
   // geolocator API:
   // https://pub.dev/documentation/geolocator/latest/geolocator/Geolocator-class.html

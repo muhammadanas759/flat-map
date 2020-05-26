@@ -132,14 +132,16 @@ class NetLoader {
         // parse markers to form acceptable in server interface
         markerLoader.getMarkersDescriptions().forEach((key, value) {
           parsedMarkers.add({
-            "Action_Name": value['actions'],
-            "position_x": value['position_x'],
-            "position_y": value['position_y'],
-            "_range": value['range'],
-            "action_position": 9999,
-            "title": value['title'],
-            "icon": value['icon'],
-            "description": value['description'],
+            "Action_Name": value.actions,
+            "position_x": value.position_x,
+            "position_y": value.position_y,
+            "_range": value.range,
+            // TODO determine what action_position means
+            "action_position": value.action_position,
+            "title": value.title,
+            "icon": value.icon,
+            "description": value.description,
+            // TODO determine what action_detail means
             "action_detail": "",
           });
         });

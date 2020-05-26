@@ -40,7 +40,6 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
       obscureText: true,
       validator: (String value) {
         if (form_var == "new_password2" && value != _formData['new_password']) {
-          print("$value -- ${_formData['new_password']}");
           return 'Passwords do not match';
         } else if(form_var == "new_password"){
           _formData['new_password'] = value;
