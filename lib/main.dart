@@ -47,6 +47,8 @@ main() async {
     'isolate_port': 0,
     'token': '',
     'login': '',
+    'isolate_enabled': false,
+    'isolate_spawned': false,
   });
 
   // get start page
@@ -69,15 +71,21 @@ main() async {
     Permission.location.request();
   }
 
-  // initiate isolated subprocess TODO unlock subprocess after development
-  // ignore: unused_local_variable
-//    final isolate = await FlutterIsolate.spawn(
-//        triggerEntryPoint,
-//        ""
-//    );
-//
-//    PrefService.setString('isolate_port', isolate.controlPort.toString());
-//    print("isolate control port: " + isolate.controlPort.toString());
+  if(PrefService.get('isolate_enabled') && !PrefService.get('isolate_spawned')){
+    // initiate isolated subprocess
+    // ignore: unused_local_variable
+    final isolate = await FlutterIsolate.spawn(
+        triggerEntryPoint,
+        ""
+    );
+
+    PrefService.setString('isolate_port', isolate.controlPort.toString());
+    print("isolate control port: " + isolate.controlPort.toString());
+
+    PrefService.setBool('isolate_spawned', true);
+  }
+
+
 
   runApp(MyApp());
 }

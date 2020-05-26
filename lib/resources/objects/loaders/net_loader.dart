@@ -147,9 +147,26 @@ class NetLoader {
         });
 
         // send parsed markers
+        print("SENDING BACKUP ----------------------"); // TODO remove print
+
         await _postToServer(
-          endpoint: "/api/backup/trigger/",
+          endpoint: "/api/backup/",
           content: parsedMarkers,
+        );
+
+        print("Backup uploaded successfully"); // TODO remove print
+
+        Fluttertoast.showToast(
+          msg: "Backup uploaded successfully",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
+      } on SocketException catch (e) {
+        print(e);
+        Fluttertoast.showToast(
+          msg: "Error: request timed out",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
         );
       } on HttpException catch (e) {
         print(e);
@@ -172,8 +189,10 @@ class NetLoader {
   Future<void> getBackup(BuildContext context, MarkerLoader markerLoader) async {
     if(PrefService.get("cloud_enabled") == true){
       try{
+        print("DOWNLOADING BACKUP ----------------------"); // TODO remove print
+
         List<Map<String, dynamic>> parsedMarkers = await _getFromServer(
-          endpoint: "/api/backup/trigger/",
+          endpoint: "/api/backup/",
         );
 
         // TODO unlock in final version
@@ -190,7 +209,22 @@ class NetLoader {
             actions: marker['Action_Name'],
           );
         });
-      } on HttpException catch (e) {
+
+        print("Backup downloaded successfully"); // TODO remove print
+
+        Fluttertoast.showToast(
+          msg: "Backup downloaded successfully",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
+      } on SocketException catch (e) {
+        print(e);
+        Fluttertoast.showToast(
+          msg: "Error: request timed out",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
+    } on HttpException catch (e) {
         print(e);
         Fluttertoast.showToast(
           msg: "Error: server could not process backup",
@@ -220,6 +254,7 @@ class NetLoader {
         endpoint: "/api/account/login",
         content: content,
       );
+
     } on HttpException catch (e) {
       print(e);
       Fluttertoast.showToast(

@@ -220,6 +220,12 @@ class _MapRouteState extends State<MapRoute> {
         _formMarkerData['title'] = value;
       },
       textInputAction: TextInputAction.next,
+      validator: (text) {
+        if (text == null || text.isEmpty) {
+          return 'This field can not be empty';
+        }
+        return null;
+      },
       onFieldSubmitted: (String value) {
         _formMarkerData['title'] = value;
         FocusScope.of(context).requestFocus(FocusNode());
@@ -239,6 +245,12 @@ class _MapRouteState extends State<MapRoute> {
         _formMarkerData['description'] = value;
       },
       textInputAction: TextInputAction.next,
+      validator: (text) {
+        if (text == null || text.isEmpty) {
+          return 'This field can not be empty';
+        }
+        return null;
+      },
       onFieldSubmitted: (String value) {
         _formMarkerData['description'] = value;
         FocusScope.of(context).requestFocus(FocusNode());
@@ -257,36 +269,38 @@ class _MapRouteState extends State<MapRoute> {
   }
 
   void _saveMarker(){
-    // save form
-    _formKey.currentState.save();
+    if (_formKey.currentState.validate()) {
+      // TODO save marker form - unlock if needed by users
+      // _formKey.currentState.save();
 
-    String _selectedMarkerId = PrefService.get('selected_marker');
+      String _selectedMarkerId = PrefService.get('selected_marker');
 
-    setState(() {
-      // adding a new marker to map
-      widget._markerLoader.addMarker(
-        id: _selectedMarkerId == 'temporary' ?
-            widget._markerLoader.generateId() : _selectedMarkerId,
-        position: widget._markerLoader.getGoogleMarker(
-            id: _selectedMarkerId
-        ).position,
-        icon: PrefService.get('selected_icon'),
-        title: _formMarkerData['title'],
-        description: _formMarkerData['description'],
-        range: _formMarkerData['range'].toDouble(),
-        actions: widget._markerLoader.getMarkerActions(id: _selectedMarkerId),
+      setState(() {
+        // adding a new marker to map
+        widget._markerLoader.addMarker(
+          id: _selectedMarkerId == 'temporary' ?
+          widget._markerLoader.generateId() : _selectedMarkerId,
+          position: widget._markerLoader.getGoogleMarker(
+              id: _selectedMarkerId
+          ).position,
+          icon: PrefService.get('selected_icon'),
+          title: _formMarkerData['title'],
+          description: _formMarkerData['description'],
+          range: _formMarkerData['range'].toDouble(),
+          actions: widget._markerLoader.getMarkerActions(id: _selectedMarkerId),
+        );
+      });
+
+      // close form panel
+      _closePanel(context);
+
+      // show message
+      Fluttertoast.showToast(
+        msg: "Added marker",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
       );
-    });
-
-    // close form panel
-    _closePanel(context);
-
-    // show message
-    Fluttertoast.showToast(
-      msg: "Added marker",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-    );
+    }
   }
 
   void _closePanel(context){
