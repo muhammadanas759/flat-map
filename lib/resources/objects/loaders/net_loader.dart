@@ -131,23 +131,33 @@ class NetLoader {
 
         // parse markers to form acceptable in server interface
         markerLoader.getMarkersDescriptions().forEach((key, value) {
-          parsedMarkers.add({
-            "Action_Name": value.actions,
-            "position_x": value.position_x,
-            "position_y": value.position_y,
-            "_range": value.range,
-            // TODO determine what action_position means
-            "action_position": value.action_position,
-            "title": value.title,
-            "icon": value.icon,
-            "description": value.description,
-            // TODO determine what action_detail means
-            "action_detail": "",
-          });
+
+          // TODO can not store temporary marker in backup due to the:
+          // empty title
+          // empty name
+          // permanent id (temporary) equal for all users
+          // impossibility of recovering temporary data -
+          // it is indistinguishable from other markers
+          if(key != "temporary"){
+            parsedMarkers.add({
+              "Action_Name": value.actions,
+              "position_x": value.position_x,
+              "position_y": value.position_y,
+              "_range": value.range,
+              // TODO determine what action_position means
+              "action_position": value.action_position,
+              "title": value.title,
+              "icon": value.icon,
+              "description": value.description,
+              // TODO determine what action_detail means
+              "action_detail": "none",
+            });
+          }
         });
 
         // send parsed markers
         print("SENDING BACKUP ----------------------"); // TODO remove print
+        print(parsedMarkers);
 
         await _postToServer(
           endpoint: "/api/backup/",

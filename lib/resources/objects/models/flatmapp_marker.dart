@@ -23,6 +23,20 @@ class FlatMappMarker {
     this.actions
   );
 
+  // override print
+  String toString(){
+    return '{'
+      'position_x: ${this.position_x}, '
+      'position_y: ${this.position_y}, '
+      'range: ${this.range}, '
+      'action_position: ${this.action_position}, '
+      'title: ${this.title}, '
+      'description: ${this.description}, '
+      'icon: ${this.icon}, '
+      'actions: ${this.actions}, '
+    '}';
+  }
+
   FlatMappMarker.fromJson(Map<String, dynamic> json) { fromJson(json); }
   FlatMappMarker.toJson() { toJson(); }
 

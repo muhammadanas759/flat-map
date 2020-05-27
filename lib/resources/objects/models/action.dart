@@ -14,6 +14,13 @@ class FlatMappAction {
     this.parameters
   );
 
+  // TODO change names in server table from Action_Name and action_detail to name and parameters
+  // override print
+  String toString(){
+    return '{Action_Name: ${this.name}, icon: ${this.icon}, '
+    'action_position: ${this.action_position}, action_detail: ${this.parameters}}';
+  }
+
   FlatMappAction.fromJson(Map<String, dynamic> json) { fromMap(json); }
   FlatMappAction.toJson() { toJson(); }
 
