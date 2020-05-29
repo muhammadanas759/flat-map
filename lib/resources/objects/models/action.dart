@@ -1,6 +1,8 @@
 
 
 
+import 'dart:convert';
+
 class FlatMappAction {
   String name;
   String icon;
@@ -17,24 +19,24 @@ class FlatMappAction {
   // TODO change names in server table from Action_Name and action_detail to name and parameters
   // override print
   String toString(){
-    return '{Action_Name: ${this.name}, icon: ${this.icon}, '
-    'action_position: ${this.action_position}, action_detail: ${this.parameters}}';
+    return '{"Action_Name": "${this.name}", "icon": "${this.icon}", '
+    '"action_position": "${this.action_position}", "action_detail": ${this.parameters}}';
   }
 
   FlatMappAction.fromJson(Map<String, dynamic> json) { fromMap(json); }
   FlatMappAction.toJson() { toJson(); }
 
   void fromMap(Map<String, dynamic> action){
-    this.name = action['name'];
+    this.name = action['Action_Name']; // TODO changed from name to Action_Name to meet server requirements
     this.icon = action['icon'];
-    this.action_position = action['action_position'];
-    this.parameters = action['parameters'];
+    this.action_position = action['action_position'].toDouble();
+    this.parameters = json.decode(action['action_detail']); // TODO changed from parameters to action_detail to meet server requirements
   }
 
   Map<String, dynamic> toJson() => {
-    'name': this.name,
+    'Action_Name': this.name, // TODO changed from name to Action_Name to meet server requirements
     'icon': this.icon,
     'action_position': this.action_position,
-    'parameters': this.parameters,
+    'action_detail': this.parameters.toString(), // TODO changed from parameters to action_detail to meet server requirements
   };
 }

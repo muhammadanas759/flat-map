@@ -263,15 +263,14 @@ class _MapRouteState extends State<MapRoute> {
       // initialValue: _formMarkerData['range'],
       initialValue: widget._markerLoader.getRange(
           id: PrefService.get('selected_marker')
-      ),
+      ).toInt(),
       onSaved: (value) => this._formMarkerData['range'] = value,
     );
   }
 
   void _saveMarker(){
     if (_formKey.currentState.validate()) {
-      // TODO save marker form - unlock if needed by users
-      // _formKey.currentState.save();
+      _formKey.currentState.save();
 
       String _selectedMarkerId = PrefService.get('selected_marker');
 

@@ -224,8 +224,8 @@ class MarkerLoader {
     return _markersDescriptions.keys.toList();
   }
 
-  int getRange({String id}){
-    return zones[id].radius.toInt();
+  double getRange({String id}){
+    return zones[id].radius;
   }
 
   List<dynamic> getMarkerActions({String id}){

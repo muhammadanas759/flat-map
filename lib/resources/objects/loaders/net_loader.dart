@@ -1,11 +1,13 @@
+import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
+import 'package:flatmapp/resources/objects/models/action.dart';
+
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:global_configuration/global_configuration.dart';
 import 'package:preferences/preferences.dart';
 
@@ -14,22 +16,32 @@ class NetLoader {
 
   String _serverURL = GlobalConfiguration().getString("server_url");
 
+  void showToast(String message){
+    print(message); // TODO REMOVE TEST
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+    );
+  }
+
   void analyseResponse(http.Response response){
     if(response.statusCode >= 300){
       throw HttpException(response.body);
     }
     // verify if response can be parsed
-    if(!(json.decode(response.body) is Map)){
-      throw Exception("Can not decode response body to correct JSON\n\n" + response.body);
+    try {
+      var decoded = json.decode(response.body);
+      if(!(decoded is Map) && !(decoded is List)){
+        throw Exception("Can not decode response body to correct JSON\n\n" + response.body);
+      }
+    } on FormatException catch(e){
+      print("Format exception error\n$e");
     }
   }
 
-  Future<http.Response> _postToServer({
-    String endpoint, List<Map<String, dynamic>> content
-  }) async {
-
+  Future<http.Response> _postToServer({String endpoint, List<Map<String, dynamic>> content}) async {
     String _token = PrefService.getString('token');
-
     http.Response _response = await http.post(
       _serverURL + endpoint,
       headers: {
@@ -37,20 +49,17 @@ class NetLoader {
         HttpHeaders.authorizationHeader: "Token $_token",
       },
       body: json.encode(content)
+      // body:
     );
-
     // verify response
     analyseResponse(_response);
-
     return _response;
   }
 
   Future<http.Response> _patchToServer({
     String endpoint, Map<String, dynamic> content
   }) async {
-
     String _token = PrefService.getString('token');
-
     http.Response _response = await http.patch(
         _serverURL + endpoint,
         headers: {
@@ -59,35 +68,13 @@ class NetLoader {
         },
         body: json.encode(content)
     );
-
     // verify response
     analyseResponse(_response);
-
     return _response;
   }
 
-  Future<http.Response> getToken({
-    String endpoint, Map<String, dynamic> content
-  }) async {
-
-    http.Response _response = await http.post(
-        _serverURL + endpoint,
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: json.encode(content)
-    );
-
-    // verify response
-    analyseResponse(_response);
-
-    return _response;
-  }
-
-  Future<List<Map<String, dynamic>>> _getFromServer({String endpoint}) async {
-
+  Future<List<dynamic>> _getFromServer({String endpoint}) async {
     String _token = PrefService.getString('token');
-
     http.Response _response = await http.get(
       _serverURL + endpoint,
       headers: {
@@ -95,17 +82,13 @@ class NetLoader {
         HttpHeaders.authorizationHeader: "Token $_token",
       },
     );
-
     // verify response
     analyseResponse(_response);
-
     return json.decode(_response.body);
   }
 
   Future<http.Response> _deleteToServer({String endpoint}) async {
-
     String _token = PrefService.getString('token');
-
     http.Response _response = await http.delete(
       _serverURL + endpoint,
       headers: {
@@ -113,16 +96,27 @@ class NetLoader {
         HttpHeaders.authorizationHeader: "Token $_token",
       },
     );
-
     // verify response
     analyseResponse(_response);
-
     return _response;
   }
 
-
   // ------------------------------------------------------------------------
-  // TODO zapis znaczników do bazy
+  Future<http.Response> getToken({
+    String endpoint, Map<String, dynamic> content
+  }) async {
+    http.Response _response = await http.post(
+        _serverURL + endpoint,
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: json.encode(content)
+    );
+    // verify response
+    analyseResponse(_response);
+    return _response;
+  }
+
   Future<void> postBackup(BuildContext context, MarkerLoader markerLoader) async {
     if(PrefService.get("cloud_enabled") == true) {
       try {
@@ -131,7 +125,6 @@ class NetLoader {
 
         // parse markers to form acceptable in server interface
         markerLoader.getMarkersDescriptions().forEach((key, value) {
-
           // TODO can not store temporary marker in backup due to the:
           // empty title
           // empty name
@@ -155,58 +148,61 @@ class NetLoader {
           }
         });
 
-        // send parsed markers
-        print("SENDING BACKUP ----------------------"); // TODO remove print
-        print(parsedMarkers);
+        // TODO repair this on server side - backups are not overwritten and have to be deleted first
+        removeBackup();
 
+        // send parsed markers
         await _postToServer(
           endpoint: "/api/backup/",
           content: parsedMarkers,
         );
 
-        print("Backup uploaded successfully"); // TODO remove print
-
-        Fluttertoast.showToast(
-          msg: "Backup uploaded successfully",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-        );
+        showToast("Backup uploaded successfully");
       } on SocketException catch (e) {
         print(e);
-        Fluttertoast.showToast(
-          msg: "Error: request timed out",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-        );
+        showToast("Error: request timed out");
       } on HttpException catch (e) {
         print(e);
-        Fluttertoast.showToast(
-          msg: "Error: server could not process backup",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-        );
+        showToast("Error: server could not process backup");
       }
     } else {
-      Fluttertoast.showToast(
-        msg: "Cloud save is not enabled in Settings - advanced",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-      );
+      showToast("Cloud save is not enabled in Settings - advanced");
     }
   }
 
-  // TODO odczyt znaczników z bazy
+  // parse list from backup to marker actions list
+  List<FlatMappAction> toActionsList(List<dynamic> actionsList){
+    List<FlatMappAction> result;
+    actionsList.forEach((element) {
+      try{
+        // FlatMappAction action = json.decode(element);// TODO REPAIR DECODE FROM ACTION
+        // result.add(action);
+
+        result.add(FlatMappAction(
+          element['Action_Name'],
+          element['icon'],
+          element['action_position'].toDouble(),
+          json.decode(element['action_detail']),
+        ));
+
+      } on Exception catch(e){
+        print("action parsing error:\n$e");
+      }
+    });
+    return result;
+  }
+
+  // odczyt znaczników z bazy
   Future<void> getBackup(BuildContext context, MarkerLoader markerLoader) async {
     if(PrefService.get("cloud_enabled") == true){
       try{
-        print("DOWNLOADING BACKUP ----------------------"); // TODO remove print
 
-        List<Map<String, dynamic>> parsedMarkers = await _getFromServer(
+        List<dynamic> parsedMarkers = await _getFromServer(
           endpoint: "/api/backup/",
         );
 
         // TODO unlock in final version
-        // markerLoader.removeAllMarkers();
+        markerLoader.removeAllMarkers();
 
         parsedMarkers.forEach((marker) {
           markerLoader.addMarker(
@@ -215,46 +211,28 @@ class NetLoader {
             icon: marker['icon'],
             title: marker['title'],
             description: marker['description'],
-            range: marker['range'],
-            actions: marker['Action_Name'],
+            range: marker['_range'],
+            actions: toActionsList(marker['Action_Name']),
           );
         });
 
-        print("Backup downloaded successfully"); // TODO remove print
-
-        Fluttertoast.showToast(
-          msg: "Backup downloaded successfully",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-        );
+        if(parsedMarkers.isEmpty){
+          showToast("Backup is empty");
+        } else {
+          showToast("Backup downloaded successfully");
+        }
       } on SocketException catch (e) {
         print(e);
-        Fluttertoast.showToast(
-          msg: "Error: request timed out",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-        );
+        showToast("Error: request timed out");
     } on HttpException catch (e) {
         print(e);
-        Fluttertoast.showToast(
-          msg: "Error: server could not process backup",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-        );
+        showToast("Error: server could not process backup");
       } on Exception catch (e) {
         print(e);
-        Fluttertoast.showToast(
-          msg: "Error: something went wrong during download",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-        );
+        showToast("Error: something went wrong during download");
       }
     } else {
-      Fluttertoast.showToast(
-        msg: "Cloud save is not enabled in Settings - advanced",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-      );
+      showToast("Cloud save is not enabled in Settings - advanced");
     }
   }
 
@@ -264,22 +242,13 @@ class NetLoader {
         endpoint: "/api/account/login",
         content: content,
       );
-
     } on HttpException catch (e) {
       print(e);
-      Fluttertoast.showToast(
-        msg: "Error: server could not process data",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-      );
+      showToast("Error: server could not process data");
       return http.Response("", 300);
     } on Exception catch (e) {
       print(e);
-      Fluttertoast.showToast(
-        msg: "Error: something went wrong",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-      );
+      showToast("Error: something went wrong");
       return http.Response("", 300);
     }
   }
@@ -291,19 +260,11 @@ class NetLoader {
       );
     } on HttpException catch (e) {
       print(e);
-      Fluttertoast.showToast(
-        msg: "Error: server could not process data",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-      );
+      showToast("Error: server could not process data");
       return http.Response("", 300);
     } on Exception catch (e) {
       print(e);
-      Fluttertoast.showToast(
-        msg: "Error: something went wrong",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-      );
+      showToast("Error: something went wrong");
       return http.Response("", 300);
     }
   }
@@ -315,19 +276,11 @@ class NetLoader {
       );
     } on HttpException catch (e) {
       print(e);
-      Fluttertoast.showToast(
-        msg: "Error: server could not process data",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-      );
+      showToast("Error: server could not process data");
       return http.Response("", 300);
     } on Exception catch (e) {
       print(e);
-      Fluttertoast.showToast(
-        msg: "Error: something went wrong",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-      );
+      showToast("Error: something went wrong");
       return http.Response("", 300);
     }
   }

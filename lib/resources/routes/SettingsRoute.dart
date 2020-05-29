@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
@@ -14,9 +15,16 @@ class SettingsRoute extends StatefulWidget {
 
 class _SettingsRouteState extends State<SettingsRoute> {
 
-  // NetLoader _netLoader = NetLoader();
+  NetLoader _netLoader = NetLoader();
 
   PreferencePage easyPreferences(){
+
+    // reset some values
+//    PrefService.setBool('advanced_enabled', false);
+//    PrefService.setBool('remove_local', false);
+//    PrefService.setBool('remove_backup', false);
+//    PrefService.setBool('remove_account', false);
+
     return PreferencePage([
       PreferenceTitle('General', style: header()),
       DropdownPreference(
@@ -105,7 +113,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
               onEnable: () {
                 // TODO confirm to remove backup markers
                 print("remove backup markers");
-                // _netLoader.removeBackup()
+                _netLoader.removeBackup();
               },
             ),
             CheckboxPreference(

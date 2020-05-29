@@ -102,8 +102,8 @@ class ActionsList {
                   ),
                 ),
                 title: Text(
-                    _actionsList[index].name,
-                    style: bodyText()
+                  _actionsList[index].name,
+                  style: bodyText()
                 ),
                 trailing: Icon(Icons.delete_forever),
                 onTap: () {
