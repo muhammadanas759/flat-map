@@ -272,33 +272,43 @@ class _MapRouteState extends State<MapRoute> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
-      String _selectedMarkerId = PrefService.get('selected_marker');
-
-      setState(() {
-        // adding a new marker to map
-        widget._markerLoader.addMarker(
-          id: _selectedMarkerId == 'temporary' ?
-          widget._markerLoader.generateId() : _selectedMarkerId,
-          position: widget._markerLoader.getGoogleMarker(
-              id: _selectedMarkerId
-          ).position,
-          icon: PrefService.get('selected_icon'),
-          title: _formMarkerData['title'],
-          description: _formMarkerData['description'],
-          range: _formMarkerData['range'].toDouble(),
-          actions: widget._markerLoader.getMarkerActions(id: _selectedMarkerId),
+      // bug on older api (25) - validation does not save form state.
+      // To prevent this behaviour, additional if is present.
+      if(_formMarkerData['title'] == "" || _formMarkerData['description'] == ""){
+        Fluttertoast.showToast(
+          msg: "Please submit title and description and press enter",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
         );
-      });
+      } else {
+        String _selectedMarkerId = PrefService.get('selected_marker');
 
-      // close form panel
-      _closePanel(context);
+        setState(() {
+          // adding a new marker to map
+          widget._markerLoader.addMarker(
+            id: _selectedMarkerId == 'temporary' ?
+            widget._markerLoader.generateId() : _selectedMarkerId,
+            position: widget._markerLoader.getGoogleMarker(
+                id: _selectedMarkerId
+            ).position,
+            icon: PrefService.get('selected_icon'),
+            title: _formMarkerData['title'],
+            description: _formMarkerData['description'],
+            range: _formMarkerData['range'].toDouble(),
+            actions: widget._markerLoader.getMarkerActions(id: _selectedMarkerId),
+          );
+        });
 
-      // show message
-      Fluttertoast.showToast(
-        msg: "Added marker",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-      );
+        // close form panel
+        _closePanel(context);
+
+        // show message
+        Fluttertoast.showToast(
+          msg: "Added marker",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
     }
   }
 
