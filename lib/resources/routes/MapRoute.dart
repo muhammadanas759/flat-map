@@ -166,6 +166,47 @@ class _MapRouteState extends State<MapRoute> {
 
   // ===========================================================================
   // -------------------- MARKER FORM WIDGET SECTION ---------------------------
+  Future<void> raiseAlertDialogRemoveMarker(String id) async {
+
+    FlatMappMarker _marker = widget._markerLoader.getMarkerDescription(id: id);
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+            title: Text("Remove marker?"),
+            content: Text(
+                "You are about to remove marker\n"
+                    "${_marker.title}\n"
+                    "${_marker.description}."
+            ),
+            actions: [
+              // set up the buttons
+              FlatButton(
+                child: Text("no nO NO"),
+                onPressed:  () {
+                  // dismiss alert
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text("HELL YEAH"),
+                onPressed:  () {
+                  // remove marker
+                  widget._markerLoader.removeMarker(id: id);
+                  // save markers state to file
+                  widget._markerLoader.saveMarkers();
+                  // dismiss alert
+                  Navigator.of(context).pop();
+                },
+              ),
+            ]
+        );
+      },
+    );
+  }
+
   void updateFormData(){
     FlatMappMarker temp = widget._markerLoader.getMarkerDescription(
       id: PrefService.get('selected_marker')
@@ -404,8 +445,7 @@ class _MapRouteState extends State<MapRoute> {
                       trailing: Icon(Icons.delete_forever),
                       onTap: (){
                         // set up the AlertDialog
-                        raiseAlertDialogRemoveMarker(
-                            context, widget._markerLoader, _id);
+                        raiseAlertDialogRemoveMarker(_id);
                       }
                   ),
                 ),

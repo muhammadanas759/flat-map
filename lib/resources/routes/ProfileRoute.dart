@@ -39,6 +39,49 @@ class _ProfileRouteState extends State<ProfileRoute> {
 
   // ---------------------------------------------------------------------------
   // ==================  ALERT DIALOGS =========================================
+  Future<void> raiseAlertDialogRemoveMarker(String id) async {
+
+    FlatMappMarker _marker = widget._markerLoader.getMarkerDescription(id: id);
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+            title: Text("Remove marker?"),
+            content: Text(
+                "You are about to remove marker\n"
+                    "${_marker.title}\n"
+                    "${_marker.description}."
+            ),
+            actions: [
+              // set up the buttons
+              FlatButton(
+                child: Text("no nO NO"),
+                onPressed:  () {
+                  // dismiss alert
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text("HELL YEAH"),
+                onPressed:  () {
+                  // remove marker
+                  widget._markerLoader.removeMarker(id: id);
+                  // save markers state to file
+                  widget._markerLoader.saveMarkers();
+                  // dismiss alert
+                  Navigator.of(context).pop();
+                  // refresh cards
+                  setState(() {});
+                },
+              ),
+            ]
+        );
+      },
+    );
+  }
+
   Future<void> _raiseAlertDialogRemoveAllMarkers(BuildContext context) async {
     return showDialog<void>(
       context: context,
@@ -183,8 +226,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
                                 tooltip: 'Remove marker',
                                 onPressed: () {
                                   // set up the AlertDialog
-                                  raiseAlertDialogRemoveMarker(
-                                      context, widget._markerLoader, _id);
+                                  raiseAlertDialogRemoveMarker(_id);
                                 },
                               ),
                             ],

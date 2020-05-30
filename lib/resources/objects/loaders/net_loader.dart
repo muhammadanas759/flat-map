@@ -219,6 +219,9 @@ class NetLoader {
         if(parsedMarkers.isEmpty){
           showToast("Backup is empty");
         } else {
+          // save backup to file
+          markerLoader.saveMarkers();
+
           showToast("Backup downloaded successfully");
         }
       } on SocketException catch (e) {
