@@ -102,18 +102,27 @@ class NetLoader {
   }
 
   // ------------------------------------------------------------------------
-  Future<http.Response> getToken({
+  Future<http.Response> getToken({BuildContext context,
     String endpoint, Map<String, dynamic> content
   }) async {
-    http.Response _response = await http.post(
-        _serverURL + endpoint,
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: json.encode(content)
-    );
-    // verify response
-    analyseResponse(_response);
+    http.Response _response;
+    try {
+      _response = await http.post(
+          _serverURL + endpoint,
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: json.encode(content)
+      );
+      // verify response
+      analyseResponse(_response);
+    } on SocketException catch (e) {
+      print(e);
+      showToast("Error: request timed out");
+    } on HttpException catch (e) {
+      print(e);
+      showToast("Error: Unable to log in with provided credentials.");
+    }
     return _response;
   }
 

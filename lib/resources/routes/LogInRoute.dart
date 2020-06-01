@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 
 import 'package:preferences/preference_service.dart';
-import 'package:volume/volume.dart';
 
 
 class LogInRoute extends StatefulWidget {
@@ -87,6 +86,7 @@ class _LogInRouteState extends State<LogInRoute> {
 
       // send credentials to server and get the response
       http.Response _response = await netLoader.getToken(
+          context: context,
           endpoint: '/api/account/login/',
           content: _formData
       );
