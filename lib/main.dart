@@ -71,7 +71,7 @@ main() async {
     Permission.location.request();
   }
 
-  if(PrefService.get('isolate_enabled') && !PrefService.get('isolate_spawned')){
+  //if(PrefService.get('isolate_enabled') && !PrefService.get('isolate_spawned')){
     // initiate isolated subprocess
     // ignore: unused_local_variable
     final isolate = await FlutterIsolate.spawn(
@@ -83,7 +83,7 @@ main() async {
     print("isolate control port: " + isolate.controlPort.toString());
 
     PrefService.setBool('isolate_spawned', true);
-  }
+  //}
 
 
 

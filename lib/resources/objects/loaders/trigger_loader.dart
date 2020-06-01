@@ -1,5 +1,6 @@
 import 'package:flatmapp/resources/extensions.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
+import 'package:flatmapp/resources/objects/models/action.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_marker.dart';
 
 import 'dart:async';
@@ -7,7 +8,6 @@ import 'dart:async';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:volume/volume.dart';
 
 
 // class providing action triggering
@@ -147,18 +147,17 @@ class TriggerLoader {
     // get activated markers
     await getActivatedMarkers(position.toLatLng());
 
-    print("all markers: ");
-    print(_markerLoader.getMarkersDescriptions());
-    print("activated now: $_activatedNow");
-    print("activated previously: $_activatedPreviously");
+    //print("all markers: ");
+    //print(_markerLoader.getMarkersDescriptions());
+    //print("activated now: $_activatedNow");
+    //print("activated previously: $_activatedPreviously");
     // TODO operate all actions possible
     for (String markerId in _activatedNow) {
       // activate marker actions
-      print("activated marker: $markerId");
-      print("activated actions:");
-
-      for(String action in _markerLoader.getMarkerActions(id: markerId)){
-        switch (action) {
+      //print("activated marker: $markerId");
+      //print("activated actions:");
+      for(FlatMappAction action in _markerLoader.getMarkerActions(id: markerId)){
+        switch (action.icon) {
           case "mute":
             mutePhone();
             break;
