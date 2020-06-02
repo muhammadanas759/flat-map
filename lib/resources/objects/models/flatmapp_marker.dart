@@ -69,8 +69,8 @@ class FlatMappMarker {
     actions_list.forEach((element) {
       actions.add(
           FlatMappAction(
-            element['name'],
-            element['icon'],
+            element['name'].toString(),
+            element['icon'].toString(),
             element['action_position'],
             element['parameters'],
           )

@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
 
 
+// ignore: must_be_immutable
 class ActionsRoute extends StatefulWidget {
   // data loader
   MarkerLoader _markerLoader = MarkerLoader();
@@ -41,7 +42,7 @@ class _ActionsRouteState extends State<ActionsRoute> {
             onTap: () {
               // add action to the selected marker id
               widget._markerLoader.addMarkerAction(
-                id: PrefService.get('selected_marker'),
+                id: PrefService.get('selected_marker').toString(),
                 action: FlatMappAction(key, key, -420, {"param1": 0})
               );
               // Navigate back

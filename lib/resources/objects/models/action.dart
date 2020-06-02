@@ -25,10 +25,10 @@ class FlatMappAction {
   FlatMappAction.toJson() { toJson(); }
 
   void fromMap(Map<String, dynamic> action){
-    this.name = action['Action_Name']; // TODO changed from name to Action_Name to meet server requirements
-    this.icon = action['icon'];
+    this.name = action['Action_Name'].toString(); // TODO changed from name to Action_Name to meet server requirements
+    this.icon = action['icon'].toString();
     this.action_position = action['action_position'].toDouble();
-    this.parameters = json.decode(action['action_detail']); // TODO changed from parameters to action_detail to meet server requirements
+    this.parameters = Map<String, dynamic>.from(json.decode(action['action_detail'])); // TODO changed from parameters to action_detail to meet server requirements
   }
 
   Map<String, dynamic> toJson() => {

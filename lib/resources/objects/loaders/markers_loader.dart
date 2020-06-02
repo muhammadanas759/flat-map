@@ -84,8 +84,8 @@ class MarkerLoader {
 //            json.decode(markerStorage)
 //        );
 
-        Map<String, dynamic> jsonObj = json.decode(markerStorage);
-        jsonObj.forEach((key, value) {
+        Map<String, dynamic> jsonObj = Map<String, dynamic>.from(json.decode(markerStorage));
+        jsonObj.forEach((key, dynamic value) {
           _markersDescriptions[key] = FlatMappMarker.fromJson(value);
         });
 

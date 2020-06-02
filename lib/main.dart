@@ -52,7 +52,7 @@ main() async {
   });
 
   // get start page
-  initScreen = PrefService.get('start_page');
+  initScreen = PrefService.getString('start_page');
   switch(initScreen) {
     case 'Map': {initScreen = '/map';} break;
     case 'Profile': {initScreen = '/profile';} break;
@@ -71,7 +71,7 @@ main() async {
     Permission.location.request();
   }
 
-  if(PrefService.get('isolate_enabled') && !PrefService.get('isolate_spawned')){
+  if(PrefService.getBool('isolate_enabled') && !PrefService.getBool('isolate_spawned')){
     // initiate isolated subprocess
     // ignore: unused_local_variable
     final isolate = await FlutterIsolate.spawn(

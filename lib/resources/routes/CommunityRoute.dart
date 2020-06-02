@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:preferences/preference_service.dart';
 
 
+// ignore: must_be_immutable
 class CommunityRoute extends StatefulWidget {
 
   MarkerLoader _markerLoader = MarkerLoader();
