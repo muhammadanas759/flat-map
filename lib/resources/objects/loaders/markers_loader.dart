@@ -53,6 +53,7 @@ class MarkerLoader {
   Future updateMarkersOnFileChange() async{
     String path = await getFilePath();
     try {
+      // check if there was a change in markers
       if (File(path).lastModifiedSync().isAfter(_markersLastModification)) {
         _markersLastModification = File(path).lastModifiedSync();
         this.loadMarkers();

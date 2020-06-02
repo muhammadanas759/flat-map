@@ -147,8 +147,8 @@ class TriggerLoader {
     // get activated markers
     await getActivatedMarkers(position.toLatLng());
 
-    print("all markers: ");
-    print(_markerLoader.getMarkersDescriptions());
+    //print("all markers: ");
+    //print(_markerLoader.getMarkersDescriptions());
     //print("activated now: $_activatedNow");
     //print("activated previously: $_activatedPreviously");
     // TODO operate all actions possible

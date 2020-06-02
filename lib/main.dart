@@ -47,7 +47,7 @@ main() async {
     'isolate_port': 0,
     'token': '',
     'login': '',
-    'isolate_enabled': false,
+    'isolate_enabled': true,
     'isolate_spawned': false,
   });
 

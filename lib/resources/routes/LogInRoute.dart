@@ -91,9 +91,8 @@ class _LogInRouteState extends State<LogInRoute> {
       );
 
       String _token = json.decode(_response.body)["token"].toString();
-
       // if there is token in response
-      if(_token != null) {
+      if(_token != null && _token != "null") {
         // save token to global variables
         PrefService.setString("token", _token);
         // save login to global variables
