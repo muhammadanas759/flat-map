@@ -102,9 +102,8 @@ class NetLoader {
   }
 
   // ------------------------------------------------------------------------
-  Future<http.Response> getToken({BuildContext context,
-    String endpoint, Map<String, dynamic> content
-  }) async {
+  Future<http.Response> getToken({
+    String endpoint, Map<String, dynamic> content }) async {
     http.Response _response;
     try {
       _response = await http.post(
