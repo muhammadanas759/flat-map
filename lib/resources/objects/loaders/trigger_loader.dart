@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:wifi_iot/wifi_iot.dart';
 
 
 // class providing action triggering
@@ -43,7 +44,7 @@ class TriggerLoader {
       Geolocator _passedGeolocator,
       MarkerLoader _passedMarkerLoader,
       FlutterLocalNotificationsPlugin passedFlutterLocalNotificationsPlugin
-  ) {
+  ){
     _geolocator = _passedGeolocator;
     _markerLoader = _passedMarkerLoader;
     _flutterLocalNotificationsPlugin = passedFlutterLocalNotificationsPlugin;
@@ -52,10 +53,9 @@ class TriggerLoader {
       (Position position){operatePositionChange(position: position);}
     );
 
-    // TODO listen to marker storage file changes
-    // load markers every 2 minutes - temporary solution
-    timer = Timer.periodic(Duration(seconds: 120),
-            (Timer t) => _markerLoader.loadMarkers());
+    // checks if file with markers was modified and if it was loads markers
+    timer = Timer.periodic(Duration(seconds: 5),
+            (Timer t) => _markerLoader.updateMarkersOnFileChange());
   }
 
   Future<LatLng> getCurrentPosition() async {
@@ -147,8 +147,8 @@ class TriggerLoader {
     // get activated markers
     await getActivatedMarkers(position.toLatLng());
 
-    //print("all markers: ");
-    //print(_markerLoader.getMarkersDescriptions());
+    print("all markers: ");
+    print(_markerLoader.getMarkersDescriptions());
     //print("activated now: $_activatedNow");
     //print("activated previously: $_activatedPreviously");
     // TODO operate all actions possible
@@ -166,6 +166,9 @@ class TriggerLoader {
                 title: "POSITION CHANGE DETECTED",
                 content: "CITIZEN NR 26108, STAY AT HOME"
             );
+            break;
+          case "wi-fi":
+            controlWIFI();
             break;
           default:
             print("default action not recognized : $action");
@@ -206,6 +209,10 @@ class TriggerLoader {
       platformChannelSpecifics,
       payload: 'Default_Sound',
     );
+  }
+
+  void controlWIFI(){
+    WiFiForIoTPlugin.setEnabled(true);
   }
 
   void mutePhone() async {

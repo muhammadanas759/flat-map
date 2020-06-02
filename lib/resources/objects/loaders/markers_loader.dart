@@ -27,6 +27,9 @@ class MarkerLoader {
   // zones set
   Map<String, Circle> zones  = <String, Circle>{};
 
+  // time of last modification
+  DateTime _markersLastModification = DateTime.now();
+
   // icons loader
   final IconsLoader iconsLoader = IconsLoader();
 
@@ -44,6 +47,18 @@ class MarkerLoader {
       // file error
       print('File processing error: $e');
       return '';
+    }
+  }
+
+  Future updateMarkersOnFileChange() async{
+    String path = await getFilePath();
+    try {
+      if (File(path).lastModifiedSync().isAfter(_markersLastModification)) {
+        _markersLastModification = File(path).lastModifiedSync();
+        this.loadMarkers();
+      }
+    } on FileSystemException catch(e) {
+      print(e);
     }
   }
 

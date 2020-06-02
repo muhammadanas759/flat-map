@@ -102,7 +102,7 @@ class ActionsList {
                   ),
                 ),
                 title: Text(
-                  _actionsList[index].name,
+                  _actionsList[index].icon,
                   style: bodyText()
                 ),
                 trailing: Icon(Icons.delete_forever),
