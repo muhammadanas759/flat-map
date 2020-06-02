@@ -1,5 +1,3 @@
-import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
-import 'package:flatmapp/resources/objects/models/flatmapp_marker.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

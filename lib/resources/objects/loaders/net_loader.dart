@@ -84,7 +84,7 @@ class NetLoader {
     );
     // verify response
     analyseResponse(_response);
-    return json.decode(_response.body);
+    return List<dynamic>.from(json.decode(_response.body));
   }
 
   Future<http.Response> _deleteToServer({String endpoint}) async {
@@ -102,9 +102,8 @@ class NetLoader {
   }
 
   // ------------------------------------------------------------------------
-  Future<http.Response> getToken({BuildContext context,
-    String endpoint, Map<String, dynamic> content
-  }) async {
+  Future<http.Response> getToken({
+    String endpoint, Map<String, dynamic> content }) async {
     http.Response _response;
     try {
       _response = await http.post(
@@ -188,8 +187,8 @@ class NetLoader {
         // result.add(action);
 
         result.add(FlatMappAction(
-          element['Action_Name'],
-          element['icon'],
+          element['Action_Name'].toString(),
+          element['icon'].toString(),
           element['action_position'].toDouble(),
           json.decode(element['action_detail']),
         ));
@@ -217,11 +216,11 @@ class NetLoader {
           markerLoader.addMarker(
             id: markerLoader.generateId(),
             position: LatLng(marker['position_x'], marker['position_y']),
-            icon: marker['icon'],
-            title: marker['title'],
-            description: marker['description'],
+            icon: marker['icon'].toString(),
+            title: marker['title'].toString(),
+            description: marker['description'].toString(),
             range: marker['_range'],
-            actions: toActionsList(marker['Action_Name']),
+            actions: toActionsList(List<dynamic>.from(marker['Action_Name'])),
           );
         });
 

@@ -4,8 +4,6 @@ import 'package:flatmapp/resources/objects/loaders/trigger_loader.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
 
-import 'package:flutter/material.dart';
-
 
 // https://pub.dev/packages/flutter_isolate
 // =============================================================================

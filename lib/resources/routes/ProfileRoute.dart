@@ -13,6 +13,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:preferences/preferences.dart';
 
 
+// ignore: must_be_immutable
 class ProfileRoute extends StatefulWidget {
 
   // data loader

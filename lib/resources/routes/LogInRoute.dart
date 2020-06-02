@@ -86,19 +86,18 @@ class _LogInRouteState extends State<LogInRoute> {
 
       // send credentials to server and get the response
       http.Response _response = await netLoader.getToken(
-          context: context,
-          endpoint: '/api/account/login/',
-          content: _formData
+        endpoint: '/api/account/login/',
+        content: _formData
       );
 
-      String _token = json.decode(_response.body)["token"];
+      String _token = json.decode(_response.body)["token"].toString();
 
       // if there is token in response
       if(_token != null) {
         // save token to global variables
         PrefService.setString("token", _token);
         // save login to global variables
-        PrefService.setString("login", _formData['username']);
+        PrefService.setString("login", _formData['username'].toString());
 
         // reset view
         resetView(context);
@@ -250,7 +249,7 @@ class _LogInRouteState extends State<LogInRoute> {
 
   void resetView(BuildContext context){
     // reset Widget
-    String initScreen = PrefService.get('start_page');
+    String initScreen = PrefService.getString('start_page');
     switch(initScreen) {
       case 'About': {initScreen = '/about';} break;
       case 'Community': {initScreen = '/community';} break;

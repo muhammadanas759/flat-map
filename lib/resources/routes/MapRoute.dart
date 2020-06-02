@@ -16,6 +16,7 @@ import 'package:preferences/preferences.dart';
 import 'dart:async';
 
 
+// ignore: must_be_immutable
 class MapRoute extends StatefulWidget {
 
   // data loader
@@ -41,7 +42,7 @@ class _MapRouteState extends State<MapRoute> {
   TextEditingController _formDescriptionController = new TextEditingController();
 
   // map style preset
-  final String _preset = PrefService.get('ui_theme');
+  final String _preset = PrefService.getString('ui_theme');
 
   // map zoom
   double _currentZoom = 18;
@@ -138,7 +139,7 @@ class _MapRouteState extends State<MapRoute> {
   CameraPosition updateCameraPosition(){
     return CameraPosition(
       target: widget._markerLoader.getGoogleMarker(
-          id: PrefService.get('selected_marker')
+          id: PrefService.getString('selected_marker')
       ).position,
       zoom: _currentZoom,
     );
@@ -209,7 +210,7 @@ class _MapRouteState extends State<MapRoute> {
 
   void updateFormData(){
     FlatMappMarker temp = widget._markerLoader.getMarkerDescription(
-      id: PrefService.get('selected_marker')
+      id: PrefService.getString('selected_marker')
     );
     // set marker data to temporary marker
     if (temp != null){
@@ -219,8 +220,8 @@ class _MapRouteState extends State<MapRoute> {
     }
 
     // update controllers
-    _formTitleController.text = _formMarkerData['title'];
-    _formDescriptionController.text = _formMarkerData['description'];
+    _formTitleController.text = _formMarkerData['title'].toString();
+    _formDescriptionController.text = _formMarkerData['description'].toString();
   }
 
   Widget _iconChangeButton(){
@@ -303,7 +304,7 @@ class _MapRouteState extends State<MapRoute> {
     return CounterFormField(
       // initialValue: _formMarkerData['range'],
       initialValue: widget._markerLoader.getRange(
-          id: PrefService.get('selected_marker')
+          id: PrefService.getString('selected_marker')
       ).toInt(),
       onSaved: (value) => this._formMarkerData['range'] = value,
     );
@@ -332,9 +333,9 @@ class _MapRouteState extends State<MapRoute> {
             position: widget._markerLoader.getGoogleMarker(
                 id: _selectedMarkerId
             ).position,
-            icon: PrefService.get('selected_icon'),
-            title: _formMarkerData['title'],
-            description: _formMarkerData['description'],
+            icon: PrefService.getString('selected_icon'),
+            title: _formMarkerData['title'].toString(),
+            description: _formMarkerData['description'].toString(),
             range: _formMarkerData['range'].toDouble(),
             actions: widget._markerLoader.getMarkerActions(id: _selectedMarkerId),
           );
@@ -363,7 +364,7 @@ class _MapRouteState extends State<MapRoute> {
 
 
   Widget _markerAddForm(context){
-    String _id = PrefService.get('selected_marker');
+    String _id = PrefService.getString('selected_marker');
     Marker tempMarker = widget._markerLoader.getGoogleMarker(
         id: _id
     );
@@ -531,7 +532,7 @@ class _MapRouteState extends State<MapRoute> {
               ),
             ),
             collapsed: InkWell(
-              onTap: () { _slidingFormController.open(); },
+              onTap: () { _mapLongPress(LatLng(0, 0)); },
               child: Container(
               decoration: BoxDecoration(
                 color: _preset == 'dark' ? Colors.black : Colors.white,

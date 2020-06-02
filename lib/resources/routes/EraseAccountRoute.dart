@@ -42,7 +42,7 @@ class _EraseAccountRouteState extends State<EraseAccountRoute> {
           children: <Widget>[
             SizedBox(height: 20),
             Text(
-              _formData['test_value'],
+              _formData['test_value'].toString(),
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: header(),
