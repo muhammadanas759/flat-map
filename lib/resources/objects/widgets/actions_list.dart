@@ -1,6 +1,6 @@
 import 'package:flatmapp/resources/objects/loaders/actions_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
-import 'package:flatmapp/resources/objects/models/action.dart';
+import 'package:flatmapp/resources/objects/models/flatmapp_action.dart';
 import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 

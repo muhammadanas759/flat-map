@@ -1,6 +1,6 @@
 import 'package:flatmapp/resources/extensions.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
-import 'package:flatmapp/resources/objects/models/action.dart';
+import 'package:flatmapp/resources/objects/models/flatmapp_action.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_marker.dart';
 
 import 'dart:async';

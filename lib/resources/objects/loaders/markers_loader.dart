@@ -1,5 +1,5 @@
 import 'package:flatmapp/resources/objects/loaders/icons_loader.dart';
-import 'package:flatmapp/resources/objects/models/action.dart';
+import 'package:flatmapp/resources/objects/models/flatmapp_action.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_marker.dart';
 
 import 'dart:convert';

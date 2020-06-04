@@ -47,7 +47,7 @@ main() async {
     'isolate_port': 0,
     'token': '',
     'login': '',
-    'isolate_enabled': true,
+    'isolate_enabled': false,
     'isolate_spawned': false,
   });
 
@@ -84,8 +84,6 @@ main() async {
 
     PrefService.setBool('isolate_spawned', true);
   }
-
-
 
   runApp(MyApp());
 }

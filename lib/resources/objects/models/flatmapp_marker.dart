@@ -1,4 +1,4 @@
-import 'package:flatmapp/resources/objects/models/action.dart';
+import 'package:flatmapp/resources/objects/models/flatmapp_action.dart';
 
 
 class FlatMappMarker {

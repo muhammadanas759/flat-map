@@ -137,12 +137,24 @@ class _MapRouteState extends State<MapRoute> {
 
   // update camera position basing on selected marker
   CameraPosition updateCameraPosition(){
-    return CameraPosition(
-      target: widget._markerLoader.getGoogleMarker(
-          id: PrefService.getString('selected_marker')
-      ).position,
-      zoom: _currentZoom,
-    );
+    try{
+      return CameraPosition(
+        target: widget._markerLoader.getGoogleMarker(
+            id: PrefService.getString('selected_marker')
+        ).position,
+        zoom: _currentZoom,
+      );
+    } on NoSuchMethodError catch(e){
+      print(e);
+      // try to repair the phantom marker bug by selecting temporary marker
+      PrefService.setString('selected_marker', 'temporary');
+      return CameraPosition(
+        target: widget._markerLoader.getGoogleMarker(
+            id: PrefService.getString('selected_marker')
+        ).position,
+        zoom: _currentZoom,
+      );
+    }
   }
 
   Widget _googleMapWidget(){
@@ -200,6 +212,8 @@ class _MapRouteState extends State<MapRoute> {
                   widget._markerLoader.saveMarkers();
                   // dismiss alert
                   Navigator.of(context).pop();
+                  // close form
+                  _slidingFormController.close();
                 },
               ),
             ]
@@ -344,6 +358,11 @@ class _MapRouteState extends State<MapRoute> {
         // close form panel
         _closePanel(context);
 
+        // reset data form
+        PrefService.setString('selected_marker', 'temporary');
+        PrefService.setString('selected_icon', 'default');
+        updateFormData();
+
         // show message
         Fluttertoast.showToast(
           msg: "Added marker",
@@ -426,8 +445,8 @@ class _MapRouteState extends State<MapRoute> {
                   margin: const EdgeInsets.only(left: 10.0, right: 20.0),
                   child: ListTile(
                     title: PrefService.getString("selected_marker") == 'temporary' ?
-                    Text('Add marker', style: bodyText()) :
-                    Text('Save changes', style: bodyText()),
+                    Text('Add\nmarker', style: bodyText()) :
+                    Text('Save\nmarker', style: bodyText()),
                     leading: Icon(Icons.bookmark_border),
                     onTap: (){
                       // submit form and add marker to dictionary
@@ -442,7 +461,7 @@ class _MapRouteState extends State<MapRoute> {
                 child: new Container(
                   margin: const EdgeInsets.only(left: 10.0, right: 20.0),
                   child: ListTile(
-                      title: Text('Delete marker', style: bodyText()),
+                      title: Text('Delete\nmarker', style: bodyText()),
                       trailing: Icon(Icons.delete_forever),
                       onTap: (){
                         // set up the AlertDialog
@@ -534,10 +553,10 @@ class _MapRouteState extends State<MapRoute> {
             collapsed: InkWell(
               onTap: () { _mapLongPress(LatLng(0, 0)); },
               child: Container(
-              decoration: BoxDecoration(
-                color: _preset == 'dark' ? Colors.black : Colors.white,
-                borderRadius: radius,
-              ),
+                decoration: BoxDecoration(
+                  color: _preset == 'dark' ? Colors.black : Colors.white,
+                  borderRadius: radius,
+                ),
                 child: Center(
                   child: Text(
                     "Tap here to open form",

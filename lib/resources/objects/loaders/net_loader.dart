@@ -1,5 +1,5 @@
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
-import 'package:flatmapp/resources/objects/models/action.dart';
+import 'package:flatmapp/resources/objects/models/flatmapp_action.dart';
 
 import 'dart:convert';
 import 'dart:io';
@@ -37,6 +37,7 @@ class NetLoader {
       }
     } on FormatException catch(e){
       print("Format exception error\n$e");
+      print("Response body: ${response.body}");
     }
   }
 
@@ -146,18 +147,18 @@ class NetLoader {
               "position_y": value.position_y,
               "_range": value.range,
               // TODO determine what action_position means
-              "action_position": value.action_position,
+              // "action_position": value.action_position,
               "title": value.title,
               "icon": value.icon,
               "description": value.description,
               // TODO determine what action_detail means
-              "action_detail": "none",
+              // "action_detail": "none",
             });
           }
         });
 
         // TODO repair this on server side - backups are not overwritten and have to be deleted first
-        removeBackup();
+        // removeBackup();
 
         // send parsed markers
         await _postToServer(
@@ -180,19 +181,16 @@ class NetLoader {
 
   // parse list from backup to marker actions list
   List<FlatMappAction> toActionsList(List<dynamic> actionsList){
-    List<FlatMappAction> result;
+    List<FlatMappAction> result = [];
     actionsList.forEach((element) {
       try{
-        // FlatMappAction action = json.decode(element);// TODO REPAIR DECODE FROM ACTION
-        // result.add(action);
-
-        result.add(FlatMappAction(
-          element['Action_Name'].toString(),
-          element['icon'].toString(),
-          element['action_position'].toDouble(),
-          json.decode(element['action_detail']),
-        ));
-
+        if(element != null){
+          result.add(
+            FlatMappAction.fromJson(element)
+          );
+        } else {
+          print("action is null");
+        }
       } on Exception catch(e){
         print("action parsing error:\n$e");
       }
@@ -229,6 +227,9 @@ class NetLoader {
         } else {
           // save backup to file
           markerLoader.saveMarkers();
+
+          // reset focused marker
+          PrefService.setString("selected_marker", 'temporary');
 
           showToast("Backup downloaded successfully");
         }
