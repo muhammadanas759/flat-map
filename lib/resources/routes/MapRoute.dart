@@ -380,8 +380,6 @@ class _MapRouteState extends State<MapRoute> {
     _slidingFormController.close();
   }
 
-
-
   Widget _markerAddForm(context){
     String _id = PrefService.getString('selected_marker');
     Marker tempMarker = widget._markerLoader.getGoogleMarker(
@@ -395,16 +393,16 @@ class _MapRouteState extends State<MapRoute> {
         children: <Widget>[
           SizedBox(height: 10),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Text(
-                'Selected marker position:\n'
-                    '${tempMarker.position.latitude},\n'
-                    '${tempMarker.position.longitude}',
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                style: bodyText(),
-              ),
+//              Text(
+//                'Selected marker position:\n'
+//                    '${tempMarker.position.latitude},\n'
+//                    '${tempMarker.position.longitude}',
+//                textAlign: TextAlign.center,
+//                overflow: TextOverflow.ellipsis,
+//                style: bodyText(),
+//              ),
               closeFormButton(onPressedMethod: (){_closePanel(context);}),
             ],
           ),
@@ -424,54 +422,7 @@ class _MapRouteState extends State<MapRoute> {
             ],
           ),
           SizedBox(height: 10),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Expanded(
-                child: new Container(
-                  margin: const EdgeInsets.only(left: 10.0, right: 20.0),
-                  child: Divider(
-                    // color: Colors.black,
-                    // height: 36,
-                  )),
-              ),
-            ],
-          ),
-          SizedBox(width: 10),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: new Container(
-                  margin: const EdgeInsets.only(left: 10.0, right: 20.0),
-                  child: ListTile(
-                    title: PrefService.getString("selected_marker") == 'temporary' ?
-                    Text('Add\nmarker', style: bodyText()) :
-                    Text('Save\nmarker', style: bodyText()),
-                    leading: Icon(Icons.bookmark_border),
-                    onTap: (){
-                      // submit form and add marker to dictionary
-                      _saveMarker();
-                    }
-                  ),
-                ),
-              ),
-              PrefService.getString("selected_marker") == 'temporary' ?
-              SizedBox.shrink() :
-              Expanded(
-                child: new Container(
-                  margin: const EdgeInsets.only(left: 10.0, right: 20.0),
-                  child: ListTile(
-                      title: Text('Delete\nmarker', style: bodyText()),
-                      trailing: Icon(Icons.delete_forever),
-                      onTap: (){
-                        // set up the AlertDialog
-                        raiseAlertDialogRemoveMarker(_id);
-                      }
-                  ),
-                ),
-              ),
-            ]
-          ),
+
           Row(children: <Widget>[
             Expanded(
               child: new Container(
@@ -495,6 +446,54 @@ class _MapRouteState extends State<MapRoute> {
           _actionsList.buildActionsList(
             context,
             PrefService.getString("selected_marker")
+          ),
+
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Expanded(
+                child: new Container(
+                    margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                    child: Divider(
+                      // color: Colors.black,
+                      // height: 36,
+                    )),
+              ),
+            ],
+          ),
+          Row(
+              children: <Widget>[
+                Expanded(
+                  child: new Container(
+                    margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                    child: ListTile(
+                        title: PrefService.getString("selected_marker") == 'temporary' ?
+                        Text('Add\nmarker', style: bodyText()) :
+                        Text('Save\nmarker', style: bodyText()),
+                        leading: Icon(Icons.bookmark_border),
+                        onTap: (){
+                          // submit form and add marker to dictionary
+                          _saveMarker();
+                        }
+                    ),
+                  ),
+                ),
+                PrefService.getString("selected_marker") == 'temporary' ?
+                SizedBox.shrink() :
+                Expanded(
+                  child: new Container(
+                    margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                    child: ListTile(
+                        title: Text('Delete\nmarker', style: bodyText()),
+                        trailing: Icon(Icons.delete_forever),
+                        onTap: (){
+                          // set up the AlertDialog
+                          raiseAlertDialogRemoveMarker(_id);
+                        }
+                    ),
+                  ),
+                ),
+              ]
           ),
         ],
       )

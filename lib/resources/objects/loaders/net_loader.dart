@@ -207,7 +207,7 @@ class NetLoader {
           endpoint: "/api/backup/",
         );
 
-        // TODO unlock in final version
+        // remove markers from local storage
         markerLoader.removeAllMarkers();
 
         parsedMarkers.forEach((marker) {
@@ -225,6 +225,7 @@ class NetLoader {
         if(parsedMarkers.isEmpty){
           showToast("Backup is empty");
         } else {
+
           // save backup to file
           markerLoader.saveMarkers();
 
