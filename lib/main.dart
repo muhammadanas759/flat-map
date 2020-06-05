@@ -6,6 +6,7 @@ import 'package:flatmapp/resources/routes/MapRoute.dart';
 import 'package:flatmapp/resources/routes/ProfileRoute.dart';
 import 'package:flatmapp/resources/routes/IconsRoute.dart';
 import 'package:flatmapp/resources/routes/CommunityRoute.dart';
+import 'package:flatmapp/resources/routes/RegisterRoute.dart';
 import 'package:flatmapp/resources/routes/SettingsRoute.dart';
 import 'package:flatmapp/resources/routes/AboutRoute.dart';
 
@@ -126,6 +127,7 @@ class MyApp extends StatelessWidget {
             '/actions': (context) => ActionsRoute(_markerLoader),
             '/change_password': (context) => ChangePasswordRoute(),
             '/erase_account': (context) => EraseAccountRoute(),
+            '/register': (context) => RegisterRoute(),
           },
           home: Scaffold(
             body: Padding(

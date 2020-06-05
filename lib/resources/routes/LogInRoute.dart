@@ -19,6 +19,9 @@ class LogInRoute extends StatefulWidget {
 
 class _LogInRouteState extends State<LogInRoute> {
 
+  // selected menu in navigator
+  int _selectedIndex = 0;
+
   // internet service
   NetLoader netLoader = NetLoader();
 
@@ -123,62 +126,62 @@ class _LogInRouteState extends State<LogInRoute> {
             _buildEmailField(context),
             SizedBox(height: 20),
             _buildPasswordField(),
-            SizedBox(height: 20),
-            Row(
-              // mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-//                textFieldButton(text: "Log in", onPressedMethod: _submitForm),
-//                SizedBox(width: 20),
-//                textFieldButton(text: "Sign up", onPressedMethod: _submitForm),
-//                SizedBox(width: 20),
-//                textFieldButton(
-//                  text: "Use as guest",
-//                  onPressedMethod: (){resetView(context);}
+//            SizedBox(height: 20),
+//            Row(
+//              // mainAxisSize: MainAxisSize.min,
+//              children: <Widget>[
+////                textFieldButton(text: "Log in", onPressedMethod: _submitForm),
+////                SizedBox(width: 20),
+////                textFieldButton(text: "Sign up", onPressedMethod: _submitForm),
+////                SizedBox(width: 20),
+////                textFieldButton(
+////                  text: "Use as guest",
+////                  onPressedMethod: (){resetView(context);}
+////                ),
+//
+//                Expanded(
+//                  child: ListTile(
+//                    title: Text(
+//                      'Log in',
+//                      style: bodyText(),
+//                      textAlign: TextAlign.left,
+//                    ),
+//                    leading: Icon(Icons.input),
+//                    onTap: (){
+//                      _submitForm();
+//                    },
+//                  ),
 //                ),
-
-                Expanded(
-                  child: ListTile(
-                    title: Text(
-                      'Log in',
-                      style: bodyText(),
-                      textAlign: TextAlign.left,
-                    ),
-                    leading: Icon(Icons.input),
-                    onTap: (){
-                      _submitForm();
-                    },
-                  ),
-                ),
-                SizedBox(width: 20),
-                Expanded(
-                  child: ListTile(
-                    title: Text(
-                      'Register',
-                      style: bodyText(),
-                      textAlign: TextAlign.center,
-                    ),
-                    trailing: Icon(Icons.queue),
-                    onTap: (){
-                      // TODO register procedure
-                    },
-                  ),
-                ),
-                SizedBox(width: 20),
-                Expanded(
-                  child: ListTile(
-                    title: Text(
-                      'Use as guest',
-                      style: bodyText(),
-                      textAlign: TextAlign.right,
-                    ),
-                    trailing: Icon(Icons.cloud_off),
-                    onTap: (){
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ),
-              ],
-            ),
+//                SizedBox(width: 20),
+//                Expanded(
+//                  child: ListTile(
+//                    title: Text(
+//                      'Register',
+//                      style: bodyText(),
+//                      textAlign: TextAlign.center,
+//                    ),
+//                    trailing: Icon(Icons.queue),
+//                    onTap: (){
+//                      // TODO register procedure
+//                    },
+//                  ),
+//                ),
+//                SizedBox(width: 20),
+//                Expanded(
+//                  child: ListTile(
+//                    title: Text(
+//                      'Use as guest',
+//                      style: bodyText(),
+//                      textAlign: TextAlign.right,
+//                    ),
+//                    trailing: Icon(Icons.cloud_off),
+//                    onTap: (){
+//                      Navigator.of(context).pop();
+//                    },
+//                  ),
+//                ),
+//              ],
+//            ),
           ],
         )
     );
@@ -194,9 +197,9 @@ class _LogInRouteState extends State<LogInRoute> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-            Text(
-              'Are you sure you want to log out?',
-              style: header(),
+              Text(
+                'Are you sure you want to log out?',
+                style: header(),
               ),
             ]
           ),
@@ -246,6 +249,25 @@ class _LogInRouteState extends State<LogInRoute> {
     );
   }
 
+  Widget _registerForm(){
+    // TODO REGISTER!
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Text("FORM IN DEVELOPMENT", style: header(),), // TODO remove
+          SizedBox(height: 20),
+          _buildEmailField(context),
+          SizedBox(height: 20),
+          _buildPasswordField(),
+          SizedBox(height: 20),
+          _buildPasswordField(),
+        ],
+      )
+    );
+  }
+
   void resetView(BuildContext context){
     // reset Widget
     String initScreen = PrefService.getString('start_page');
@@ -279,11 +301,50 @@ class _LogInRouteState extends State<LogInRoute> {
       Padding(
         padding: const EdgeInsets.all(8.0),
         child:  PrefService.getString('token') == '' ?
-            _logInForm() : _logOutForm(),
+          _logInForm() : _logOutForm(),
       ),
 
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
+
+      bottomNavigationBar:
+      PrefService.getString('token') != '' ?
+      SizedBox.shrink() :
+      BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.input),
+            title: Text('Log in'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.queue),
+            title: Text('Register'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.cloud_off),
+            title: Text('Use as guest'),
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.green,
+        onTap: (int index) {
+          switch(index){
+            case 0:
+              // log in
+              _submitForm();
+              break;
+            case 1:
+              // move to register screen
+              Navigator.of(context).pop();
+              Navigator.pushNamed(context, '/register');
+              break;
+            case 2:
+              // return to previous screen as guest
+              Navigator.of(context).pop();
+              break;
+          }
+        }
+      ),
     );
   }
 }

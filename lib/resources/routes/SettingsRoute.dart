@@ -18,14 +18,8 @@ class _SettingsRouteState extends State<SettingsRoute> {
   NetLoader _netLoader = NetLoader();
 
   PreferencePage easyPreferences(){
-
-    // reset some values
-//    PrefService.setBool('advanced_enabled', false);
-//    PrefService.setBool('remove_local', false);
-//    PrefService.setBool('remove_backup', false);
-//    PrefService.setBool('remove_account', false);
-
     return PreferencePage([
+
       PreferenceTitle('General', style: header()),
       DropdownPreference(
         'Start Page',
@@ -33,34 +27,20 @@ class _SettingsRouteState extends State<SettingsRoute> {
         defaultVal: 'Map',
         values: ['Map', 'Profile', 'Community', 'Settings', 'About'],
       ),
-      PreferenceTitle('Personalization', style: header()),
 
-      PreferenceDialogLink(
+      PreferenceTitle('Personalization', style: header()),
+      DropdownPreference(
         'Change background theme',
-        dialog: PreferenceDialog([
-          RadioPreference(
-            'Light Theme',
-            'light',
-            'ui_theme',
-            isDefault: true,
-            onSelect: () {
-              DynamicTheme.of(context).setBrightness(Brightness.light);
-            },
-          ),
-          RadioPreference(
-            'Dark Theme',
-            'dark',
-            'ui_theme',
-            onSelect: () {
-              DynamicTheme.of(context).setBrightness(Brightness.dark);
-            },
-          ),
-          ],
-          title: 'Select application theme',
-          // cancelText: 'Cancel',
-          submitText: 'Close',
-          onlySaveOnSubmit: false,
-        ),
+        'ui_theme',
+        defaultVal: 'light',
+        values: ['light', 'dark'],
+        onChange: (value) {
+          if(value == 'light'){
+            DynamicTheme.of(context).setBrightness(Brightness.light);
+          } else {
+            DynamicTheme.of(context).setBrightness(Brightness.dark);
+          }
+        },
       ),
 
       PreferenceTitle('Advanced', style: header()),
@@ -95,32 +75,27 @@ class _SettingsRouteState extends State<SettingsRoute> {
           leading: Icon(Icons.remove_circle),
           trailing: Icon(Icons.keyboard_arrow_right),
           page: PreferencePage([
-            PreferenceTitle('Local data', style: header()),
-            CheckboxPreference(
-              'Remove local markers',
-              'remove_local',
-              defaultVal: false,
-              onEnable: () {
-                // TODO confirm to remove local markers
-                print("remove local markers");
-              },
-            ),
+//            PreferenceTitle('Local data', style: header()),
+//            PreferenceText(
+//              'Remove local markers',
+//              leading: Icon(Icons.delete_forever),
+//              onTap: () {
+//
+//              },
+//            ),
             PreferenceTitle('Outside data', style: header()),
-            CheckboxPreference(
+            PreferenceText(
               'Remove backup markers',
-              'remove_backup',
-              defaultVal: false,
-              onEnable: () {
-                // TODO confirm to remove backup markers
+              leading: Icon(Icons.cloud_off),
+              onTap: () {
                 print("remove backup markers");
                 _netLoader.removeBackup();
               },
             ),
-            CheckboxPreference(
+            PreferenceText(
               'Remove account',
-              'remove_account',
-              defaultVal: false,
-              onEnable: () {
+              leading: Icon(Icons.remove_circle),
+              onTap: () {
                 // move to account removal form
                 Navigator.pushNamed(context, '/erase_account');
               },
@@ -128,101 +103,6 @@ class _SettingsRouteState extends State<SettingsRoute> {
           ]),
         ),
       ], '!advanced_enabled'), // Use ! to get reversed boolean values
-
-      // --------------------------------------------------------------------
-
-//      PreferenceTitle('User'),
-//      TextFieldPreference(
-//        'Display Name',
-//        'user_display_name',
-//      ),
-//      TextFieldPreference('E-Mail', 'user_email',
-//          defaultVal: 'email@example.com'),
-//      PreferenceText(
-//        PrefService.getString('user_description') ?? '',
-//        style: TextStyle(color: Colors.grey),
-//      ),
-//      PreferenceDialogLink(
-//        'Edit description',
-//        dialog: PreferenceDialog(
-//          [
-//            TextFieldPreference(
-//              'Description',
-//              'user_description',
-//              padding: const EdgeInsets.only(top: 8.0),
-//              autofocus: true,
-//              maxLines: 2,
-//            )
-//          ],
-//          title: 'Edit description',
-//          cancelText: 'Cancel',
-//          submitText: 'Save',
-//          onlySaveOnSubmit: true,
-//        ),
-//        onPop: () => setState(() {}),
-//      ),
-//      PreferenceTitle('Content'),
-//      PreferenceDialogLink(
-//        'Content Types',
-//        dialog: PreferenceDialog(
-//          [
-//            CheckboxPreference('Text', 'content_show_text'),
-//            CheckboxPreference('Images', 'content_show_image'),
-//            CheckboxPreference('Music', 'content_show_audio')
-//          ],
-//          title: 'Enabled Content Types',
-//          cancelText: 'Cancel',
-//          submitText: 'Save',
-//          onlySaveOnSubmit: true,
-//        ),
-//      ),
-//      PreferenceTitle('More Dialogs'),
-//      PreferenceDialogLink(
-//        'Android\'s "ListPreference"',
-//        dialog: PreferenceDialog(
-//          [
-//            RadioPreference(
-//                'Select me!', 'select_1', 'android_listpref_selected'),
-//            RadioPreference(
-//                'Hello World!', 'select_2', 'android_listpref_selected'),
-//            RadioPreference('Test', 'select_3', 'android_listpref_selected'),
-//          ],
-//          title: 'Select an option',
-//          cancelText: 'Cancel',
-//          submitText: 'Save',
-//          onlySaveOnSubmit: true,
-//        ),
-//      ),
-//      PreferenceDialogLink(
-//        'Android\'s "ListPreference" with autosave',
-//        dialog: PreferenceDialog(
-//          [
-//            RadioPreference(
-//                'Select me!', 'select_1', 'android_listpref_auto_selected'),
-//            RadioPreference(
-//                'Hello World!', 'select_2', 'android_listpref_auto_selected'),
-//            RadioPreference(
-//                'Test', 'select_3', 'android_listpref_auto_selected'),
-//          ],
-//          title: 'Select an option',
-//          cancelText: 'Close',
-//        ),
-//      ),
-//      PreferenceDialogLink(
-//        'Android\'s "MultiSelectListPreference"',
-//        dialog: PreferenceDialog(
-//          [
-//            CheckboxPreference('A enabled', 'android_multilistpref_a'),
-//            CheckboxPreference('B enabled', 'android_multilistpref_b'),
-//            CheckboxPreference('C enabled', 'android_multilistpref_c'),
-//          ],
-//          title: 'Select multiple options',
-//          cancelText: 'Cancel',
-//          submitText: 'Save',
-//          onlySaveOnSubmit: true,
-//        ),
-//      ),
-
 
     ]);
   }
@@ -235,48 +115,8 @@ class _SettingsRouteState extends State<SettingsRoute> {
 
       easyPreferences(),
 
-      // BODY
-//      Column(
-//        children: <Widget>[
-//          easyPreferences(),
-//
-//          ExpansionTile(
-//            leading: Icon(Icons.settings_applications),
-//            title: Text("Advanced", style: bodyText()),
-//            trailing: Icon(Icons.keyboard_arrow_down),
-//            children: <Widget>[
-//              ListTile(
-//                title: Text(
-//                  'Remove local markers',
-//                  style: bodyText(),
-//                ),
-//                // trailing: Icon(Icons.keyboard_arrow_right),
-//                leading: Icon(Icons.remove_circle_outline),
-//                onLongPress: (){
-//                  // TODO remove markers after alert dialog
-//
-//                },
-//              ),
-//
-//              ListTile(
-//                title: Text(
-//                  'Restore settings to default',
-//                  style: bodyText(),
-//                ),
-//                // trailing: Icon(Icons.keyboard_arrow_right),
-//                leading: Icon(Icons.remove_circle),
-//                onLongPress: (){
-//                  // TODO restore settings to default after alert dialog
-//                },
-//              ),
-//            ],
-//          ),
-//        ],
-//      ),
-
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
     );
   }
 }
-

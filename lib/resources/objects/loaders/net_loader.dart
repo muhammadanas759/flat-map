@@ -297,4 +297,22 @@ class NetLoader {
       return http.Response("", 300);
     }
   }
+
+  Future<http.Response> register(Map<String, dynamic> content) async {
+    try{
+      // TODO register endpoint
+//      return await _patchToServer(
+//        endpoint: "/api/account/register",
+//        content: content,
+//      );
+    } on HttpException catch (e) {
+      print(e);
+      showToast("Error: server could not process data");
+      return http.Response("", 300);
+    } on Exception catch (e) {
+      print(e);
+      showToast("Error: something went wrong");
+      return http.Response("", 300);
+    }
+  }
 }
