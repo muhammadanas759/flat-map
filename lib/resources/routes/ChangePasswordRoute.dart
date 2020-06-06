@@ -5,7 +5,9 @@ import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:preferences/preferences.dart';
 
 
 class ChangePasswordRoute extends StatefulWidget {
@@ -135,8 +137,18 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
       // TODO send new password to server and get the response
       http.Response _response = await netLoader.changePassword(_formData);
       if(200 <= _response.statusCode && _response.statusCode < 300){
+        // remove token
+        PrefService.setString("token", "");
         // move back
         Navigator.of(context).pop();
+        // move to log in
+        Navigator.pushNamed(context, '/login');
+        // show message
+        Fluttertoast.showToast(
+          msg: "Password changed successfully",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
       }
     }
   }

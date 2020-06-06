@@ -25,11 +25,13 @@ class _RegisterRouteState extends State<RegisterRoute> {
 
   final _formKey = GlobalKey<FormState>();
   final Map<String, dynamic> _formData = {
+    'email': '',
     'username': '',
     'password': '',
-    'password_2': '',
+    'password2': '',
   };
   final focusPassword = FocusNode();
+  final focusPassword2 = FocusNode();
 
   Widget _buildEmailField(context) {
     return TextFormField(
@@ -75,8 +77,9 @@ class _RegisterRouteState extends State<RegisterRoute> {
       },
       focusNode: focusPassword,
       onFieldSubmitted: (v) {
-        // _submitForm();
-        // TODO move focus to password confirmation
+        _formData['password'] = v;
+        // move focus to password confirmation
+        FocusScope.of(context).requestFocus(focusPassword2);
       },
     );
   }
@@ -98,9 +101,11 @@ class _RegisterRouteState extends State<RegisterRoute> {
         return null;
       },
       onSaved: (String value) {
-        _formData['password_2'] = value;
+        _formData['password2'] = value;
       },
+      focusNode: focusPassword2,
       onFieldSubmitted: (v) {
+        _formData['password2'] = v;
         _submitForm();
       },
     );
@@ -112,28 +117,26 @@ class _RegisterRouteState extends State<RegisterRoute> {
       _formKey.currentState.save();
 
       // send credentials to server and get the response
-      // TODO register endpoint
       http.Response _response = await netLoader.register(_formData);
-      // TODO analyse response
-
-      // show message
-      Fluttertoast.showToast(
-        msg: "Registered account",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-      );
+      if(200 <= _response.statusCode && _response.statusCode < 300){
+        // move back
+        Navigator.of(context).pop();
+        // show message
+        Fluttertoast.showToast(
+          msg: "Registered account",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
     }
   }
 
   Widget _registerForm(){
-    // TODO REGISTER!
     return Form(
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Text("FORM IN DEVELOPMENT", style: header(),), // TODO remove
-          SizedBox(height: 20),
           _buildEmailField(context),
           SizedBox(height: 20),
           _buildPasswordField(),

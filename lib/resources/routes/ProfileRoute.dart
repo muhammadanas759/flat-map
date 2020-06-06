@@ -361,6 +361,8 @@ class _ProfileRouteState extends State<ProfileRoute> {
         selectedItemColor: Colors.green,
         onTap: (int index) {
           if(index == 1 && PrefService.getString('token') == ''){
+            // go to login page
+            Navigator.pushNamed(context, '/login');
             // show message
             Fluttertoast.showToast(
               msg: "You need to log in to use Profile",

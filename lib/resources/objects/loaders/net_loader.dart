@@ -74,6 +74,23 @@ class NetLoader {
     return _response;
   }
 
+  Future<http.Response> _putToServer({
+    String endpoint, Map<String, dynamic> content
+  }) async {
+    String _token = PrefService.getString('token');
+    http.Response _response = await http.put(
+        _serverURL + endpoint,
+        headers: {
+          "Content-type": "application/json",
+          HttpHeaders.authorizationHeader: "Token $_token",
+        },
+        body: json.encode(content)
+    );
+    // verify response
+    analyseResponse(_response);
+    return _response;
+  }
+
   Future<List<dynamic>> _getFromServer({String endpoint}) async {
     String _token = PrefService.getString('token');
     http.Response _response = await http.get(
@@ -251,8 +268,8 @@ class NetLoader {
 
   Future<http.Response> changePassword(Map<String, dynamic> content) async {
     try{
-      return await _patchToServer(
-        endpoint: "/api/account/login",
+      return await _putToServer(
+        endpoint: "/api/account/change_password",
         content: content,
       );
     } on HttpException catch (e) {
@@ -300,11 +317,11 @@ class NetLoader {
 
   Future<http.Response> register(Map<String, dynamic> content) async {
     try{
-      // TODO register endpoint
-//      return await _patchToServer(
-//        endpoint: "/api/account/register",
-//        content: content,
-//      );
+      // register endpoint
+      return await _putToServer(
+        endpoint: "/api/account/register",
+        content: content,
+      );
     } on HttpException catch (e) {
       print(e);
       showToast("Error: server could not process data");
