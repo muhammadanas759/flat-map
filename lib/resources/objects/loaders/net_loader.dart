@@ -27,6 +27,7 @@ class NetLoader {
 
   void analyseResponse(http.Response response){
     if(response.statusCode >= 300){
+      print(response.statusCode);
       throw HttpException(response.body);
     }
     // verify if response can be parsed
@@ -83,6 +84,21 @@ class NetLoader {
         headers: {
           "Content-type": "application/json",
           HttpHeaders.authorizationHeader: "Token $_token",
+        },
+        body: json.encode(content)
+    );
+    // verify response
+    analyseResponse(_response);
+    return _response;
+  }
+
+  Future<http.Response> _putToServer2({
+    String endpoint, Map<String, dynamic> content
+  }) async {
+    http.Response _response = await http.post(
+        _serverURL + endpoint,
+        headers: {
+          "Content-type": "application/json",
         },
         body: json.encode(content)
     );
@@ -269,7 +285,7 @@ class NetLoader {
   Future<http.Response> changePassword(Map<String, dynamic> content) async {
     try{
       return await _putToServer(
-        endpoint: "/api/account/change_password",
+        endpoint: "/api/account/change_password/",
         content: content,
       );
     } on HttpException catch (e) {
@@ -318,8 +334,8 @@ class NetLoader {
   Future<http.Response> register(Map<String, dynamic> content) async {
     try{
       // register endpoint
-      return await _putToServer(
-        endpoint: "/api/account/register",
+      return await _putToServer2(
+        endpoint: "/api/account/register/",
         content: content,
       );
     } on HttpException catch (e) {

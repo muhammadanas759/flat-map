@@ -115,7 +115,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
     // validate form
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-
+      _formData['email'] = _formData['username'];
       // send credentials to server and get the response
       http.Response _response = await netLoader.register(_formData);
       if(200 <= _response.statusCode && _response.statusCode < 300){
