@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/routes/ActionParametersRoute.dart';
 import 'package:flatmapp/resources/routes/ActionsRoute.dart';
 import 'package:flatmapp/resources/routes/ChangePasswordRoute.dart';
 import 'package:flatmapp/resources/routes/EraseAccountRoute.dart';
@@ -43,8 +44,8 @@ main() async {
     'ui_theme': 'light',
     "cloud_enabled": false,
     'selected_marker': 'temporary',
+    'selected_action': 0,
     'selected_icon': 'default',
-    'selected_action': [],
     'isolate_port': 0,
     'token': '',
     'login': '',
@@ -128,6 +129,7 @@ class MyApp extends StatelessWidget {
             '/change_password': (context) => ChangePasswordRoute(),
             '/erase_account': (context) => EraseAccountRoute(),
             '/register': (context) => RegisterRoute(),
+            '/action_parameters': (context) => ActionParametersRoute(_markerLoader)
           },
           home: Scaffold(
             body: Padding(

@@ -118,14 +118,14 @@ class _LogInRouteState extends State<LogInRoute> {
 
   Widget _logInForm(){
     return Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(height: 20),
-            _buildEmailField(context),
-            SizedBox(height: 20),
-            _buildPasswordField(),
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(height: 20),
+          _buildEmailField(context),
+          SizedBox(height: 20),
+          _buildPasswordField(),
 //            SizedBox(height: 20),
 //            Row(
 //              // mainAxisSize: MainAxisSize.min,
@@ -182,8 +182,8 @@ class _LogInRouteState extends State<LogInRoute> {
 //                ),
 //              ],
 //            ),
-          ],
-        )
+        ],
+      )
     );
   }
 

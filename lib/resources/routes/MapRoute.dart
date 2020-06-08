@@ -382,9 +382,9 @@ class _MapRouteState extends State<MapRoute> {
 
   Widget _markerAddForm(context){
     String _id = PrefService.getString('selected_marker');
-    Marker tempMarker = widget._markerLoader.getGoogleMarker(
-        id: _id
-    );
+//    Marker tempMarker = widget._markerLoader.getGoogleMarker(
+//        id: _id
+//    );
     ActionsList _actionsList = ActionsList(widget._markerLoader);
     return Form(
       key: _formKey,

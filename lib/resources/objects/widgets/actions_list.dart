@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 
 import 'dart:async';
 
+import 'package:preferences/preferences.dart';
+
 
 // class providing actions list for markers
 class ActionsList {
@@ -93,24 +95,65 @@ class ActionsList {
               },
             );
           } else {
-            return Card( //                           <-- Card widget
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  backgroundImage: AssetImage(
-                      _actionsLoader.actionsMap[_actionsList[index].icon]
-                  ),
+//            return Card( //                           <-- Card widget
+//              child: ListTile(
+//                leading: CircleAvatar(
+//                  backgroundColor: Colors.white,
+//                  backgroundImage: AssetImage(
+//                      _actionsLoader.actionsMap[_actionsList[index].icon]
+//                  ),
+//                ),
+//                title: Text(
+//                  _actionsList[index].icon,
+//                  style: bodyText()
+//                ),
+//                trailing: Icon(Icons.delete_forever),
+//                onTap: () {
+//                  // remove action with alert dialog
+//                  _raiseAlertDialog(context, id, index, _actionsList[index].name);
+//                },
+//              ),
+//            );
+            return ExpansionTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.white,
+                backgroundImage: AssetImage(
+                    _actionsLoader.actionsMap[_actionsList[index].icon]
                 ),
-                title: Text(
-                  _actionsList[index].icon,
-                  style: bodyText()
-                ),
-                trailing: Icon(Icons.delete_forever),
-                onTap: () {
-                  // remove action with alert dialog
-                  _raiseAlertDialog(context, id, index, _actionsList[index].name);
-                },
               ),
+              title: Text(
+                _actionsList[index].icon,
+                style: bodyText()
+              ),
+//              subtitle: Text("", style: footer()),
+              trailing: Icon(Icons.keyboard_arrow_down),
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.edit),
+                      tooltip: 'Edit parameters',
+                      onPressed: () {
+                        // set selected marker id for map screen
+                        PrefService.setInt('selected_action', index);
+                        // Navigate to the parameters screen using a named route.
+                        Navigator.pushNamed(context, '/action_parameters');
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.delete_forever),
+                      tooltip: 'Remove action',
+                      onPressed: () {
+                        // remove action with alert dialog
+                        _raiseAlertDialog(context, id, index, _actionsList[index].name);
+                      },
+                    ),
+                  ],
+                ),
+                // TODO add actions list to marker card in Profile
+                // _actionsList.buildActionsList(context, _id),
+              ],
             );
           }
         },

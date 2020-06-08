@@ -244,8 +244,12 @@ class MarkerLoader {
     return zones[id].radius;
   }
 
-  List<dynamic> getMarkerActions({String id}){
+  List<FlatMappAction> getMarkerActions({String id}){
     return _markersDescriptions[id].actions;
+  }
+
+  FlatMappAction getMarkerActionSingle({String marker_id, int action_position}){
+    return _markersDescriptions[marker_id].actions[action_position];
   }
 
   void addMarkerAction({String id, FlatMappAction action}) {
