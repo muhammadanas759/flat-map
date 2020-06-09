@@ -163,8 +163,8 @@ class TriggerLoader {
             break;
           case "notification":
             _showNotificationWithDefaultSound(
-                title: "POSITION CHANGE DETECTED",
-                content: "CITIZEN NR 26108, STAY AT HOME"
+              title: action.parameters['param1'],
+              content: action.parameters['param2']
             );
             break;
           case "wi-fi":
@@ -192,9 +192,9 @@ class TriggerLoader {
   // https://medium.com/@nitishk72/flutter-local-notification-1e43a353877b
   Future _showNotificationWithDefaultSound({String title, String content}) async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-        'your channel id',
-        'your channel name',
-        'your channel description',
+        'flutter_channel_id',
+        'flutter_channel_name',
+        'flutter_channel_description',
         importance: Importance.Max,
         priority: Priority.High
     );

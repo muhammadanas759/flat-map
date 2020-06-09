@@ -252,6 +252,15 @@ class MarkerLoader {
     return _markersDescriptions[marker_id].actions[action_position];
   }
 
+  void setMarkerActionSingle({
+    String marker_id,
+    int action_position,
+    Map<String, dynamic> action_parameters
+  }) {
+    _markersDescriptions[marker_id].actions[action_position].parameters =
+        action_parameters;
+  }
+
   void addMarkerAction({String id, FlatMappAction action}) {
     if(_markersDescriptions[id].actions == null){
       _markersDescriptions[id].actions = [];
