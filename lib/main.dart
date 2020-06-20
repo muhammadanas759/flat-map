@@ -49,7 +49,7 @@ main() async {
     'isolate_port': 0,
     'token': '',
     'login': '',
-    'isolate_enabled': false,
+    'isolate_enabled': true,
     'isolate_spawned': false,
   });
 
@@ -84,7 +84,7 @@ main() async {
     PrefService.setString('isolate_port', isolate.controlPort.toString());
     print("isolate control port: " + isolate.controlPort.toString());
 
-    PrefService.setBool('isolate_spawned', true);
+    // PrefService.setBool('isolate_spawned', true);
   }
 
   runApp(MyApp());

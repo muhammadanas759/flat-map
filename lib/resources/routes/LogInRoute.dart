@@ -35,6 +35,7 @@ class _LogInRouteState extends State<LogInRoute> {
   Widget _buildEmailField(context) {
     return TextFormField(
       style: bodyText(),
+      key: Key('login_email_field'),
       decoration: textFieldStyle(
           labelTextStr: "Email",
           hintTextStr: "Your email goes here"
@@ -60,6 +61,7 @@ class _LogInRouteState extends State<LogInRoute> {
   Widget _buildPasswordField() {
     return TextFormField(
       style: bodyText(),
+      key: Key('login_password_field'),
       decoration: textFieldStyle(
           labelTextStr: "Password",
           hintTextStr: "Your password goes here"
@@ -245,25 +247,6 @@ class _LogInRouteState extends State<LogInRoute> {
 //              ]
 //          )
         ]
-      )
-    );
-  }
-
-  Widget _registerForm(){
-    // TODO REGISTER!
-    return Form(
-      key: _formKey,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Text("FORM IN DEVELOPMENT", style: header(),), // TODO remove
-          SizedBox(height: 20),
-          _buildEmailField(context),
-          SizedBox(height: 20),
-          _buildPasswordField(),
-          SizedBox(height: 20),
-          _buildPasswordField(),
-        ],
       )
     );
   }
