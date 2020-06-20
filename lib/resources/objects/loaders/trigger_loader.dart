@@ -128,7 +128,7 @@ class TriggerLoader {
 
       // check if marker should be activated
       getDistanceBetweenPositions(user, markerPos).then((distance){
-        if( distance < range ){
+        if( distance <= range ){
           if(!_activatedNow.contains(markerID) && !_activatedPreviously.contains(markerID))
           _activatedNow.add(markerID);
         }
@@ -213,6 +213,7 @@ class TriggerLoader {
 
   void controlWIFI(){
     WiFiForIoTPlugin.setEnabled(true);
+    // TODO turn on WIFI doesnt work in subprocess
   }
 
   void mutePhone() async {
