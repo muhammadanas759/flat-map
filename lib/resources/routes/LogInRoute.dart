@@ -35,7 +35,7 @@ class _LogInRouteState extends State<LogInRoute> {
   Widget _buildEmailField(context) {
     return TextFormField(
       style: bodyText(),
-      key: Key('login_email_field'),
+      key: Key('login_email_field_key'),
       decoration: textFieldStyle(
           labelTextStr: "Email",
           hintTextStr: "Your email goes here"
@@ -61,7 +61,7 @@ class _LogInRouteState extends State<LogInRoute> {
   Widget _buildPasswordField() {
     return TextFormField(
       style: bodyText(),
-      key: Key('login_password_field'),
+      key: Key('login_password_field_key'),
       decoration: textFieldStyle(
           labelTextStr: "Password",
           hintTextStr: "Your password goes here"
@@ -210,6 +210,7 @@ class _LogInRouteState extends State<LogInRoute> {
             children: <Widget>[
               Expanded(
                 child: ListTile(
+                  key: Key("logout_yes_list_tile"),
                   title: Text(
                     'Yes',
                     style: bodyText(),
@@ -223,6 +224,7 @@ class _LogInRouteState extends State<LogInRoute> {
               SizedBox(width: 20),
               Expanded(
                 child: ListTile(
+                  key: Key("logout_no_list_tile"),
                   title: Text(
                     'No',
                     style: bodyText(),
@@ -278,7 +280,7 @@ class _LogInRouteState extends State<LogInRoute> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
-
+      key: Key("login_route_key"),
       // BODY FORM
       body:
       Padding(
@@ -294,6 +296,7 @@ class _LogInRouteState extends State<LogInRoute> {
       PrefService.getString('token') != '' ?
       SizedBox.shrink() :
       BottomNavigationBar(
+        key: Key("login_button"),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.input),
