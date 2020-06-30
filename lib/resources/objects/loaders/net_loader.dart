@@ -242,7 +242,7 @@ class NetLoader {
 
         // remove markers from local storage
         markerLoader.removeAllMarkers();
-
+        print("akcje:");
         parsedMarkers.forEach((marker) {
           markerLoader.addMarker(
             id: markerLoader.generateId(),
@@ -253,7 +253,10 @@ class NetLoader {
             range: marker['_range'],
             actions: toActionsList(List<dynamic>.from(marker['Action_Name'])),
           );
+          print(marker['Action_Name']);
         });
+
+
 
         if(parsedMarkers.isEmpty){
           showToast("Backup is empty");

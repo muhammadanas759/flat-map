@@ -71,7 +71,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
             decoration: textFieldStyle(
               labelTextStr: "Notification title"
             ),
-            initialValue: _formData['param1'],
+            initialValue: _formData['param1'].toString(),
             onSaved: (String value) {
               _formData['param1'] = value;
             },
@@ -88,13 +88,14 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
             decoration: textFieldStyle(
               labelTextStr: "Notification description"
             ),
-            initialValue: _formData['param2'],
+            initialValue: _formData['param2'].toString(),
             onSaved: (String value) {
               _formData['param2'] = value;
             },
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (value) {
               _formData['param2'] = value;
+              focusParam2.unfocus();
             },
             focusNode: focusParam2,
           ),

@@ -37,14 +37,16 @@ class _RegisterRouteState extends State<RegisterRoute> {
     return TextFormField(
       style: bodyText(),
       decoration: textFieldStyle(
-          labelTextStr: "Email",
-          hintTextStr: "Your email goes here"
+          labelTextStr: "Username",
+          hintTextStr: "Your username goes here"
       ),
       validator: (String value) {
         if (!RegExp(
             r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-            .hasMatch(value)) {
-          return 'Invalid email format';
+            .hasMatch(value))
+//        if (value == "")
+        {
+          return 'Invalid username format';
         }
         return null;
       },
@@ -103,6 +105,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
       onSaved: (String value) {
         _formData['password2'] = value;
       },
+
       focusNode: focusPassword2,
       onFieldSubmitted: (v) {
         _formData['password2'] = v;
@@ -124,6 +127,13 @@ class _RegisterRouteState extends State<RegisterRoute> {
         // show message
         Fluttertoast.showToast(
           msg: "Registered account",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
+      else{
+        Fluttertoast.showToast(
+          msg: "Somthing went wrong ;(",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
         );

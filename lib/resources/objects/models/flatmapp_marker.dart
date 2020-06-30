@@ -76,6 +76,7 @@ class FlatMappMarker {
           )
       );
     });
+
     return actions;
   }
 }
