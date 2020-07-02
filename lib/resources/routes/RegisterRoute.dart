@@ -133,7 +133,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
       }
       else{
         Fluttertoast.showToast(
-          msg: "Somthing went wrong ;(",
+          msg: "Something went wrong",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
         );

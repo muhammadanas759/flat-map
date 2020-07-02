@@ -11,6 +11,10 @@ import 'package:http/http.dart' as http;
 import 'package:global_configuration/global_configuration.dart';
 import 'package:preferences/preferences.dart';
 
+import 'dart:async';
+import 'package:flutter/cupertino.dart';
+
+
 
 class NetLoader {
 
@@ -350,5 +354,30 @@ class NetLoader {
       showToast("Error: something went wrong");
       return http.Response("", 300);
     }
+  }
+
+  void sendFile(String filepath, String endpoint) {
+    // https://dev.to/carminezacc/advanced-flutter-networking-part-1-uploading-a-file-to-a-rest-api-from-flutter-using-a-multi-part-form-data-post-request-2ekm
+    // init request
+    var request = new http.MultipartRequest(
+      "POST",
+      Uri.parse(_serverURL + endpoint)
+    );
+
+    // add file to request
+    http.MultipartFile.fromPath(
+      'backup',
+      filepath
+    ).then((file){request.files.add(file);});
+
+    // send request
+    request.send().then((response) {
+      if (response.statusCode/100 == 2){
+        print("Uploaded!");
+      }else{
+        print(response.statusCode);
+        print("something went wrong during upload");
+      }
+    });
   }
 }

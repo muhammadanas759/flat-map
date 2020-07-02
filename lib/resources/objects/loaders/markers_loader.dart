@@ -77,6 +77,10 @@ class MarkerLoader {
     final path_ = await getFilePath();
     final file = new File(path_);
     String markerStorage = json.encode(_markersDescriptions);
+
+    print("printing marker storage");
+    print(markerStorage);
+
     await file.writeAsString(markerStorage);
   }
 

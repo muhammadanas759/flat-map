@@ -26,31 +26,31 @@ class ActionsList {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-            title: Text("Remove action?"),
-            content: Text(
-                "You are about to remove action\n" + description
+          title: Text("Remove action?"),
+          content: Text(
+            "You are about to remove action\n" + description
+          ),
+          actions: [
+            // set up the buttons
+            FlatButton(
+              child: Text("no nO NO"),
+              onPressed:  () {
+                // dismiss alert
+                Navigator.of(context).pop();
+              },
             ),
-            actions: [
-              // set up the buttons
-              FlatButton(
-                child: Text("no nO NO"),
-                onPressed:  () {
-                  // dismiss alert
-                  Navigator.of(context).pop();
-                },
-              ),
-              FlatButton(
-                child: Text("HELL YEAH"),
-                onPressed:  () {
-                  // remove marker
-                  _markerLoader.removeMarkerAction(id: id, index: index);
-                  // save markers state to file
-                  _markerLoader.saveMarkers();
-                  // dismiss alert
-                  Navigator.of(context).pop();
-                },
-              ),
-            ]
+            FlatButton(
+              child: Text("HELL YEAH"),
+              onPressed:  () {
+                // remove marker
+                _markerLoader.removeMarkerAction(id: id, index: index);
+                // save markers state to file
+                _markerLoader.saveMarkers();
+                // dismiss alert
+                Navigator.of(context).pop();
+              },
+            ),
+          ]
         );
       },
     );
