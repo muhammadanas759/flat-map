@@ -356,7 +356,10 @@ class NetLoader {
     }
   }
 
+  // --------- FILE UPLOAD -----------------------------------------------------
   void sendFile(String filepath, String endpoint) {
+    assert(filepath != null && endpoint != null);
+
     // https://dev.to/carminezacc/advanced-flutter-networking-part-1-uploading-a-file-to-a-rest-api-from-flutter-using-a-multi-part-form-data-post-request-2ekm
     // init request
     var request = new http.MultipartRequest(
@@ -380,4 +383,56 @@ class NetLoader {
       }
     });
   }
+
+  // --------- FILE DOWNLOAD ---------------------------------------------------
+  // https://github.com/salk52/Flutter-File-Upload-Download/blob/master/upload_download_app/lib/services/file_service.dart
+  static HttpClient getHttpClient() {
+    HttpClient httpClient = new HttpClient()
+      ..connectionTimeout = const Duration(seconds: 10)
+      ..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+    return httpClient;
+  }
+
+  Future<String> fileDownload(String filepath, String endpoint) async {
+    assert(filepath != null && endpoint != null);
+
+    final url = Uri.parse(_serverURL + endpoint);
+
+    final httpClient = getHttpClient();
+
+    final request = await httpClient.getUrl(url);
+    request.headers.add(HttpHeaders.contentTypeHeader, "application/octet-stream");
+
+    var httpResponse = await request.close();
+
+    int byteCount = 0;
+    int totalBytes = httpResponse.contentLength;
+    File file = new File(filepath);
+    var raf = file.openSync(mode: FileMode.write);
+    Completer completer = new Completer<String>();
+
+    httpResponse.listen(
+          (data) {
+        byteCount += data.length;
+        raf.writeFromSync(data);
+      },
+      onDone: () {
+        raf.closeSync();
+        completer.complete(file.path);
+      },
+      onError: (e) {
+        raf.closeSync();
+        file.deleteSync();
+        completer.completeError(e);
+      },
+      cancelOnError: true,
+    );
+
+    return completer.future;
+  }
+
+
+  // TODO propozycja wysłania zip na serwer
+  // https://stackoverflow.com/questions/56410086/flutter-how-to-create-a-zip-file
+  // ===========================================================================
 }
