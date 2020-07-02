@@ -106,6 +106,10 @@ class MarkerLoader {
 
         Map<String, dynamic> jsonObj = Map<String, dynamic>.from(json.decode(markerStorage));
         jsonObj.forEach((key, dynamic value) {
+
+          // TODO REMOVE TEST
+          print(value);
+
           _markersDescriptions[key] = FlatMappMarker.fromJson(value);
         });
 
@@ -253,6 +257,11 @@ class MarkerLoader {
   }
 
   FlatMappAction getMarkerActionSingle({String marker_id, int action_position}){
+
+    // TODO REMOVE TEST
+    print("MARKER ACTION SHOW TEST");
+    print(_markersDescriptions[marker_id]);
+
     return _markersDescriptions[marker_id].actions[action_position];
   }
 

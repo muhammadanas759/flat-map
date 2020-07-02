@@ -31,31 +31,98 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
   int _selectedIndex = 0;
 
   final _formKey = GlobalKey<FormState>();
-  final Map<String, dynamic> _formData = {
-    'param1': '',
-    'param2': '',
-  };
+  Map<String, dynamic> _formData = {};
   final focusParam1 = FocusNode();
   final focusParam2 = FocusNode();
 
   //----------------------- ACTION PARAMETERS WIDGETS --------------------------
   Widget _muteWidget(){
-    return ListTile(
-      title: Text(
-        'Mute dummy widget',
-        style: bodyText(),
+    return Form(
+      key: _formKey,
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(height: 20),
+            TextFormField(
+              style: bodyText(),
+              decoration: textFieldStyle(
+                  labelTextStr: "Mute parameter 1"
+              ),
+              initialValue: _formData['param1'].toString(),
+              onSaved: (String value) {
+                _formData['param1'] = value;
+              },
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (value) {
+                _formData['param1'] = value;
+                FocusScope.of(context).requestFocus(focusParam2);
+              },
+              focusNode: focusParam1,
+            ),
+            SizedBox(height: 20),
+            TextFormField(
+              style: bodyText(),
+              decoration: textFieldStyle(
+                  labelTextStr: "Mute parameter 2"
+              ),
+              initialValue: _formData['param2'].toString(),
+              onSaved: (String value) {
+                _formData['param2'] = value;
+              },
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (value) {
+                _formData['param2'] = value;
+                focusParam2.unfocus();
+              },
+              focusNode: focusParam2,
+            ),
+          ]
       ),
-      leading: Icon(Icons.error_outline)
     );
   }
 
   Widget _bluetoothWidget(){
-    return ListTile(
-      title: Text(
-        'Bluetooth dummy widget',
-        style: bodyText(),
+    return Form(
+      key: _formKey,
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(height: 20),
+            TextFormField(
+              style: bodyText(),
+              decoration: textFieldStyle(
+                  labelTextStr: "Bluetooth parameter 1"
+              ),
+              initialValue: _formData['param1'].toString(),
+              onSaved: (String value) {
+                _formData['param1'] = value;
+              },
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (value) {
+                _formData['param1'] = value;
+                FocusScope.of(context).requestFocus(focusParam2);
+              },
+              focusNode: focusParam1,
+            ),
+            SizedBox(height: 20),
+            TextFormField(
+              style: bodyText(),
+              decoration: textFieldStyle(
+                  labelTextStr: "Bluetooth parameter 2"
+              ),
+              initialValue: _formData['param2'].toString(),
+              onSaved: (String value) {
+                _formData['param2'] = value;
+              },
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (value) {
+                _formData['param2'] = value;
+                focusParam2.unfocus();
+              },
+              focusNode: focusParam2,
+            ),
+          ]
       ),
-      leading: Icon(Icons.error_outline)
     );
   }
 
@@ -105,12 +172,47 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
   }
 
   Widget _wifiWidget(){
-    return ListTile(
-      title: Text(
-        'Wifi dummy widget',
-        style: bodyText(),
+    return Form(
+      key: _formKey,
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(height: 20),
+            TextFormField(
+              style: bodyText(),
+              decoration: textFieldStyle(
+                  labelTextStr: "WIFI parameter 1"
+              ),
+              initialValue: _formData['param1'].toString(),
+              onSaved: (String value) {
+                _formData['param1'] = value;
+              },
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (value) {
+                _formData['param1'] = value;
+                FocusScope.of(context).requestFocus(focusParam2);
+              },
+              focusNode: focusParam1,
+            ),
+            SizedBox(height: 20),
+            TextFormField(
+              style: bodyText(),
+              decoration: textFieldStyle(
+                  labelTextStr: "WIFI parameter 2"
+              ),
+              initialValue: _formData['param2'].toString(),
+              onSaved: (String value) {
+                _formData['param2'] = value;
+              },
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (value) {
+                _formData['param2'] = value;
+                focusParam2.unfocus();
+              },
+              focusNode: focusParam2,
+            ),
+          ]
       ),
-      leading: Icon(Icons.error_outline)
     );
   }
 
@@ -142,15 +244,6 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
   }
 
   Widget _parametersColumn(BuildContext context){
-
-    _selected_action = widget._markerLoader.getMarkerActionSingle(
-      marker_id: PrefService.getString('selected_marker'),
-      action_position: PrefService.getInt('selected_action')
-    );
-
-    _formData['param1'] = _selected_action.parameters['param1'];
-    _formData['param2'] = _selected_action.parameters['param2'];
-
     return Column(
       children: <Widget>[
         ListTile(
@@ -177,15 +270,25 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
 
       // save data from form to action
       widget._markerLoader.setMarkerActionSingle(
-        marker_id: PrefService.getString('selected_marker'),
-        action_position: PrefService.getInt('selected_action'),
-        action_parameters: _formData
+          marker_id: PrefService.getString('selected_marker'),
+          action_position: PrefService.getInt('selected_action'),
+          action_parameters: _formData
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+
+    _selected_action = widget._markerLoader.getMarkerActionSingle(
+      marker_id: PrefService.getString('selected_marker'),
+      action_position: PrefService.getInt('selected_action')
+    );
+
+    print(_selected_action);
+
+    _formData = _selected_action.parameters;
+
     return Scaffold(
       appBar: appBar(title: 'Action parameters'),
       body:

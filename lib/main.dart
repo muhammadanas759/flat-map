@@ -105,7 +105,7 @@ class MyApp extends StatelessWidget {
 //    print("isolate control port: " + isolate.controlPort.toString());
 
     // TODO NEW APPROACH: triggerEntryPoint IN MAIN
-    triggerEntryPoint("MAIN");
+    // triggerEntryPoint("MAIN");
 
     return new DynamicTheme(
       defaultBrightness: Brightness.light,

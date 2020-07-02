@@ -325,8 +325,11 @@ class _LogInRouteState extends State<LogInRoute> {
               Navigator.pushNamed(context, '/register');
               break;
             case 2:
-              // return to previous screen as guest
-              Navigator.of(context).pop();
+              // return to default screen
+              Navigator.popUntil(
+                context,
+                ModalRoute.withName(Navigator.defaultRouteName)
+              );
               break;
           }
         }

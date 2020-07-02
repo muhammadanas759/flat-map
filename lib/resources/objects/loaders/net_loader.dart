@@ -244,6 +244,9 @@ class NetLoader {
           endpoint: "/api/backup/",
         );
 
+        // reset focused marker
+        PrefService.setString("selected_marker", 'temporary');
+
         // remove markers from local storage
         markerLoader.removeAllMarkers();
         print("akcje:");
@@ -260,17 +263,12 @@ class NetLoader {
           print(marker['Action_Name']);
         });
 
-
-
         if(parsedMarkers.isEmpty){
           showToast("Backup is empty");
         } else {
 
           // save backup to file
           markerLoader.saveMarkers();
-
-          // reset focused marker
-          PrefService.setString("selected_marker", 'temporary');
 
           showToast("Backup downloaded successfully");
         }
