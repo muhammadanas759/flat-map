@@ -104,11 +104,12 @@ class MarkerLoader {
 //            json.decode(markerStorage)
 //        );
 
+        // TODO BARTEK sprawdź czy to rozwiąże problem
+        // clear markers storage
+        // removeAllMarkers();
+
         Map<String, dynamic> jsonObj = Map<String, dynamic>.from(json.decode(markerStorage));
         jsonObj.forEach((key, dynamic value) {
-
-          // TODO REMOVE TEST
-          print(value);
 
           _markersDescriptions[key] = FlatMappMarker.fromJson(value);
         });
