@@ -77,6 +77,10 @@ class MarkerLoader {
     final path_ = await getFilePath();
     final file = new File(path_);
     String markerStorage = json.encode(_markersDescriptions);
+
+    print("printing marker storage");
+    print(markerStorage);
+
     await file.writeAsString(markerStorage);
   }
 
@@ -100,8 +104,13 @@ class MarkerLoader {
 //            json.decode(markerStorage)
 //        );
 
+        // TODO BARTEK sprawdź czy to rozwiąże problem
+        // clear markers storage
+        // removeAllMarkers();
+
         Map<String, dynamic> jsonObj = Map<String, dynamic>.from(json.decode(markerStorage));
         jsonObj.forEach((key, dynamic value) {
+
           _markersDescriptions[key] = FlatMappMarker.fromJson(value);
         });
 
@@ -249,6 +258,11 @@ class MarkerLoader {
   }
 
   FlatMappAction getMarkerActionSingle({String marker_id, int action_position}){
+
+    // TODO REMOVE TEST
+    print("MARKER ACTION SHOW TEST");
+    print(_markersDescriptions[marker_id]);
+
     return _markersDescriptions[marker_id].actions[action_position];
   }
 

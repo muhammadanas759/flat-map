@@ -19,6 +19,7 @@ Incoming versions:
 * **v0.9:** rebuild, new actions package
 * **v1.0:** full release
 
+APK file can be found under path: *build\app\outputs\apk\release\app-release.apk*
 
 ## Getting Started
 

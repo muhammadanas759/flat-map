@@ -1,4 +1,5 @@
 import 'package:flatmapp/resources/objects/models/flatmapp_action.dart';
+import 'dart:convert';
 
 
 class FlatMappMarker {
@@ -72,7 +73,7 @@ class FlatMappMarker {
             element['name'].toString(),
             element['icon'].toString(),
             element['action_position'],
-            element['parameters'],
+            json.decode(element['parameters']),
           )
       );
     });

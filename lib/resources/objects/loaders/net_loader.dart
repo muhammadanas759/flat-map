@@ -11,6 +11,10 @@ import 'package:http/http.dart' as http;
 import 'package:global_configuration/global_configuration.dart';
 import 'package:preferences/preferences.dart';
 
+import 'dart:async';
+import 'package:flutter/cupertino.dart';
+
+
 
 class NetLoader {
 
@@ -241,6 +245,9 @@ class NetLoader {
           endpoint: "/api/backup/",
         );
 
+        // reset focused marker
+        PrefService.setString("selected_marker", 'temporary');
+
         // remove markers from local storage
         markerLoader.removeAllMarkers();
         parsedMarkers.forEach((marker) {
@@ -255,18 +262,12 @@ class NetLoader {
           );
         });
 
-        print("markery:");
-        print(markerLoader.getMarkersDescriptions());
-
         if(parsedMarkers.isEmpty){
           showToast("Backup is empty");
         } else {
 
           // save backup to file
           markerLoader.saveMarkers();
-
-          // reset focused marker
-          PrefService.setString("selected_marker", 'temporary');
 
           showToast("Backup downloaded successfully");
         }
@@ -351,4 +352,84 @@ class NetLoader {
       return http.Response("", 300);
     }
   }
+
+  // --------- FILE UPLOAD -----------------------------------------------------
+  void sendFile(String filepath, String endpoint) {
+    assert(filepath != null && endpoint != null);
+
+    // https://dev.to/carminezacc/advanced-flutter-networking-part-1-uploading-a-file-to-a-rest-api-from-flutter-using-a-multi-part-form-data-post-request-2ekm
+    // init request
+    var request = new http.MultipartRequest(
+      "POST",
+      Uri.parse(_serverURL + endpoint)
+    );
+
+    // add file to request
+    http.MultipartFile.fromPath(
+      'backup',
+      filepath
+    ).then((file){request.files.add(file);});
+
+    // send request
+    request.send().then((response) {
+      if (response.statusCode/100 == 2){
+        print("Uploaded!");
+      }else{
+        print(response.statusCode);
+        print("something went wrong during upload");
+      }
+    });
+  }
+
+  // --------- FILE DOWNLOAD ---------------------------------------------------
+  // https://github.com/salk52/Flutter-File-Upload-Download/blob/master/upload_download_app/lib/services/file_service.dart
+  static HttpClient getHttpClient() {
+    HttpClient httpClient = new HttpClient()
+      ..connectionTimeout = const Duration(seconds: 10)
+      ..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+    return httpClient;
+  }
+
+  Future<String> fileDownload(String filepath, String endpoint) async {
+    assert(filepath != null && endpoint != null);
+
+    final url = Uri.parse(_serverURL + endpoint);
+
+    final httpClient = getHttpClient();
+
+    final request = await httpClient.getUrl(url);
+    request.headers.add(HttpHeaders.contentTypeHeader, "application/octet-stream");
+
+    var httpResponse = await request.close();
+
+    int byteCount = 0;
+    int totalBytes = httpResponse.contentLength;
+    File file = new File(filepath);
+    var raf = file.openSync(mode: FileMode.write);
+    Completer completer = new Completer<String>();
+
+    httpResponse.listen(
+          (data) {
+        byteCount += data.length;
+        raf.writeFromSync(data);
+      },
+      onDone: () {
+        raf.closeSync();
+        completer.complete(file.path);
+      },
+      onError: (e) {
+        raf.closeSync();
+        file.deleteSync();
+        completer.completeError(e);
+      },
+      cancelOnError: true,
+    );
+
+    return completer.future;
+  }
+
+
+  // TODO propozycja wysłania zip na serwer
+  // https://stackoverflow.com/questions/56410086/flutter-how-to-create-a-zip-file
+  // ===========================================================================
 }

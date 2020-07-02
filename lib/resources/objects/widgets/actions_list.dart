@@ -26,37 +26,39 @@ class ActionsList {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-            title: Text("Remove action?"),
-            content: Text(
-                "You are about to remove action\n" + description
+          title: Text("Remove action?"),
+          content: Text(
+            "You are about to remove action\n" + description
+          ),
+          actions: [
+            // set up the buttons
+            FlatButton(
+              child: Text("no nO NO"),
+              onPressed:  () {
+                // dismiss alert
+                Navigator.of(context).pop();
+              },
             ),
-            actions: [
-              // set up the buttons
-              FlatButton(
-                child: Text("no nO NO"),
-                onPressed:  () {
-                  // dismiss alert
-                  Navigator.of(context).pop();
-                },
-              ),
-              FlatButton(
-                child: Text("HELL YEAH"),
-                onPressed:  () {
-                  // remove marker
-                  _markerLoader.removeMarkerAction(id: id, index: index);
-                  // save markers state to file
-                  _markerLoader.saveMarkers();
-                  // dismiss alert
-                  Navigator.of(context).pop();
-                },
-              ),
-            ]
+            FlatButton(
+              child: Text("HELL YEAH"),
+              onPressed:  () {
+                // remove marker
+                _markerLoader.removeMarkerAction(id: id, index: index);
+                // save markers state to file
+                _markerLoader.saveMarkers();
+                // dismiss alert
+                Navigator.of(context).pop();
+              },
+            ),
+          ]
         );
       },
     );
   }
 
-  void addAction(context){
+  void addAction(context, index){
+    // set selected marker id for map screen
+    PrefService.setInt('selected_action', index);
     // Navigate to the icons screen using a named route.
     Navigator.pushNamed(context, '/actions');
   }
@@ -91,29 +93,10 @@ class ActionsList {
             return addActionCard(
               tooltip: "Add action",
               onPressedMethod: () {
-                addAction(context);
+                addAction(context, index);
               },
             );
           } else {
-//            return Card( //                           <-- Card widget
-//              child: ListTile(
-//                leading: CircleAvatar(
-//                  backgroundColor: Colors.white,
-//                  backgroundImage: AssetImage(
-//                      _actionsLoader.actionsMap[_actionsList[index].icon]
-//                  ),
-//                ),
-//                title: Text(
-//                  _actionsList[index].icon,
-//                  style: bodyText()
-//                ),
-//                trailing: Icon(Icons.delete_forever),
-//                onTap: () {
-//                  // remove action with alert dialog
-//                  _raiseAlertDialog(context, id, index, _actionsList[index].name);
-//                },
-//              ),
-//            );
             return ExpansionTile(
               leading: CircleAvatar(
                 backgroundColor: Colors.white,

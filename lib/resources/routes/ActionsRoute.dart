@@ -43,10 +43,16 @@ class _ActionsRouteState extends State<ActionsRoute> {
               // add action to the selected marker id
               widget._markerLoader.addMarkerAction(
                 id: PrefService.get('selected_marker').toString(),
-                action: FlatMappAction(key, key, -420, {"param1": 0})
+                action: FlatMappAction(key, key, -420, {
+                  'param1': '',
+                  'param2': '',
+                  'param3': '',
+                  'param4': '',
+                  'param5': '',
+                })
               );
-              // Navigate back
-              Navigator.of(context).pop();
+              // TODO Navigate to parameters after adding action
+              Navigator.of(context).popAndPushNamed("/action_parameters");
             },
           ),
         );
