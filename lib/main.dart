@@ -73,19 +73,21 @@ main() async {
     Permission.location.request();
   }
 
-  if(PrefService.getBool('isolate_enabled') && !PrefService.getBool('isolate_spawned')){
-    // initiate isolated subprocess
-    // ignore: unused_local_variable
-    final isolate = await FlutterIsolate.spawn(
-        triggerEntryPoint,
-        ""
-    );
+  triggerEntryPoint(null);
 
-    PrefService.setString('isolate_port', isolate.controlPort.toString());
-    print("isolate control port: " + isolate.controlPort.toString());
-
-    // PrefService.setBool('isolate_spawned', true);
-  }
+//  if(PrefService.getBool('isolate_enabled') && !PrefService.getBool('isolate_spawned')){
+//    // initiate isolated subprocess
+//    // ignore: unused_local_variable
+//    final isolate = await FlutterIsolate.spawn(
+//        triggerEntryPoint,
+//        ""
+//    );
+//
+//    PrefService.setString('isolate_port', isolate.controlPort.toString());
+//    print("isolate control port: " + isolate.controlPort.toString());
+//
+//    // PrefService.setBool('isolate_spawned', true);
+//  }
 
   runApp(MyApp());
 }

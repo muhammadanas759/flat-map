@@ -37,8 +37,8 @@ class _RegisterRouteState extends State<RegisterRoute> {
     return TextFormField(
       style: bodyText(),
       decoration: textFieldStyle(
-          labelTextStr: "Username",
-          hintTextStr: "Your username goes here"
+          labelTextStr: "Email",
+          hintTextStr: "Your email goes here"
       ),
       validator: (String value) {
         if (!RegExp(
@@ -46,7 +46,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
             .hasMatch(value))
 //        if (value == "")
         {
-          return 'Invalid username format';
+          return 'Invalid email format';
         }
         return null;
       },
