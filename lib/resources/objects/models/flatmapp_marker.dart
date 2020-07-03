@@ -67,17 +67,23 @@ class FlatMappMarker {
 
   List<FlatMappAction> actionsFromList(List<dynamic> actions_list){
     List<FlatMappAction> actions = [];
-    actions_list.forEach((element) {
-      actions.add(
-          FlatMappAction(
-            element['name'].toString(),
-            element['icon'].toString(),
-            element['action_position'],
-            json.decode(element['parameters']),
-          )
-      );
-    });
-
+    if(actions_list.isNotEmpty){
+      actions_list.forEach((element){
+        if(element['action_detail'] == null) {
+          print(element);
+          print("no action_detail object found!");
+        } else {
+          actions.add(
+            FlatMappAction(
+              element['Action_Name'].toString(),
+              element['icon'].toString(),
+              element['action_position'],
+              json.decode(element['action_detail']),
+            )
+          );
+        }
+      });
+    }
     return actions;
   }
 }

@@ -173,6 +173,7 @@ class NetLoader {
 
         // parse markers to form acceptable in server interface
         markerLoader.getMarkersDescriptions().forEach((key, value) {
+
           // TODO can not store temporary marker in backup due to the:
           // empty title
           // empty name

@@ -78,10 +78,9 @@ class MarkerLoader {
     final file = new File(path_);
     String markerStorage = json.encode(_markersDescriptions);
 
-    print("printing marker storage");
-    print(markerStorage);
-
     await file.writeAsString(markerStorage);
+
+    print("markers saved!");
   }
 
   // load markers from local storage
@@ -108,18 +107,25 @@ class MarkerLoader {
         // clear markers storage
         // removeAllMarkers();
 
-        Map<String, dynamic> jsonObj = Map<String, dynamic>.from(json.decode(markerStorage));
-        jsonObj.forEach((key, dynamic value) {
+        Map<String, dynamic> jsonObj = Map<String, dynamic>.from(
+          json.decode(markerStorage)
+        );
 
-          _markersDescriptions[key] = FlatMappMarker.fromJson(value);
-        });
-
-      } catch (error) {
-        print(error);
-        print('could not load marker descriptions from local storage...');
-
-        _repairFile(path);
+        if(jsonObj.isNotEmpty){
+          jsonObj.forEach((key, dynamic value) {
+            _markersDescriptions[key] = FlatMappMarker.fromJson(value);
+          });
+        } else {
+          print("could not parse file content");
+        }
+      } on FormatException {
+        print('local storage is empty...');
       }
+//      } catch (error) {
+//        print(error);
+//        print('could not load marker descriptions from local storage...');
+//        _repairFile(path);
+//      }
     } else {
       _repairFile(path);
       print('local storage did not exist, created new one...');
@@ -258,11 +264,6 @@ class MarkerLoader {
   }
 
   FlatMappAction getMarkerActionSingle({String marker_id, int action_position}){
-
-    // TODO REMOVE TEST
-    print("MARKER ACTION SHOW TEST");
-    print(_markersDescriptions[marker_id]);
-
     return _markersDescriptions[marker_id].actions[action_position];
   }
 

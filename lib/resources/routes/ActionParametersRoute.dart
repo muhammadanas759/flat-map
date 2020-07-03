@@ -285,15 +285,16 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
       action_position: PrefService.getInt('selected_action')
     );
 
-    print(_selected_action);
-
     _formData = _selected_action.parameters;
 
     return Scaffold(
       appBar: appBar(title: 'Action parameters'),
       body:
       // BODY
-      _parametersColumn(context),
+      Padding(
+        padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+        child: _parametersColumn(context),
+      ),
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
 
