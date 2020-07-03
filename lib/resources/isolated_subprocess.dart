@@ -8,6 +8,13 @@ import 'package:geolocator/geolocator.dart';
 // https://pub.dev/packages/flutter_isolate
 // =============================================================================
 // -------------------- TRIGGER ISOLATE SECTION --------------------------------
+Future<dynamic> onSelectNotification(String payload) async {
+  // TODO function after opening notification
+//  await Navigator.push(
+//    context,
+//    MaterialPageRoute(builder: (context) => AboutRoute()),
+//  );
+}
 
 // This function happens in the isolate
 // void triggerEntryPoint(BuildContext context) async { TODO remove or use test section
@@ -43,7 +50,8 @@ void triggerEntryPoint(var message) async {
   );
   _flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
   _flutterLocalNotificationsPlugin.initialize(
-      initializationSettings
+    initializationSettings,
+    onSelectNotification: onSelectNotification
   );
 
   // initiate trigger loader in isolated process

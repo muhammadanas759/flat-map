@@ -15,7 +15,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 
 
-
 class NetLoader {
 
   String _serverURL = GlobalConfiguration().getString("server_url");
