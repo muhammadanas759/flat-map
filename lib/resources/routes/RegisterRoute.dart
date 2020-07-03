@@ -54,7 +54,8 @@ class _RegisterRouteState extends State<RegisterRoute> {
         _formData['username'] = value;
       },
       textInputAction: TextInputAction.next,
-      onFieldSubmitted: (v) {
+      onFieldSubmitted: (String value) {
+        _formData['username'] = value;
         FocusScope.of(context).requestFocus(focusPassword);
       },
     );
@@ -78,8 +79,8 @@ class _RegisterRouteState extends State<RegisterRoute> {
         _formData['password'] = value;
       },
       focusNode: focusPassword,
-      onFieldSubmitted: (v) {
-        _formData['password'] = v;
+      onFieldSubmitted: (String value) {
+        _formData['password'] = value;
         // move focus to password confirmation
         FocusScope.of(context).requestFocus(focusPassword2);
       },

@@ -159,8 +159,8 @@ class _MapRouteState extends State<MapRoute> {
 
   Widget _googleMapWidget(){
     return GoogleMap(
-      myLocationEnabled: false,
-      mapToolbarEnabled: false,
+      myLocationEnabled: true,
+      mapToolbarEnabled: true,
       initialCameraPosition: updateCameraPosition(),
       markers: Set<Marker>.of(widget._markerLoader.googleMarkers.values),
       circles: Set<Circle>.of(widget._markerLoader.zones.values),
