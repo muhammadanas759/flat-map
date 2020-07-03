@@ -20,7 +20,7 @@ import 'package:preferences/preferences.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_isolate/flutter_isolate.dart';
+// import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 
