@@ -9,6 +9,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:wifi_iot/wifi_iot.dart';
+import 'package:volume/volume.dart';
+
 
 
 // class providing action triggering
@@ -157,14 +159,17 @@ class TriggerLoader {
       //print("activated marker: $markerId");
       //print("activated actions:");
       for(FlatMappAction action in _markerLoader.getMarkerActions(id: markerId)){
+        print(action);
         switch (action.icon) {
           case "mute":
             mutePhone();
             break;
           case "notification":
             _showNotificationWithDefaultSound(
-              title: action.parameters['param1'],
-              content: action.parameters['param2']
+//              title: action.parameters['param1'],
+//              content: action.parameters['param2']
+                title: "Notification Title",
+                content: "Notification Description"
             );
             break;
           case "wi-fi":
@@ -217,7 +222,7 @@ class TriggerLoader {
   }
 
   void mutePhone() async {
-    // current_volume = await Volume.getVol;
+    await Volume.setVol(0, showVolumeUI: ShowVolumeUI.SHOW);
 
     // TODO Mute phones returns null pointer exeption when called
     // await Volume.setVol(0);

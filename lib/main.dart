@@ -73,9 +73,11 @@ main() async {
     Permission.location.request();
   }
 
-  if(PrefService.getBool('isolate_enabled') && !PrefService.getBool('isolate_spawned')){
-    // initiate isolated subprocess
-    // ignore: unused_local_variable
+  triggerEntryPoint(null);
+
+//  if(PrefService.getBool('isolate_enabled') && !PrefService.getBool('isolate_spawned')){
+//    // initiate isolated subprocess
+//    // ignore: unused_local_variable
 //    final isolate = await FlutterIsolate.spawn(
 //        triggerEntryPoint,
 //        ""
@@ -83,9 +85,9 @@ main() async {
 //
 //    PrefService.setString('isolate_port', isolate.controlPort.toString());
 //    print("isolate control port: " + isolate.controlPort.toString());
-
-    // PrefService.setBool('isolate_spawned', true);
-  }
+//
+//    // PrefService.setBool('isolate_spawned', true);
+//  }
 
   runApp(MyApp());
 }
@@ -103,9 +105,6 @@ class MyApp extends StatelessWidget {
 //
 //    PrefService.setString('isolate_port', isolate.controlPort.toString());
 //    print("isolate control port: " + isolate.controlPort.toString());
-
-    // TODO NEW APPROACH: triggerEntryPoint IN MAIN
-    // triggerEntryPoint("MAIN");
 
     return new DynamicTheme(
       defaultBrightness: Brightness.light,

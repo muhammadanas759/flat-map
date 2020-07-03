@@ -136,6 +136,7 @@ class NetLoader {
     );
     // verify response
     analyseResponse(_response);
+    PrefService.setString('token', '');
     return _response;
   }
 
@@ -249,7 +250,6 @@ class NetLoader {
 
         // remove markers from local storage
         markerLoader.removeAllMarkers();
-        print("akcje:");
         parsedMarkers.forEach((marker) {
           markerLoader.addMarker(
             id: markerLoader.generateId(),
@@ -260,7 +260,6 @@ class NetLoader {
             range: marker['_range'],
             actions: toActionsList(List<dynamic>.from(marker['Action_Name'])),
           );
-          print(marker['Action_Name']);
         });
 
         if(parsedMarkers.isEmpty){
@@ -307,7 +306,7 @@ class NetLoader {
   Future<http.Response> removeAccount() async {
     try{
       return await _deleteToServer(
-        endpoint: "/api/account/",
+        endpoint: "/api/account/delete_account/",
       );
     } on HttpException catch (e) {
       print(e);
