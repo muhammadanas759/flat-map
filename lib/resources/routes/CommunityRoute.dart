@@ -19,7 +19,8 @@ class DropdownItem {
 // ignore: must_be_immutable
 class CommunityRoute extends StatefulWidget {
 
-  MarkerLoader _markerLoader = MarkerLoader();
+  // ignore: unused_field
+  MarkerLoader _markerLoader = MarkerLoader();  // TODO unused element
   CommunityRoute(this._markerLoader, {Key key}): super(key: key);
 
   @override

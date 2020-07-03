@@ -9,7 +9,9 @@ import 'package:global_configuration/global_configuration.dart';
 Future<void> main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
   await PrefService.init();
-  String _serverURL = GlobalConfiguration().getString("server_url");
+
+  // ignore: unused_local_variable
+  String _serverURL = GlobalConfiguration().getString("server_url");  // TODO unused element
   group('net_loader', () {
     test('Loging in to existing account with correct credentials', () async {
       NetLoader netLoader = NetLoader();

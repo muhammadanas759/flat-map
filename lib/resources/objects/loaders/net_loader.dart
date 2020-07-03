@@ -62,7 +62,8 @@ class NetLoader {
     return _response;
   }
 
-  Future<http.Response> _patchToServer({
+  // ignore: unused_element
+  Future<http.Response> _patchToServer({  // TODO unused element
     String endpoint, Map<String, dynamic> content
   }) async {
     String _token = PrefService.getString('token');
@@ -248,23 +249,25 @@ class NetLoader {
         // reset focused marker
         PrefService.setString("selected_marker", 'temporary');
 
-        // remove markers from local storage
-        markerLoader.removeAllMarkers();
-        parsedMarkers.forEach((marker) {
-          markerLoader.addMarker(
-            id: markerLoader.generateId(),
-            position: LatLng(marker['position_x'], marker['position_y']),
-            icon: marker['icon'].toString(),
-            title: marker['title'].toString(),
-            description: marker['description'].toString(),
-            range: marker['_range'],
-            actions: toActionsList(List<dynamic>.from(marker['Action_Name'])),
-          );
-        });
-
         if(parsedMarkers.isEmpty){
           showToast("Backup is empty");
         } else {
+
+          // remove markers from local storage
+          markerLoader.removeAllMarkers();
+
+          // add markers
+          parsedMarkers.forEach((marker) {
+            markerLoader.addMarker(
+              id: markerLoader.generateId(),
+              position: LatLng(marker['position_x'], marker['position_y']),
+              icon: marker['icon'].toString(),
+              title: marker['title'].toString(),
+              description: marker['description'].toString(),
+              range: marker['_range'],
+              actions: toActionsList(List<dynamic>.from(marker['Action_Name'])),
+            );
+          });
 
           // save backup to file
           markerLoader.saveMarkers();
@@ -402,8 +405,10 @@ class NetLoader {
 
     var httpResponse = await request.close();
 
-    int byteCount = 0;
-    int totalBytes = httpResponse.contentLength;
+    // ignore: unused_local_variable
+    int byteCount = 0;   // TODO unused element
+    // ignore: unused_local_variable
+    int totalBytes = httpResponse.contentLength;  // TODO unused element
     File file = new File(filepath);
     var raf = file.openSync(mode: FileMode.write);
     Completer completer = new Completer<String>();

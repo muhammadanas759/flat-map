@@ -12,7 +12,6 @@ import 'package:wifi_iot/wifi_iot.dart';
 import 'package:volume/volume.dart';
 
 
-
 // class providing action triggering
 class TriggerLoader {
   // ===========================================================================
@@ -162,18 +161,13 @@ class TriggerLoader {
         print(action);
         switch (action.icon) {
           case "mute":
-            mutePhone();
+            mutePhone(action.parameters);
             break;
           case "notification":
-            _showNotificationWithDefaultSound(
-//              title: action.parameters['param1'],
-//              content: action.parameters['param2']
-                title: "Notification Title",
-                content: "Notification Description"
-            );
+            _showNotificationWithDefaultSound(action.parameters);
             break;
           case "wi-fi":
-            controlWIFI();
+            controlWIFI(action.parameters);
             break;
           default:
             print("default action not recognized : $action");
@@ -195,7 +189,7 @@ class TriggerLoader {
 
   // push notifications
   // https://medium.com/@nitishk72/flutter-local-notification-1e43a353877b
-  Future _showNotificationWithDefaultSound({String title, String content}) async {
+  Future _showNotificationWithDefaultSound(Map<String, dynamic> parameters) async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
         'flutter_channel_id',
         'flutter_channel_name',
@@ -209,19 +203,19 @@ class TriggerLoader {
     );
     await _flutterLocalNotificationsPlugin.show(
       0,
-      title,
-      content,
+      parameters['param1'],  // title
+      parameters['param2'],  // content
       platformChannelSpecifics,
       payload: 'Default_Sound',
     );
   }
 
-  void controlWIFI(){
+  void controlWIFI(Map<String, dynamic> parameters){
     WiFiForIoTPlugin.setEnabled(true);
     // TODO turn on WIFI doesnt work in subprocess
   }
 
-  void mutePhone() async {
+  void mutePhone(Map<String, dynamic> parameters) async {
     await Volume.setVol(0, showVolumeUI: ShowVolumeUI.SHOW);
 
     // TODO Mute phones returns null pointer exeption when called
