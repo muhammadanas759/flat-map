@@ -36,6 +36,9 @@ class _CommunityRouteState extends State<CommunityRoute> {
 
   NetLoader netLoader = NetLoader();
   List<dynamic> categoryCards;
+  List<Map<String, dynamic>> _placesDescriptions = [];
+  DropdownItem selectedPlaceCategory;
+  Geolocator _geolocator = Geolocator();
 
   Map<String, dynamic> _formCategoryData = {
     'category': '',
@@ -43,8 +46,6 @@ class _CommunityRouteState extends State<CommunityRoute> {
     'position_x': 0,
     'position_y': 0
   };
-
-  Geolocator _geolocator = Geolocator();
 
   Future<LatLng> getCurrentPosition() async {
     Position temp = await _geolocator.getCurrentPosition();
@@ -56,10 +57,6 @@ class _CommunityRouteState extends State<CommunityRoute> {
     const DropdownItem('Cinemas', Icon(Icons.theaters, color:  const Color(0xFF167F67))),
     const DropdownItem('Casino', Icon(Icons.casino, color:  const Color(0xFF167F67))),
   ];
-
-  List<Map<String, dynamic>> _placesDescriptions = [];
-
-  DropdownItem selectedPlaceCategory;
 
   Widget _buildMarkerRangeField() {
     return CounterFormField(
@@ -76,8 +73,13 @@ class _CommunityRouteState extends State<CommunityRoute> {
       // send request to server via NetLoader and get category cards
       netLoader.categoryRequest(
         "/api/category/",
-          _formCategoryData
-      ).then((v){categoryCards = v;});
+        _formCategoryData
+      ).then((v){
+        categoryCards = v;
+//        setState(() {
+//          categoryCards = v;
+//        });
+      });
     });
   }
 
@@ -139,7 +141,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
             return  Card(
               child: Padding(
                 padding: EdgeInsets.only(
-                    top: 5.0, left: 10.0, right: 10.0, bottom: 0.0
+                  top: 5.0, left: 10.0, right: 10.0, bottom: 0.0
                 ),
                 child: ExpansionTile(
 //                  leading: CircleAvatar(
@@ -148,8 +150,8 @@ class _CommunityRouteState extends State<CommunityRoute> {
 //                        _iconsLoader.markerImageLocal[_marker.icon]
 //                    ),
 //                  ),
-                  title: Text(_placesDescriptions[index]['title'], style: bodyText()),
-                  subtitle: Text(_placesDescriptions[index]['description'], style: footer()),
+                  title: Text(_placesDescriptions[index]['name'], style: bodyText()),
+                  subtitle: Text(_placesDescriptions[index]['address'], style: footer()),
                   trailing: Icon(Icons.keyboard_arrow_down),
                   children: <Widget>[
                     Row(
@@ -160,6 +162,12 @@ class _CommunityRouteState extends State<CommunityRoute> {
                           tooltip: 'Find placemark',
                           onPressed: () {
 //                            // set selected marker id for map screen
+
+                          // use
+                            // _placesDescriptions[index]['position_x']
+                            // _placesDescriptions[index]['position_y']
+                            // _placesDescriptions[index]['radius']
+
 //                            PrefService.setString('selected_marker', _id);
 //                            // Navigate to the profile screen using a named route.
 //                            Navigator.pushNamed(context, '/map');

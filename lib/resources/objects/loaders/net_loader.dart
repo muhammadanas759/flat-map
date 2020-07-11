@@ -393,8 +393,6 @@ class NetLoader {
       try{
         String _token = PrefService.getString('token');
 
-        print(json.encode(content));
-
         http.Response _response = await http.post(
             _serverURL + endpoint,
             headers: {
@@ -406,13 +404,31 @@ class NetLoader {
         );
         // verify response
         analyseResponse(_response);
-        List<dynamic> parsedMarkers = List<dynamic>.from(json.decode(_response.body));
-        if(parsedMarkers.isEmpty){
+
+        Map<String, dynamic> parsedMarkers = Map<String, dynamic>.from(
+          json.decode(_response.body)
+        );
+
+        List<dynamic> temp = [];
+
+        parsedMarkers['data'].values.forEach((place) {
+          temp.add({
+            'address': place['addres'],
+            'position_x': place['location']['lat'],
+            'position_y': place['location']['lng'],
+            'name': place['name'],
+            'radius': place['radius'],
+          });
+        });
+
+        print(temp);
+
+        if(temp.isEmpty){
           showToast("Category is empty");
         } else {
           showToast("Category downloaded successfully");
         }
-        return parsedMarkers;
+        return temp;
       } on SocketException catch (e) {
         print(e);
         showToast("Error: request timed out");
