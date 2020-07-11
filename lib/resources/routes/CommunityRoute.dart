@@ -6,7 +6,11 @@ import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:preferences/preference_service.dart';
+import 'package:geolocator/geolocator.dart';
+
+import 'package:flatmapp/resources/extensions.dart';
 
 
 // dropdown list item class
@@ -30,47 +34,15 @@ class CommunityRoute extends StatefulWidget {
 class _CommunityRouteState extends State<CommunityRoute> {
 
   NetLoader netLoader = NetLoader();
+  LatLng userPosition;
+  List<dynamic> categoryCards;
 
-//  Widget _tabWidget(){
-//    Color _color = (PrefService.get('ui_theme') == 'dark') ? Colors.white : Colors.black;
-//    return SizedBox(
-//      height: 300.0,
-//      child: DefaultTabController(
-//        length: 3,
-//        child: Column(
-//          mainAxisAlignment: MainAxisAlignment.start,
-//          mainAxisSize: MainAxisSize.min,
-//          children: <Widget>[
-//            Container(
-//              child: TabBar(
-//                tabs: [
-//                  Tab(icon: Icon(Icons.directions_car, color: _color)),
-//                  Tab(icon: Icon(Icons.directions_transit, color: _color)),
-//                  Tab(icon: Icon(Icons.directions_bike, color: _color)),
-//                ],
-//              ),
-//            ),
-//            SizedBox(
-//              height: 100.0,
-//              child: TabBarView(
-//                children: <Widget>[
-//                  Container(
-//                    color: Colors.grey,
-//                  ),
-//                  Container(
-//                    color: Colors.green,
-//                  ),
-//                  Container(
-//                    color: Colors.purple,
-//                  ),
-//                ],
-//              ),
-//            ),
-//          ],
-//        ),
-//      ),
-//    );
-//  }
+  Geolocator _geolocator = Geolocator();
+
+  Future<LatLng> getCurrentPosition() async {
+    Position temp = await _geolocator.getCurrentPosition();
+    return temp.toLatLng();
+  }
 
   List<DropdownItem> _dropdownListItems = <DropdownItem>[
     const DropdownItem('Theaters', Icon(Icons.local_activity, color:  const Color(0xFF167F67))),
@@ -95,8 +67,17 @@ class _CommunityRouteState extends State<CommunityRoute> {
             value: selectedPlaceCategory,
             onChanged: (DropdownItem Value) {
               setState(() {
-                // TODO operate change on list
                 selectedPlaceCategory = Value;
+                // UPDATE USER POSITION
+                getCurrentPosition().then((position){
+                  userPosition = position;
+                  // send request to server via NetLoader and get category cards
+                  netLoader.categoryRequest(
+                      "/api/category/",
+                      selectedPlaceCategory.toString(),
+                      userPosition
+                  ).then((value) => categoryCards);
+                });
               });
             },
             items: _dropdownListItems.map((DropdownItem user) {
@@ -186,6 +167,16 @@ class _CommunityRouteState extends State<CommunityRoute> {
 
   @override
   Widget build(BuildContext context) {
+
+    // check permission
+    _geolocator.checkGeolocationPermissionStatus().then((permission){
+      // check permission status
+      if(permission != GeolocationStatus.granted){
+        print("GEOLOCATION PERMISSION IS NOT GRANTED YET");
+      }
+      print(permission);
+    });
+
     return Scaffold(
       appBar: appBar(),
       body:
@@ -204,7 +195,6 @@ class _CommunityRouteState extends State<CommunityRoute> {
               ),
               leading: Icon(Icons.language),
             ),
-
             _tabWidget(context),  // TODO new community widget
           ],
         ),

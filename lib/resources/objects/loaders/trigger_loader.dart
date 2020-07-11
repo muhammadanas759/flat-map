@@ -27,7 +27,6 @@ class TriggerLoader {
       timeInterval: 1000,
       distanceFilter: 10
   );
-  Position userLocation;
 
   // ignore or add somewhere subscription.cancel()
   // so that app would be able to do some cleanup in stream

@@ -111,7 +111,7 @@ class NetLoader {
     return _response;
   }
 
-  Future<List<dynamic>> _getFromServer({String endpoint}) async {
+  Future<List<dynamic>> _getFromServer({String endpoint, String content}) async {
     String _token = PrefService.getString('token');
     http.Response _response = await http.get(
       _serverURL + endpoint,
@@ -384,6 +384,49 @@ class NetLoader {
     });
   }
 
+  // --------- PLACES COMMUNITY SYSTEM -----------------------------------------
+  Future<List<dynamic>> categoryRequest(String endpoint, String category, LatLng userPosition) async {
+    if(PrefService.getString('token') != ''){
+      try{
+        String _token = PrefService.getString('token');
+
+        http.Response _response = await http.post(
+            _serverURL + endpoint,
+            headers: {
+              "Content-type": "application/json",
+              HttpHeaders.authorizationHeader: "Token $_token",
+            },
+            body: json.encode({'category': category})
+          // body:
+        );
+        // verify response
+        analyseResponse(_response);
+        List<dynamic> parsedMarkers = List<dynamic>.from(json.decode(_response.body));
+        if(parsedMarkers.isEmpty){
+          showToast("Category is empty");
+        } else {
+          showToast("Category downloaded successfully");
+        }
+        return parsedMarkers;
+      } on SocketException catch (e) {
+        print(e);
+        showToast("Error: request timed out");
+        return null;
+      } on HttpException catch (e) {
+        print(e);
+        showToast("Error: server could not process data");
+        return null;
+      } on Exception catch (e) {
+        print(e);
+        showToast("Error: something went wrong during download");
+        return null;
+      }
+    } else {
+      showToast("Not logged in - please log in to proceed");
+      return null;
+    }
+  }
+
   // --------- FILE DOWNLOAD ---------------------------------------------------
   // https://github.com/salk52/Flutter-File-Upload-Download/blob/master/upload_download_app/lib/services/file_service.dart
   static HttpClient getHttpClient() {
@@ -432,7 +475,6 @@ class NetLoader {
 
     return completer.future;
   }
-
 
   // TODO propozycja wysłania zip na serwer
   // https://stackoverflow.com/questions/56410086/flutter-how-to-create-a-zip-file
