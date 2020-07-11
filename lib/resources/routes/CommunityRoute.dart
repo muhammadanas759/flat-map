@@ -2,6 +2,7 @@ import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
+import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 // import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 
@@ -34,8 +35,14 @@ class CommunityRoute extends StatefulWidget {
 class _CommunityRouteState extends State<CommunityRoute> {
 
   NetLoader netLoader = NetLoader();
-  LatLng userPosition;
   List<dynamic> categoryCards;
+
+  Map<String, dynamic> _formCategoryData = {
+    'category': '',
+    'range': 100,
+    'position_x': 0,
+    'position_y': 0
+  };
 
   Geolocator _geolocator = Geolocator();
 
@@ -54,34 +61,50 @@ class _CommunityRouteState extends State<CommunityRoute> {
 
   DropdownItem selectedPlaceCategory;
 
+  Widget _buildMarkerRangeField() {
+    return CounterFormField(
+      initialValue: 100,
+      onSaved: (value) => this._formCategoryData['range'] = value,
+    );
+  }
+
+  void sendCategoryRequest(){
+    // UPDATE USER POSITION
+    getCurrentPosition().then((position){
+      _formCategoryData['position_x'] = position.longitude;
+      _formCategoryData['position_y'] = position.latitude;
+      // send request to server via NetLoader and get category cards
+      netLoader.categoryRequest(
+        "/api/category/",
+          _formCategoryData
+      ).then((v){categoryCards = v;});
+    });
+  }
+
   Widget _tabWidget(context){
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 15.0),
-          child: new DropdownButton<DropdownItem>(
+    return Padding(
+      padding: const EdgeInsets.only(left: 15.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          // counter field
+          _buildMarkerRangeField(),
+          // dropdown list
+          new DropdownButton<DropdownItem>(
             hint:  Text("Select category"),
             value: selectedPlaceCategory,
             onChanged: (DropdownItem Value) {
               setState(() {
                 selectedPlaceCategory = Value;
-                // UPDATE USER POSITION
-                getCurrentPosition().then((position){
-                  userPosition = position;
-                  // send request to server via NetLoader and get category cards
-                  netLoader.categoryRequest(
-                      "/api/category/",
-                      selectedPlaceCategory.toString(),
-                      userPosition
-                  ).then((value) => categoryCards);
-                });
+                _formCategoryData['category'] = selectedPlaceCategory.name;
+                // send request after changing category
+                sendCategoryRequest();
               });
             },
             items: _dropdownListItems.map((DropdownItem user) {
-              return  DropdownMenuItem<DropdownItem>(
+              return DropdownMenuItem<DropdownItem>(
                 value: user,
                 child: Row(
                   children: <Widget>[
@@ -96,9 +119,10 @@ class _CommunityRouteState extends State<CommunityRoute> {
               );
             }).toList(),
           ),
-        ),
-        _listPlaces(context)
-      ],
+          // places cards list
+          _listPlaces(context)
+        ],
+      ),
     );
   }
 
@@ -188,12 +212,15 @@ class _CommunityRouteState extends State<CommunityRoute> {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            ListTile(
-              title: Text(
-                'Community',
+            ListTile( title: Text( 'Community',
                 style: header(),
               ),
               leading: Icon(Icons.language),
+            ),
+            ListTile( title: Text( 'Select range of search and category of places '
+                'to look up for places nearby in declared range.',
+                style: bodyText(),
+              ),
             ),
             _tabWidget(context),  // TODO new community widget
           ],

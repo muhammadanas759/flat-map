@@ -385,10 +385,15 @@ class NetLoader {
   }
 
   // --------- PLACES COMMUNITY SYSTEM -----------------------------------------
-  Future<List<dynamic>> categoryRequest(String endpoint, String category, LatLng userPosition) async {
+  Future<List<dynamic>> categoryRequest(
+    String endpoint,
+    Map<String, dynamic> content
+  ) async {
     if(PrefService.getString('token') != ''){
       try{
         String _token = PrefService.getString('token');
+
+        print(json.encode(content));
 
         http.Response _response = await http.post(
             _serverURL + endpoint,
@@ -396,7 +401,7 @@ class NetLoader {
               "Content-type": "application/json",
               HttpHeaders.authorizationHeader: "Token $_token",
             },
-            body: json.encode({'category': category})
+            body: json.encode(content)
           // body:
         );
         // verify response
