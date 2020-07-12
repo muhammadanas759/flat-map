@@ -24,7 +24,6 @@ class DropdownItem {
 // ignore: must_be_immutable
 class CommunityRoute extends StatefulWidget {
 
-  // ignore: unused_field
   MarkerLoader _markerLoader = MarkerLoader();  // TODO unused element
   CommunityRoute(this._markerLoader, {Key key}): super(key: key);
 
@@ -35,7 +34,6 @@ class CommunityRoute extends StatefulWidget {
 class _CommunityRouteState extends State<CommunityRoute> {
 
   NetLoader netLoader = NetLoader();
-  List<dynamic> categoryCards;
   List<Map<String, dynamic>> _placesDescriptions = [];
   DropdownItem selectedPlaceCategory;
   Geolocator _geolocator = Geolocator();
@@ -45,6 +43,12 @@ class _CommunityRouteState extends State<CommunityRoute> {
     'range': 100,
     'position_x': 0,
     'position_y': 0
+  };
+
+  Map<String, String> _iconsTranslator = {
+    'Theaters':   'parliament',
+    'Cinemas':    'buildings',
+    'Casino':     'party',
   };
 
   Future<LatLng> getCurrentPosition() async {
@@ -60,8 +64,39 @@ class _CommunityRouteState extends State<CommunityRoute> {
 
   Widget _buildMarkerRangeField() {
     return CounterFormField(
-      initialValue: 100,
+      initialValue: _formCategoryData['range'],
       onSaved: (value) => this._formCategoryData['range'] = value,
+    );
+  }
+
+  Widget _buildDropdownListField() {
+    // dropdown list
+    return DropdownButton<DropdownItem>(
+      hint:  Text("Select category"),
+      value: selectedPlaceCategory,
+      onChanged: (DropdownItem Value) {
+        setState(() {
+          selectedPlaceCategory = Value;
+          _formCategoryData['category'] = selectedPlaceCategory.name;
+          // send request after changing category
+          sendCategoryRequest();
+        });
+      },
+      items: _dropdownListItems.map((DropdownItem user) {
+        return DropdownMenuItem<DropdownItem>(
+          value: user,
+          child: Row(
+            children: <Widget>[
+              user.icon,
+              SizedBox(width: 10,),
+              Text(
+                user.name,
+                style:  TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -75,57 +110,11 @@ class _CommunityRouteState extends State<CommunityRoute> {
         "/api/category/",
         _formCategoryData
       ).then((v){
-        categoryCards = v;
-//        setState(() {
-//          categoryCards = v;
-//        });
+        setState(() {
+          _placesDescriptions = v;
+        });
       });
     });
-  }
-
-  Widget _tabWidget(context){
-    return Padding(
-      padding: const EdgeInsets.only(left: 15.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          // counter field
-          _buildMarkerRangeField(),
-          // dropdown list
-          new DropdownButton<DropdownItem>(
-            hint:  Text("Select category"),
-            value: selectedPlaceCategory,
-            onChanged: (DropdownItem Value) {
-              setState(() {
-                selectedPlaceCategory = Value;
-                _formCategoryData['category'] = selectedPlaceCategory.name;
-                // send request after changing category
-                sendCategoryRequest();
-              });
-            },
-            items: _dropdownListItems.map((DropdownItem user) {
-              return DropdownMenuItem<DropdownItem>(
-                value: user,
-                child: Row(
-                  children: <Widget>[
-                    user.icon,
-                    SizedBox(width: 10,),
-                    Text(
-                      user.name,
-                      style:  TextStyle(color: Colors.black),
-                    ),
-                  ],
-                ),
-              );
-            }).toList(),
-          ),
-          // places cards list
-          _listPlaces(context)
-        ],
-      ),
-    );
   }
 
   Widget _listPlaces(BuildContext context) {
@@ -135,7 +124,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
         ListView.builder(
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          itemCount: _placesDescriptions.length + 1,
+          itemCount: _placesDescriptions.length,
           itemBuilder: (context, index) {
             // add placemark expandable card:
             return  Card(
@@ -161,23 +150,43 @@ class _CommunityRouteState extends State<CommunityRoute> {
                           icon: Icon(Icons.location_searching),
                           tooltip: 'Find placemark',
                           onPressed: () {
-//                            // set selected marker id for map screen
-
-                          // use
-                            // _placesDescriptions[index]['position_x']
-                            // _placesDescriptions[index]['position_y']
-                            // _placesDescriptions[index]['radius']
-
-//                            PrefService.setString('selected_marker', _id);
-//                            // Navigate to the profile screen using a named route.
-//                            Navigator.pushNamed(context, '/map');
+                            // move temporary marker to new position
+                            widget._markerLoader.addTemporaryMarker(
+                              LatLng(
+                                _placesDescriptions[index]['position_x'],
+                                _placesDescriptions[index]['position_y']
+                              )
+                            );
+                            // set selected marker
+                            PrefService.setString('selected_marker', "temporary");
+                            // Navigate to the profile screen using a named route.
+                            Navigator.pushNamed(context, '/map');
                           },
                         ),
                         IconButton(
                           icon: Icon(Icons.add),
                           tooltip: 'Add marker',
                           onPressed: () {
-                            // TODO add placemark method
+                            // add placemark method
+                            String _id = widget._markerLoader.generateId();
+
+                            widget._markerLoader.addMarker(
+                              id: _id,
+                              position: LatLng(
+                                  _placesDescriptions[index]['position_x'],
+                                  _placesDescriptions[index]['position_y']
+                              ),
+                              icon: _iconsTranslator[_formCategoryData['category']],
+                              title: _placesDescriptions[index]['name'],
+                              description: _placesDescriptions[index]['address'],
+                              range: _placesDescriptions[index]['radius'],
+                              actions: [],
+                            );
+
+                            // set selected marker
+                            PrefService.setString('selected_marker', _id);
+                            // Navigate to the profile screen using a named route.
+                            Navigator.pushNamed(context, '/map');
                           },
                         ),
                       ],
@@ -216,7 +225,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
       PrefService.getString('token') == ''
           ? textInfo('You need to log in to use community options.' ?? '') :
       SingleChildScrollView(
-        child: new Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -230,7 +239,19 @@ class _CommunityRouteState extends State<CommunityRoute> {
                 style: bodyText(),
               ),
             ),
-            _tabWidget(context),  // TODO new community widget
+
+            // counter field
+            _buildMarkerRangeField(),
+
+            // dropdown list
+            _buildDropdownListField(),
+
+            // places cards list
+            SizedBox(
+              height: 400, // fixed height
+              child: _listPlaces(context),
+            ),
+
           ],
         ),
       ),

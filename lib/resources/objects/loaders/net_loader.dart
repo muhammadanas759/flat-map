@@ -385,7 +385,7 @@ class NetLoader {
   }
 
   // --------- PLACES COMMUNITY SYSTEM -----------------------------------------
-  Future<List<dynamic>> categoryRequest(
+  Future<List<Map<String, dynamic>>> categoryRequest(
     String endpoint,
     Map<String, dynamic> content
   ) async {
@@ -406,10 +406,10 @@ class NetLoader {
         analyseResponse(_response);
 
         Map<String, dynamic> parsedMarkers = Map<String, dynamic>.from(
-          json.decode(_response.body)
+          json.decode(utf8.decode(_response.bodyBytes))
         );
 
-        List<dynamic> temp = [];
+        List<Map<String, dynamic>> temp = [];
 
         parsedMarkers['data'].values.forEach((place) {
           temp.add({
@@ -420,8 +420,6 @@ class NetLoader {
             'radius': place['radius'],
           });
         });
-
-        print(temp);
 
         if(temp.isEmpty){
           showToast("Category is empty");
