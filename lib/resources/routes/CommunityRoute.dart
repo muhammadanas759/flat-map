@@ -38,6 +38,8 @@ class _CommunityRouteState extends State<CommunityRoute> {
   DropdownItem selectedPlaceCategory;
   Geolocator _geolocator = Geolocator();
 
+  bool if_already_added = false;
+
   Map<String, dynamic> _formCategoryData = {
     'category': '',
     'range': 100,
@@ -61,6 +63,21 @@ class _CommunityRouteState extends State<CommunityRoute> {
     const DropdownItem('Cinemas', Icon(Icons.theaters, color:  const Color(0xFF167F67))),
     const DropdownItem('Casino', Icon(Icons.casino, color:  const Color(0xFF167F67))),
   ];
+
+  void addMarkerFromCategory(int index, String _id){
+    widget._markerLoader.addMarker(
+      id: _id,
+      position: LatLng(
+          _placesDescriptions[index]['position_x'],
+          _placesDescriptions[index]['position_y']
+      ),
+      icon: _iconsTranslator[_formCategoryData['category']],
+      title: _placesDescriptions[index]['name'],
+      description: _placesDescriptions[index]['address'],
+      range: _placesDescriptions[index]['radius'],
+      actions: [],
+    );
+  }
 
   Widget _buildMarkerRangeField() {
     return CounterFormField(
@@ -115,6 +132,28 @@ class _CommunityRouteState extends State<CommunityRoute> {
         });
       });
     });
+    // reset control of category add button
+    if_already_added = false;
+  }
+
+  Widget addAllPlaces(BuildContext context){
+    return ListTile(
+      title: Text( 'Add all placemarks from list',
+        style: bodyText(),
+      ),
+      leading: Icon(Icons.add_circle_outline),
+      onTap: () {
+        for (int index=0; index < _placesDescriptions.length; index++) {
+          // add placemark method
+          String _id = widget._markerLoader.generateId();
+          addMarkerFromCategory(index, _id);
+        }
+        setState(() {
+          if_already_added = true;
+        });
+        netLoader.showToast("All placemarks added successfully");
+      },
+    );
   }
 
   Widget _listPlaces(BuildContext context) {
@@ -164,24 +203,23 @@ class _CommunityRouteState extends State<CommunityRoute> {
                           },
                         ),
                         IconButton(
+                          icon: Icon(Icons.delete_forever),
+                          tooltip: 'Delete placemark from list',
+                          onPressed: () {
+                            // remove element from list
+                            setState(() {
+                              _placesDescriptions.removeAt(index);
+                            });
+                          },
+                        ),
+                        IconButton(
                           icon: Icon(Icons.add),
                           tooltip: 'Add marker',
                           onPressed: () {
                             // add placemark method
                             String _id = widget._markerLoader.generateId();
 
-                            widget._markerLoader.addMarker(
-                              id: _id,
-                              position: LatLng(
-                                  _placesDescriptions[index]['position_x'],
-                                  _placesDescriptions[index]['position_y']
-                              ),
-                              icon: _iconsTranslator[_formCategoryData['category']],
-                              title: _placesDescriptions[index]['name'],
-                              description: _placesDescriptions[index]['address'],
-                              range: _placesDescriptions[index]['radius'],
-                              actions: [],
-                            );
+                            addMarkerFromCategory(index, _id);
 
                             // set selected marker
                             PrefService.setString('selected_marker', _id);
@@ -245,6 +283,9 @@ class _CommunityRouteState extends State<CommunityRoute> {
 
             // dropdown list
             _buildDropdownListField(),
+
+            _placesDescriptions.length != 0 && !if_already_added ?
+              addAllPlaces(context) : SizedBox.shrink(),
 
             // places cards list
             SizedBox(
