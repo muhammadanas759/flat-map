@@ -3,7 +3,6 @@ import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
-// import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 
 import 'package:flutter/material.dart';
@@ -15,11 +14,11 @@ import 'package:flatmapp/resources/extensions.dart';
 
 
 // dropdown list item class
-class DropdownItem {
-  const DropdownItem(this.name,this.icon);
-  final String name;
-  final Icon icon;
-}
+//class DropdownItem {
+//  const DropdownItem(this.name,this.icon);
+//  final String name;
+//  final Icon icon;
+//}
 
 // ignore: must_be_immutable
 class CommunityRoute extends StatefulWidget {
@@ -35,8 +34,13 @@ class _CommunityRouteState extends State<CommunityRoute> {
 
   NetLoader netLoader = NetLoader();
   List<Map<String, dynamic>> _placesDescriptions = [];
-  DropdownItem selectedPlaceCategory;
+//  DropdownItem selectedPlaceCategory;
   Geolocator _geolocator = Geolocator();
+
+  // form controllers:
+  TextEditingController _categoryController = new TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
 
   bool if_already_added = false;
 
@@ -47,31 +51,26 @@ class _CommunityRouteState extends State<CommunityRoute> {
     'position_y': 0
   };
 
-  Map<String, String> _iconsTranslator = {
-    'Theaters':   'parliament',
-    'Cinemas':    'buildings',
-    'Casino':     'party',
-  };
+//  Map<String, String> _iconsTranslator = {
+//    'Theaters':   'parliament',
+//    'Cinemas':    'buildings',
+//    'Casino':     'party',
+//    'default':    'default',
+//  };
 
   Future<LatLng> getCurrentPosition() async {
     Position temp = await _geolocator.getCurrentPosition();
     return temp.toLatLng();
   }
 
-  List<DropdownItem> _dropdownListItems = <DropdownItem>[
-    const DropdownItem('Theaters', Icon(Icons.local_activity, color:  const Color(0xFF167F67))),
-    const DropdownItem('Cinemas', Icon(Icons.theaters, color:  const Color(0xFF167F67))),
-    const DropdownItem('Casino', Icon(Icons.casino, color:  const Color(0xFF167F67))),
-  ];
-
   void addMarkerFromCategory(int index, String _id){
     widget._markerLoader.addMarker(
       id: _id,
       position: LatLng(
-          _placesDescriptions[index]['position_x'],
-          _placesDescriptions[index]['position_y']
+        _placesDescriptions[index]['position_x'],
+        _placesDescriptions[index]['position_y']
       ),
-      icon: _iconsTranslator[_formCategoryData['category']],
+      icon: 'default',
       title: _placesDescriptions[index]['name'],
       description: _placesDescriptions[index]['address'],
       range: _placesDescriptions[index]['radius'],
@@ -86,36 +85,99 @@ class _CommunityRouteState extends State<CommunityRoute> {
     );
   }
 
-  Widget _buildDropdownListField() {
-    // dropdown list
-    return DropdownButton<DropdownItem>(
-      hint:  Text("Select category"),
-      value: selectedPlaceCategory,
-      onChanged: (DropdownItem Value) {
-        setState(() {
-          selectedPlaceCategory = Value;
-          _formCategoryData['category'] = selectedPlaceCategory.name;
-          // send request after changing category
-          sendCategoryRequest();
-        });
-      },
-      items: _dropdownListItems.map((DropdownItem user) {
-        return DropdownMenuItem<DropdownItem>(
-          value: user,
-          child: Row(
-            children: <Widget>[
-              user.icon,
-              SizedBox(width: 10,),
-              Text(
-                user.name,
-                style:  TextStyle(color: Colors.black),
+  Widget _buildCategoryTextFieldAndButton() {
+    return Form(
+      key: _formKey,
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: new Container(
+              margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+              child: TextFormField(
+                controller: _categoryController,
+                style: bodyText(),
+                decoration: textFieldStyle(
+                  labelTextStr: "Category name",
+                  hintTextStr: "please provide category for search"
+                ),
+                onSaved: (String value) {
+                  _formCategoryData['category'] = value;
+                },
+                textInputAction: TextInputAction.next,
+                validator: (text) {
+                  if (text == null || text.isEmpty) {
+                    return 'This field can not be empty';
+                  }
+                  return null;
+                },
+                onFieldSubmitted: (String value) {
+                  _formCategoryData['category'] = value;
+                  FocusScope.of(context).requestFocus(FocusNode());
+                },
+                onChanged: (String value) {
+                  _formCategoryData['category'] = value;
+                },
               ),
-            ],
+            ),
           ),
-        );
-      }).toList(),
+          Expanded(
+            child: new Container(
+              margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+              child: ListTile(
+                  title: Text('Search', style: bodyText()),
+                  trailing: Icon(Icons.search),
+                  onTap: (){
+                    if (_formKey.currentState.validate()) {
+                      // send request
+                      sendCategoryRequest();
+                    } else {
+                      print("field didn't pass validation");
+                    }
+                  }
+              ),
+            ),
+          ),
+        ]
+      )
     );
   }
+
+//  List<DropdownItem> _dropdownListItems = <DropdownItem>[
+//    const DropdownItem('Theaters', Icon(Icons.local_activity, color:  const Color(0xFF167F67))),
+//    const DropdownItem('Cinemas', Icon(Icons.theaters, color:  const Color(0xFF167F67))),
+//    const DropdownItem('Casino', Icon(Icons.casino, color:  const Color(0xFF167F67))),
+//  ];
+
+//  Widget _buildDropdownListField() {
+//    // dropdown list
+//    return DropdownButton<DropdownItem>(
+//      hint:  Text("Select category"),
+//      value: selectedPlaceCategory,
+//      onChanged: (DropdownItem Value) {
+//        setState(() {
+//          selectedPlaceCategory = Value;
+//          _formCategoryData['category'] = selectedPlaceCategory.name;
+//          // send request after changing category
+//          sendCategoryRequest();
+//        });
+//      },
+//      items: _dropdownListItems.map((DropdownItem user) {
+//        return DropdownMenuItem<DropdownItem>(
+//          value: user,
+//          child: Row(
+//            children: <Widget>[
+//              user.icon,
+//              SizedBox(width: 10,),
+//              Text(
+//                user.name,
+//                style:  TextStyle(color: Colors.black),
+//              ),
+//            ],
+//          ),
+//        );
+//      }).toList(),
+//    );
+//  }
 
   void sendCategoryRequest(){
     // UPDATE USER POSITION
@@ -282,7 +344,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
             _buildMarkerRangeField(),
 
             // dropdown list
-            _buildDropdownListField(),
+            _buildCategoryTextFieldAndButton(),
 
             _placesDescriptions.length != 0 && !if_already_added ?
               addAllPlaces(context) : SizedBox.shrink(),

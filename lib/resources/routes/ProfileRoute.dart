@@ -5,7 +5,6 @@ import 'package:flatmapp/resources/objects/models/flatmapp_marker.dart';
 // import 'package:flatmapp/resources/objects/widgets/actions_list.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
-import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 
 import 'package:flutter/material.dart';
@@ -174,14 +173,22 @@ class _ProfileRouteState extends State<ProfileRoute> {
             itemBuilder: (context, index) {
               if (index == _markersDescriptionsKeys.length){
                 // add last element - card "add marker"
-                return addActionCard(
-                  tooltip: "Add marker",
-                  onPressedMethod: () {
-                    // set temporary as selected marker
-                    PrefService.setString('selected_marker', "temporary");
-                    // Navigate to the profile screen using a named route.
-                    Navigator.pushNamed(context, '/map');
-                  },
+                return Container( //                           <-- Card widget
+                  child: Opacity(
+                    opacity: 0.2,
+                    child: IconButton(
+                        icon: Icon(Icons.add_circle_outline, size: 40,),
+                        color: (PrefService.get('ui_theme') == 'dark') ? Colors.white : Colors.black,
+                        tooltip: "Add marker",
+                        onPressed: () {
+                          // set temporary as selected marker
+                          PrefService.setString('selected_marker', "temporary");
+                          // Navigate to the profile screen using a named route.
+                          Navigator.pushNamed(context, '/map');
+                        }
+                    ),
+                  ),
+                  alignment: Alignment(0.0, 0.0),
                 );
               } else {
                 // marker data for card
@@ -275,20 +282,26 @@ class _ProfileRouteState extends State<ProfileRoute> {
           ),
         ),
 
-        BackupTile(
-            text: 'Back up your markers to server',
-            icon: Icon(Icons.backup),
-            onLongPressMethod: (){
-              _netLoader.postBackup(context, widget._markerLoader);
-            }
+        ListTile(
+          title: Text(
+            'Back up your markers to server',
+            style: bodyText(),
+          ),
+          trailing: Icon(Icons.backup),
+          onTap: (){
+            _netLoader.postBackup(context, widget._markerLoader);
+          },
         ),
 
-        BackupTile(
-            text: 'Get your markers from Backup',
-            icon: Icon(Icons.file_download),
-            onLongPressMethod: (){
-              _netLoader.getBackup(context, widget._markerLoader);
-            }
+        ListTile(
+          title: Text(
+            'Get your markers from Backup',
+            style: bodyText(),
+          ),
+          trailing: Icon(Icons.file_download),
+          onTap: (){
+            _netLoader.getBackup(context, widget._markerLoader);
+          },
         ),
 
         ExpansionTile(

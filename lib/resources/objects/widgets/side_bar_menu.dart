@@ -1,3 +1,4 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:preferences/preference_service.dart';
 
 import 'text_styles.dart';
@@ -41,9 +42,36 @@ Drawer sideBarMenu(context){
         ),
         sideBarMenuElement(context, 'Map', Icon(Icons.location_on), '/map'),
         sideBarMenuElement(context, 'Profile', Icon(Icons.account_circle), '/profile'),
-        PrefService.getString('token') == '' ?
-          SizedBox.shrink():
-          sideBarMenuElement(context, 'Community', Icon(Icons.language), '/community'),
+
+        // community tile
+        ListTile(
+          leading: Icon(Icons.language),
+          title: Text(
+            'Community',
+            style: (PrefService.getString('token') == '') ?
+                    sideBarMenuStyleGrey() : sideBarMenuStyle(),
+          ),
+          onTap: () {
+            if(PrefService.getString('token') == ''){
+              // Then close the drawer
+              Navigator.pop(context);
+              // go to login page
+              Navigator.pushNamed(context, '/login');
+              // show message
+              Fluttertoast.showToast(
+                msg: "You need to log in to use Community",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+              );
+            } else {
+              // Then close the drawer
+              Navigator.pop(context);
+              // Navigate to the profile screen using a named route.
+              Navigator.pushNamed(context, '/community');
+            }
+          },
+        ),
+
         sideBarMenuElement(context, 'Settings', Icon(Icons.settings_applications), '/settings'),
         sideBarMenuElement(context, 'About', Icon(Icons.info_outline), '/about'),
         PrefService.getString('token') == '' ?

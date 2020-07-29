@@ -1,5 +1,4 @@
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
-import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;

@@ -316,7 +316,6 @@ class _MapRouteState extends State<MapRoute> {
 
   Widget _buildMarkerRangeField() {
     return CounterFormField(
-      // initialValue: _formMarkerData['range'],
       initialValue: widget._markerLoader.getRange(
           id: PrefService.getString('selected_marker')
       ).toInt(),
@@ -395,15 +394,20 @@ class _MapRouteState extends State<MapRoute> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-//              Text(
-//                'Selected marker position:\n'
-//                    '${tempMarker.position.latitude},\n'
-//                    '${tempMarker.position.longitude}',
-//                textAlign: TextAlign.center,
-//                overflow: TextOverflow.ellipsis,
-//                style: bodyText(),
-//              ),
-              closeFormButton(onPressedMethod: (){_closePanel(context);}),
+              Container(
+                child: Opacity(
+                  opacity: 0.2,
+                  child: IconButton(
+                    icon: Icon(Icons.keyboard_arrow_down, size: 40),
+                    color: (PrefService.get('ui_theme') == 'dark') ? Colors.white : Colors.black,
+                    tooltip: 'Close form',
+                    onPressed: (){
+                      _closePanel(context);
+                    },
+                  ),
+                ),
+                alignment: Alignment(0.0, 0.0),
+              ),
             ],
           ),
           SizedBox(height: 10),

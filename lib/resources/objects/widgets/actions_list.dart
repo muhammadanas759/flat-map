@@ -1,7 +1,6 @@
 import 'package:flatmapp/resources/objects/loaders/actions_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_action.dart';
-import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 
 import 'package:flutter/material.dart';
@@ -90,11 +89,19 @@ class ActionsList {
         itemBuilder: (context, index) {
           if (index == _actionsList.length){
             // add last element - card "add marker"
-            return addActionCard(
-              tooltip: "Add action",
-              onPressedMethod: () {
-                addAction(context, index);
-              },
+            return Container( //                           <-- Card widget
+              child: Opacity(
+                opacity: 0.2,
+                child: IconButton(
+                    icon: Icon(Icons.add_circle_outline, size: 40,),
+                    color: (PrefService.get('ui_theme') == 'dark') ? Colors.white : Colors.black,
+                    tooltip: "Add action",
+                    onPressed: () {
+                      addAction(context, index);
+                    }
+                ),
+              ),
+              alignment: Alignment(0.0, 0.0),
             );
           } else {
             return ExpansionTile(
