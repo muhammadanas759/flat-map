@@ -117,9 +117,15 @@ class MarkerLoader {
           });
         } else {
           print("could not parse file content");
+          // add temporary marker
+          addTemporaryMarker(_firstCoordinates);
+          saveMarkers();
         }
       } on FormatException {
         print('local storage is empty...');
+        // add temporary marker
+        addTemporaryMarker(_firstCoordinates);
+        saveMarkers();
       }
 //      } catch (error) {
 //        print(error);
@@ -302,14 +308,8 @@ class MarkerLoader {
     googleMarkers.clear();
     zones.clear();
 
-    // from persistent storage
-    String path = await getFilePath();
-    // if marker storage does exist
-    if (await File(path).exists()){
-      // create new one
-      File(path).writeAsString('');
-      // add temporary marker
-      addTemporaryMarker(_firstCoordinates);
-    }
+    // add temporary marker
+    addTemporaryMarker(_firstCoordinates);
+    saveMarkers();
   }
 }
