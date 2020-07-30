@@ -179,23 +179,35 @@ class _CommunityRouteState extends State<CommunityRoute> {
 //    );
 //  }
 
-  void sendCategoryRequest(){
+  Future<void> sendCategoryRequest() async {
     // UPDATE USER POSITION
-    getCurrentPosition().then((position){
-      _formCategoryData['position_x'] = position.longitude;
-      _formCategoryData['position_y'] = position.latitude;
-      // send request to server via NetLoader and get category cards
-      netLoader.categoryRequest(
-        "/api/category/",
-        _formCategoryData
-      ).then((v){
-        setState(() {
-          _placesDescriptions = v;
+    _geolocator.isLocationServiceEnabled().then((status){
+      if (status == false){
+        netLoader.showToast("Geolocation is turned off");
+      } else {
+        netLoader.checkNetworkConnection().then((connected){
+          if(connected){
+            getCurrentPosition().then((position){
+              _formCategoryData['position_x'] = position.longitude;
+              _formCategoryData['position_y'] = position.latitude;
+              // send request to server via NetLoader and get category cards
+              netLoader.categoryRequest(
+                  "/api/category/",
+                  _formCategoryData
+              ).then((v){
+                setState(() {
+                  _placesDescriptions = v;
+                });
+              });
+            });
+            // reset control of category add button
+            if_already_added = false;
+          } else {
+            netLoader.showToast("Network connection is off");
+          }
         });
-      });
+      }
     });
-    // reset control of category add button
-    if_already_added = false;
   }
 
   Widget addAllPlaces(BuildContext context){

@@ -44,7 +44,7 @@ dependencies:
   # sliding panel for forms
   sliding_up_panel: ^1.0.1
   # push notifications
-  flutter_local_notifications:
+  flutter_local_notifications: ^1.4.4+2
   # background processing
   flutter_isolate: ^1.0.0+13
   # custom settings in file
@@ -60,6 +60,8 @@ dependencies:
   volume: ^0.1.4
   # WIFI control
   wifi_iot: ^0.1.1
+  # check if internet is on
+  connectivity: ^0.4.9
 
 dev_dependencies:
   flutter_driver:

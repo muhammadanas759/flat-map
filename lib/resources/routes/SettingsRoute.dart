@@ -75,20 +75,11 @@ class _SettingsRouteState extends State<SettingsRoute> {
           leading: Icon(Icons.remove_circle),
           trailing: Icon(Icons.keyboard_arrow_right),
           page: PreferencePage([
-//            PreferenceTitle('Local data', style: header()),
-//            PreferenceText(
-//              'Remove local markers',
-//              leading: Icon(Icons.delete_forever),
-//              onTap: () {
-//
-//              },
-//            ),
             PreferenceTitle('Outside data', style: header()),
             PreferenceText(
               'Remove backup markers',
               leading: Icon(Icons.cloud_off),
               onTap: () {
-                print("remove backup markers");
                 _netLoader.removeBackup();
               },
             ),

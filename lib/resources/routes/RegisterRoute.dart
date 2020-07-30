@@ -119,24 +119,30 @@ class _RegisterRouteState extends State<RegisterRoute> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       _formData['email'] = _formData['username'];
-      // send credentials to server and get the response
-      http.Response _response = await netLoader.register(_formData);
-      if(200 <= _response.statusCode && _response.statusCode < 300){
-        // move back
-        Navigator.of(context).pop();
-        // show message
-        Fluttertoast.showToast(
-          msg: "Registered account",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-        );
-      }
-      else{
-        Fluttertoast.showToast(
-          msg: "Something went wrong",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-        );
+
+      bool connected = await netLoader.checkNetworkConnection();
+      if(connected){
+        // send credentials to server and get the response
+        http.Response _response = await netLoader.register(_formData);
+        if(200 <= _response.statusCode && _response.statusCode < 300){
+          // move back
+          Navigator.of(context).pop();
+          // show message
+          Fluttertoast.showToast(
+            msg: "Registered account",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+          );
+        }
+        else{
+          Fluttertoast.showToast(
+            msg: "Something went wrong",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+          );
+        }
+      } else {
+        netLoader.showToast("Network connection is off");
       }
     }
   }

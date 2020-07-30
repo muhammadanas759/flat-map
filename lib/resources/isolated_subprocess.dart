@@ -33,13 +33,20 @@ void triggerEntryPoint(var message) async {
   FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
 
   // check permission
-  _geolocator.checkGeolocationPermissionStatus().then((permission){
-    // check permission status
-    if(permission != GeolocationStatus.granted){
-      print("GEOLOCATION PERMISSION IS NOT GRANTED YET");
+  _geolocator.isLocationServiceEnabled().then((status){
+    if (status == false) {
+      print("GEOLOCATION MODULE IS TURNED OFF");
+    } else {
+      _geolocator.checkGeolocationPermissionStatus().then((permission) {
+        // check permission status
+        if (permission != GeolocationStatus.granted) {
+          print("GEOLOCATION PERMISSION IS NOT GRANTED YET");
+        }
+        print(permission);
+      });
     }
-    print(permission);
   });
+
 
   // init notifications
   var initializationSettingsAndroid =

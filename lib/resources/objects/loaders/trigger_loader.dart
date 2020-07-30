@@ -58,6 +58,10 @@ class TriggerLoader {
             (Timer t) => _markerLoader.updateMarkersOnFileChange());
   }
 
+  Future<bool> checkGeolocationModule() async {
+    return await _geolocator.isLocationServiceEnabled();
+  }
+
   Future<LatLng> getCurrentPosition() async {
     Position temp = await _geolocator.getCurrentPosition();
     return temp.toLatLng();
@@ -79,7 +83,7 @@ class TriggerLoader {
   Future<String> getAddressFromPosition({LatLng position}) async {
 
     List<Placemark> tempPlaceList = await _geolocator.placemarkFromCoordinates(
-        position.latitude, position.longitude
+      position.latitude, position.longitude
     );
 
     if (tempPlaceList != null && tempPlaceList.isNotEmpty) {

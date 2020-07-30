@@ -133,21 +133,26 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
-      // TODO send new password to server and get the response
-      http.Response _response = await netLoader.changePassword(_formData);
-      if(200 <= _response.statusCode && _response.statusCode < 300){
-        // remove token
-        PrefService.setString("token", "");
-        // move back
-        Navigator.of(context).pop();
-        // move to log in
-        Navigator.pushNamed(context, '/login');
-        // show message
-        Fluttertoast.showToast(
-          msg: "Password changed successfully",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-        );
+      // send new password to server and get the response
+      bool connected = await netLoader.checkNetworkConnection();
+      if(connected){
+        http.Response _response = await netLoader.changePassword(_formData);
+        if(200 <= _response.statusCode && _response.statusCode < 300){
+          // remove token
+          PrefService.setString("token", "");
+          // move back
+          Navigator.of(context).pop();
+          // move to log in
+          Navigator.pushNamed(context, '/login');
+          // show message
+          Fluttertoast.showToast(
+            msg: "Password changed successfully",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+          );
+        }
+      } else {
+        netLoader.showToast("Network connection is off");
       }
     }
   }

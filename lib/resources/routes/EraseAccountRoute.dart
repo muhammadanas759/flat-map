@@ -107,17 +107,22 @@ class _EraseAccountRouteState extends State<EraseAccountRoute> {
   Future<void> _submitForm() async {
     // validate form
     if (_formKey.currentState.validate()) {
-      // send request to the server
-      http.Response _response = await netLoader.removeAccount();
-      if(200 <= _response.statusCode && _response.statusCode < 300){
-        // move back
-        Navigator.of(context).pop();
-        // show message
-        Fluttertoast.showToast(
-          msg: "Account erased successfully",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-        );
+      bool connected = await netLoader.checkNetworkConnection();
+      if(connected){
+        // send request to the server
+        http.Response _response = await netLoader.removeAccount();
+        if(200 <= _response.statusCode && _response.statusCode < 300){
+          // move back
+          Navigator.of(context).pop();
+          // show message
+          Fluttertoast.showToast(
+            msg: "Account erased successfully",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+          );
+        }
+      } else {
+        netLoader.showToast("Network connection is off");
       }
     }
   }

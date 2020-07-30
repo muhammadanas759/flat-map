@@ -88,26 +88,31 @@ class _LogInRouteState extends State<LogInRoute> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
-      // send credentials to server and get the response
-      http.Response _response = await netLoader.getToken(
-        endpoint: '/api/account/login/',
-        content: _formData
-      );
+      bool connected = await netLoader.checkNetworkConnection();
+      if(connected){
+        // send credentials to server and get the response
+        http.Response _response = await netLoader.getToken(
+            endpoint: '/api/account/login/',
+            content: _formData
+        );
 
-      String _token = json.decode(_response.body)["token"].toString();
-      // if there is token in response
-      if(_token != null && _token != "null") {
-        // save token to global variables
-        PrefService.setString("token", _token);
-        // save login to global variables
-        PrefService.setString("login", _formData['username'].toString());
+        String _token = json.decode(_response.body)["token"].toString();
+        // if there is token in response
+        if(_token != null && _token != "null") {
+          // save token to global variables
+          PrefService.setString("token", _token);
+          // save login to global variables
+          PrefService.setString("login", _formData['username'].toString());
 
-        // reset view
-        resetView(context);
+          // reset view
+          resetView(context);
+        } else {
+          // there is no token in response
+          print("No token detected!");
+          print(_response.body);
+        }
       } else {
-        // there is no token in response
-        print("No token detected!");
-        print(_response.body);
+        netLoader.showToast("Network connection is off");
       }
     }
   }
