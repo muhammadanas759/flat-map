@@ -367,6 +367,8 @@ class NetLoader {
       try{
         String _token = PrefService.getString('token');
 
+        print(json.encode(content));
+
         http.Response _response = await http.post(
             _serverURL + endpoint,
             headers: {

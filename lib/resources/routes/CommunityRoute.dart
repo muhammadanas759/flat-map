@@ -12,14 +12,6 @@ import 'package:geolocator/geolocator.dart';
 
 import 'package:flatmapp/resources/extensions.dart';
 
-
-// dropdown list item class
-//class DropdownItem {
-//  const DropdownItem(this.name,this.icon);
-//  final String name;
-//  final Icon icon;
-//}
-
 // ignore: must_be_immutable
 class CommunityRoute extends StatefulWidget {
 
@@ -34,7 +26,6 @@ class _CommunityRouteState extends State<CommunityRoute> {
 
   NetLoader netLoader = NetLoader();
   List<Map<String, dynamic>> _placesDescriptions = [];
-//  DropdownItem selectedPlaceCategory;
   Geolocator _geolocator = Geolocator();
 
   // form controllers:
@@ -52,13 +43,6 @@ class _CommunityRouteState extends State<CommunityRoute> {
     'position_y': 0
   };
 
-//  Map<String, String> _iconsTranslator = {
-//    'Theaters':   'parliament',
-//    'Cinemas':    'buildings',
-//    'Casino':     'party',
-//    'default':    'default',
-//  };
-
   Future<LatLng> getCurrentPosition() async {
     Position temp = await _geolocator.getCurrentPosition();
     return temp.toLatLng();
@@ -74,7 +58,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
       icon: PrefService.get('community_icon'),
       title: _placesDescriptions[index]['name'],
       description: _placesDescriptions[index]['address'],
-      range: _placesDescriptions[index]['radius'],
+      range: _placesDescriptions[index]['radius'].toDouble(),
       actions: [],
     );
   }
@@ -132,7 +116,6 @@ class _CommunityRouteState extends State<CommunityRoute> {
                       if (_last_search != _formCategoryData['category']){
                         // send request
                         sendCategoryRequest();
-                        _last_search = _formCategoryData['category'];
                       } else {
                         netLoader.showToast("No new category to search");
                       }
@@ -148,43 +131,6 @@ class _CommunityRouteState extends State<CommunityRoute> {
     );
   }
 
-//  List<DropdownItem> _dropdownListItems = <DropdownItem>[
-//    const DropdownItem('Theaters', Icon(Icons.local_activity, color:  const Color(0xFF167F67))),
-//    const DropdownItem('Cinemas', Icon(Icons.theaters, color:  const Color(0xFF167F67))),
-//    const DropdownItem('Casino', Icon(Icons.casino, color:  const Color(0xFF167F67))),
-//  ];
-
-//  Widget _buildDropdownListField() {
-//    // dropdown list
-//    return DropdownButton<DropdownItem>(
-//      hint:  Text("Select category"),
-//      value: selectedPlaceCategory,
-//      onChanged: (DropdownItem Value) {
-//        setState(() {
-//          selectedPlaceCategory = Value;
-//          _formCategoryData['category'] = selectedPlaceCategory.name;
-//          // send request after changing category
-//          sendCategoryRequest();
-//        });
-//      },
-//      items: _dropdownListItems.map((DropdownItem user) {
-//        return DropdownMenuItem<DropdownItem>(
-//          value: user,
-//          child: Row(
-//            children: <Widget>[
-//              user.icon,
-//              SizedBox(width: 10,),
-//              Text(
-//                user.name,
-//                style:  TextStyle(color: Colors.black),
-//              ),
-//            ],
-//          ),
-//        );
-//      }).toList(),
-//    );
-//  }
-
   Future<void> sendCategoryRequest() async {
     // UPDATE USER POSITION
     _geolocator.isLocationServiceEnabled().then((status){
@@ -194,15 +140,16 @@ class _CommunityRouteState extends State<CommunityRoute> {
         netLoader.checkNetworkConnection().then((connected){
           if(connected){
             getCurrentPosition().then((position){
-              _formCategoryData['position_x'] = position.longitude;
-              _formCategoryData['position_y'] = position.latitude;
+              _formCategoryData['position_x'] = position.latitude;
+              _formCategoryData['position_y'] = position.longitude;
               // send request to server via NetLoader and get category cards
               netLoader.categoryRequest(
-                  "/api/category/",
-                  _formCategoryData
+                "/api/category/",
+                _formCategoryData
               ).then((v){
                 setState(() {
                   _placesDescriptions = v;
+                  _last_search = _formCategoryData['category'];
                 });
               });
             });
@@ -378,7 +325,8 @@ class _CommunityRouteState extends State<CommunityRoute> {
               ),
               leading: Icon(Icons.language),
             ),
-            ListTile( title: Text( 'Select range of search and category of places '
+            ListTile(
+              title: Text( 'Select range of search and category of places '
                 'to look up for places nearby in declared range.',
                 style: bodyText(),
               ),
@@ -411,7 +359,6 @@ class _CommunityRouteState extends State<CommunityRoute> {
               height: 400, // fixed height
               child: _listPlaces(context),
             ),
-
           ],
         ),
       ),
