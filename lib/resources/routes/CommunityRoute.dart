@@ -43,6 +43,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
   final _formKey = GlobalKey<FormState>();
 
   bool if_already_added = false;
+  String _last_search = "text"; // something not empty
 
   Map<String, dynamic> _formCategoryData = {
     'category': '',
@@ -70,7 +71,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
         _placesDescriptions[index]['position_x'],
         _placesDescriptions[index]['position_y']
       ),
-      icon: 'default',
+      icon: PrefService.get('community_icon'),
       title: _placesDescriptions[index]['name'],
       description: _placesDescriptions[index]['address'],
       range: _placesDescriptions[index]['radius'],
@@ -128,8 +129,13 @@ class _CommunityRouteState extends State<CommunityRoute> {
                   trailing: Icon(Icons.search),
                   onTap: (){
                     if (_formKey.currentState.validate()) {
-                      // send request
-                      sendCategoryRequest();
+                      if (_last_search != _formCategoryData['category']){
+                        // send request
+                        sendCategoryRequest();
+                        _last_search = _formCategoryData['category'];
+                      } else {
+                        netLoader.showToast("No new category to search");
+                      }
                     } else {
                       print("field didn't pass validation");
                     }
@@ -227,6 +233,32 @@ class _CommunityRouteState extends State<CommunityRoute> {
         });
         netLoader.showToast("All placemarks added successfully");
       },
+    );
+  }
+
+  Widget _iconChangeButton(){
+    return Expanded(
+      child: SizedBox(
+        height: 60.0,
+        // icon change button
+        child: Container(
+            child: ConstrainedBox(
+                constraints: BoxConstraints.expand(),
+                child: FlatButton(
+                    onPressed: (){
+                      // Navigate to the icons screen using a named route.
+                      Navigator.pushNamed(context, '/community_icons');
+                    },
+                    padding: EdgeInsets.all(0.0),
+                    child: Image.asset(
+                      widget._markerLoader.iconsLoader.markerImageLocal[
+                        PrefService.get('community_icon')
+                      ]
+                    )
+                )
+            )
+        ),
+      ),
     );
   }
 
@@ -359,7 +391,20 @@ class _CommunityRouteState extends State<CommunityRoute> {
             _buildCategoryTextFieldAndButton(),
 
             _placesDescriptions.length != 0 && !if_already_added ?
-              addAllPlaces(context) : SizedBox.shrink(),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: addAllPlaces(context),
+                  ),
+                  SizedBox(
+                    width: 100,
+                    child: _iconChangeButton()
+                  ),
+                ],
+              )
+            : SizedBox.shrink(),
 
             // places cards list
             SizedBox(

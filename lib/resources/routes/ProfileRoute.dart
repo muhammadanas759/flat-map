@@ -261,6 +261,9 @@ class _ProfileRouteState extends State<ProfileRoute> {
   Widget _profileColumn(){
     return PrefService.get('token') == '' ?
     textInfo('You need to log in to use Profile' ?? '') :
+//    Expanded(
+//      child: ,
+//    ),
     Column(
       children: <Widget>[
         ListTile(
