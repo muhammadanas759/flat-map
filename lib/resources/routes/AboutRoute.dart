@@ -39,9 +39,7 @@ class AboutRoute extends StatelessWidget {
             ListTile(
               title: Text(
                 'FlatMapp is free to use and is not gathering any personal data '
-                'without user consent. All data gathered from application, such '
-                'as user settings, saved locations or custom triggers, is '
-                'anonymized before gathering. ',
+                'without user consent.',
                 style: bodyText(),
               ),
             ),
