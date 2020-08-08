@@ -2,6 +2,7 @@ import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
+import 'package:flatmapp/resources/objects/loaders/service_loader.dart';
 
 import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
@@ -69,6 +70,12 @@ class _SettingsRouteState extends State<SettingsRoute> {
           'Enable isolate subprocess',
           'isolate_enabled',
           defaultVal: false,
+            onEnable: (){
+              ServiceLoader.startServiceInPlatform();
+            },
+            onDisable: (){
+              ServiceLoader.stopServiceInPlatform();
+            }
         ),
         PreferencePageLink(
           'Delete data',
