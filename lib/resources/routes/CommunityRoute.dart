@@ -40,7 +40,9 @@ class _CommunityRouteState extends State<CommunityRoute> {
     'category': '',
     'range': 100,
     'position_x': 0,
-    'position_y': 0
+    'position_y': 0,
+    'approximate': false,
+    'language': 'EN',
   };
 
   Future<LatLng> getCurrentPosition() async {
@@ -132,6 +134,10 @@ class _CommunityRouteState extends State<CommunityRoute> {
   }
 
   Future<void> sendCategoryRequest() async {
+
+    // get phone localization language code
+    _formCategoryData['language'] =  Localizations.localeOf(context).languageCode;
+
     // UPDATE USER POSITION
     _geolocator.isLocationServiceEnabled().then((status){
       if (status == false){
@@ -301,13 +307,13 @@ class _CommunityRouteState extends State<CommunityRoute> {
   Widget build(BuildContext context) {
 
     // check permission
-    _geolocator.checkGeolocationPermissionStatus().then((permission){
-      // check permission status
-      if(permission != GeolocationStatus.granted){
-        print("GEOLOCATION PERMISSION IS NOT GRANTED YET");
-      }
-      print(permission);
-    });
+//    _geolocator.checkGeolocationPermissionStatus().then((permission){
+//      // check permission status
+//      if(permission != GeolocationStatus.granted){
+//        print("GEOLOCATION PERMISSION IS NOT GRANTED YET");
+//      }
+//      print(permission);
+//    });
 
     return Scaffold(
       appBar: appBar(),
@@ -332,8 +338,21 @@ class _CommunityRouteState extends State<CommunityRoute> {
               ),
             ),
 
-            // counter field
             _buildMarkerRangeField(),
+
+            CheckboxListTile(
+              title: Text(
+                "Use approximated range",
+                style: bodyText(),
+              ),
+              value: _formCategoryData['approximate'],
+              onChanged: (value) {
+                setState(() {
+                  _formCategoryData['approximate'] = value;
+                });
+              },
+              controlAffinity: ListTileControlAffinity.trailing, //or leading
+            ),
 
             // dropdown list
             _buildCategoryTextFieldAndButton(),
