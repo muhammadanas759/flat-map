@@ -50,17 +50,22 @@ class _CommunityRouteState extends State<CommunityRoute> {
     return temp.toLatLng();
   }
 
-  void addMarkerFromCategory(int index, String _id){
+  void addMarkerFromCategory(Map<String, dynamic> item, String _id){
+
+    if (item['radius'] == null) {
+      item['radius'] = 110;
+    }
+
     widget._markerLoader.addMarker(
       id: _id,
       position: LatLng(
-        _placesDescriptions[index]['position_x'],
-        _placesDescriptions[index]['position_y']
+        item['position_x'],
+        item['position_y']
       ),
       icon: PrefService.get('community_icon'),
-      title: _placesDescriptions[index]['name'],
-      description: _placesDescriptions[index]['address'],
-      range: _placesDescriptions[index]['radius'].toDouble(),
+      title: item['name'],
+      description: item['address'],
+      range: item['radius'].toDouble(),
       actions: [],
     );
   }
@@ -179,7 +184,8 @@ class _CommunityRouteState extends State<CommunityRoute> {
         for (int index=0; index < _placesDescriptions.length; index++) {
           // add placemark method
           String _id = widget._markerLoader.generateId();
-          addMarkerFromCategory(index, _id);
+          print(_placesDescriptions[index]);
+          addMarkerFromCategory(_placesDescriptions[index], _id);
         }
         setState(() {
           if_already_added = true;
@@ -278,7 +284,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
                             // add placemark method
                             String _id = widget._markerLoader.generateId();
 
-                            addMarkerFromCategory(index, _id);
+                            addMarkerFromCategory(_placesDescriptions[index], _id);
 
                             // set selected marker
                             PrefService.setString('selected_marker', _id);
