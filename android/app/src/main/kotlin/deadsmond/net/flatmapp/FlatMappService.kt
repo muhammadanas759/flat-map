@@ -38,7 +38,7 @@ class FlatMappService : IntentService("FlatMapp Service"){
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         markerPath = baseContext.filesDir.path + "/../app_flutter"
         wifiManager = baseContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        //bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     }
 
 
@@ -165,7 +165,7 @@ class FlatMappService : IntentService("FlatMapp Service"){
 //                        }
 //                    }
             Thread.sleep(5000)
-            enableBluetooth()
+            //enableBluetooth()
         }
     }
 }
