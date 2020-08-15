@@ -167,12 +167,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
           _buildPasswordField2(),
           SizedBox(height: 20),
           Container(
-            decoration: BoxDecoration(
-              border: Border.all(width: 0.5),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10.0) //         <--- border radius here
-              ),
-            ), //       <--- BoxDecoration here
+            decoration: buttonFieldStyle(),
             child: ListTile(
               title: Text(
                 'Register',
