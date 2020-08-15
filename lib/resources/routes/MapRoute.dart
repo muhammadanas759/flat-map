@@ -244,6 +244,7 @@ class _MapRouteState extends State<MapRoute> {
         height: 60.0,
         // icon change button
         child: Container(
+          decoration: buttonFieldStyle(),
           child: ConstrainedBox(
             constraints: BoxConstraints.expand(),
             child: FlatButton(
@@ -421,6 +422,7 @@ class _MapRouteState extends State<MapRoute> {
             children: <Widget>[
               // icon change button
               _iconChangeButton(),
+              SizedBox(width: 10),
               // range counter
               _buildMarkerRangeField(),
             ],

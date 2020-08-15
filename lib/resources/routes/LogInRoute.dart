@@ -182,31 +182,37 @@ class _LogInRouteState extends State<LogInRoute> {
           Row(
             children: <Widget>[
               Expanded(
-                child: ListTile(
-                  key: Key("logout_yes_list_tile"),
-                  title: Text(
-                    'Yes',
-                    style: bodyText(),
+                child: Container(
+                  decoration: buttonFieldStyle(),
+                  child: ListTile(
+                    key: Key("logout_yes_list_tile"),
+                    title: Text(
+                      'Yes',
+                      style: bodyText(),
+                    ),
+                    leading: Icon(Icons.check),
+                    onTap: (){
+                      _logOut();
+                    },
                   ),
-                  leading: Icon(Icons.check),
-                  onTap: (){
-                    _logOut();
-                  },
                 ),
               ),
-              SizedBox(width: 20),
+              SizedBox(width: 10),
               Expanded(
-                child: ListTile(
-                  key: Key("logout_no_list_tile"),
-                  title: Text(
-                    'No',
-                    style: bodyText(),
-                    textAlign: TextAlign.right,
+                child: Container(
+                  decoration: buttonFieldStyle(),
+                  child: ListTile(
+                    key: Key("logout_no_list_tile"),
+                    title: Text(
+                      'No',
+                      style: bodyText(),
+                      textAlign: TextAlign.right,
+                    ),
+                    trailing: Icon(Icons.close),
+                    onTap: (){
+                      Navigator.of(context).pop();
+                    },
                   ),
-                  trailing: Icon(Icons.close),
-                  onTap: (){
-                    Navigator.of(context).pop();
-                  },
                 ),
               ),
             ],

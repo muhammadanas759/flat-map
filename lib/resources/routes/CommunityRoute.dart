@@ -114,7 +114,12 @@ class _CommunityRouteState extends State<CommunityRoute> {
           ),
           Expanded(
             child: new Container(
-              margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+              decoration: BoxDecoration(
+                border: Border.all(width: 0.5),
+                borderRadius: BorderRadius.all(
+                    Radius.circular(10.0) //         <--- border radius here
+                ),
+              ), //
               child: ListTile(
                   title: Text('Search', style: bodyText()),
                   trailing: Icon(Icons.search),
@@ -175,23 +180,31 @@ class _CommunityRouteState extends State<CommunityRoute> {
   }
 
   Widget addAllPlaces(BuildContext context){
-    return ListTile(
-      title: Text( 'Add all placemarks from list',
-        style: bodyText(),
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(width: 0.5),
+        borderRadius: BorderRadius.all(
+          Radius.circular(10.0) //         <--- border radius here
+        ),
+      ), //       <--- BoxDecoration here
+      child: ListTile(
+        title: Text( 'Add all placemarks from list',
+          style: bodyText(),
+        ),
+        leading: Icon(Icons.add_circle_outline),
+        onTap: () {
+          for (int index=0; index < _placesDescriptions.length; index++) {
+            // add placemark method
+            String _id = widget._markerLoader.generateId();
+            print(_placesDescriptions[index]);
+            addMarkerFromCategory(_placesDescriptions[index], _id);
+          }
+          setState(() {
+            if_already_added = true;
+          });
+          netLoader.showToast("All placemarks added successfully");
+        },
       ),
-      leading: Icon(Icons.add_circle_outline),
-      onTap: () {
-        for (int index=0; index < _placesDescriptions.length; index++) {
-          // add placemark method
-          String _id = widget._markerLoader.generateId();
-          print(_placesDescriptions[index]);
-          addMarkerFromCategory(_placesDescriptions[index], _id);
-        }
-        setState(() {
-          if_already_added = true;
-        });
-        netLoader.showToast("All placemarks added successfully");
-      },
     );
   }
 
@@ -201,19 +214,20 @@ class _CommunityRouteState extends State<CommunityRoute> {
         height: 60.0,
         // icon change button
         child: Container(
+            decoration: buttonFieldStyle(),
             child: ConstrainedBox(
                 constraints: BoxConstraints.expand(),
                 child: FlatButton(
-                    onPressed: (){
-                      // Navigate to the icons screen using a named route.
-                      Navigator.pushNamed(context, '/community_icons');
-                    },
-                    padding: EdgeInsets.all(0.0),
-                    child: Image.asset(
-                      widget._markerLoader.iconsLoader.markerImageLocal[
-                        PrefService.get('community_icon')
-                      ]
-                    )
+                  onPressed: (){
+                    // Navigate to the icons screen using a named route.
+                    Navigator.pushNamed(context, '/community_icons');
+                  },
+                  padding: EdgeInsets.all(0.0),
+                  child: Image.asset(
+                    widget._markerLoader.iconsLoader.markerImageLocal[
+                      PrefService.get('community_icon')
+                    ]
+                  )
                 )
             )
         ),
@@ -328,63 +342,78 @@ class _CommunityRouteState extends State<CommunityRoute> {
       PrefService.getString('token') == ''
           ? textInfo('You need to log in to use community options.' ?? '') :
       SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile( title: Text( 'Community',
-                style: header(),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile( title: Text( 'Community',
+                  style: header(),
+                ),
+                leading: Icon(Icons.language),
               ),
-              leading: Icon(Icons.language),
-            ),
-            ListTile(
-              title: Text( 'Select range of search and category of places '
-                'to look up for places nearby in declared range.',
-                style: bodyText(),
+              ListTile(
+                title: Text( 'Select range of search and category of places '
+                  'to look up for places nearby in declared range.',
+                  style: bodyText(),
+                ),
               ),
-            ),
 
-            _buildMarkerRangeField(),
+              _buildMarkerRangeField(),
 
-            CheckboxListTile(
-              title: Text(
-                "Use approximated range",
-                style: bodyText(),
-              ),
-              value: _formCategoryData['approximate'],
-              onChanged: (value) {
-                setState(() {
-                  _formCategoryData['approximate'] = value;
-                });
-              },
-              controlAffinity: ListTileControlAffinity.trailing, //or leading
-            ),
+              SizedBox(height: 10),
 
-            // dropdown list
-            _buildCategoryTextFieldAndButton(),
-
-            _placesDescriptions.length != 0 && !if_already_added ?
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Expanded(
-                    child: addAllPlaces(context),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(width: 0.5),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10.0) //         <--- border radius here
                   ),
-                  SizedBox(
-                    width: 100,
-                    child: _iconChangeButton()
+                ), //       <--- BoxDecoration here
+                child: CheckboxListTile(
+                  title: Text(
+                    "Use approximated range",
+                    style: bodyText(),
                   ),
-                ],
-              )
-            : SizedBox.shrink(),
+                  value: _formCategoryData['approximate'],
+                  onChanged: (value) {
+                    setState(() {
+                      _formCategoryData['approximate'] = value;
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.trailing, //or leading
+                ),
+              ),
 
-            // places cards list
-            SizedBox(
-              height: 400, // fixed height
-              child: _listPlaces(context),
-            ),
-          ],
+              SizedBox(height: 10),
+
+              // dropdown list
+              _buildCategoryTextFieldAndButton(),
+
+              _placesDescriptions.length != 0 && !if_already_added ?
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: addAllPlaces(context),
+                    ),
+                    SizedBox(
+                      width: 100,
+                      child: _iconChangeButton()
+                    ),
+                  ],
+                )
+              : SizedBox.shrink(),
+
+              // places cards list
+              SizedBox(
+                height: 400, // fixed height
+                child: _listPlaces(context),
+              ),
+            ],
+          ),
         ),
       ),
 

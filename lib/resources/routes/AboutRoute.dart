@@ -15,97 +15,106 @@ class AboutRoute extends StatelessWidget {
     return Scaffold(
       appBar: appBar(),
       body:
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListView(
+          children: ListTile.divideTiles(
+            context: context,
+            tiles: [
+              ListTile(
+                title: Text(
+                  'About',
+                  style: header(),
+                ),
+                leading: Icon(Icons.info_outline),
+              ),
+              SizedBox(height: 10),
+              ListTile(
+                title: Text(
+                  'FlatMapp is an engineering project, aiming at creation of '
+                  'geolocation manager, triggering user-defined actions in '
+                  'declared geographical position.',
+                  style: bodyText(),
+                ),
+              ),
+              SizedBox(height: 20),
+              ListTile(
+                title: Text(
+                  'FlatMapp is free to use and is not gathering any personal data '
+                  'without user consent.',
+                  style: bodyText(),
+                ),
+              ),
+              SizedBox(height: 10),
 
-      // BODY
-      ListView(
-        children: ListTile.divideTiles(
-          context: context,
-          tiles: [
-            ListTile(
-              title: Text(
-                'About',
-                style: header(),
+              ListTile(
+                title: Linkify(
+                  text: "Application repository: \nhttps://github.com/AdamLewicki/flatmapp_app",
+                  onOpen: (link) async {
+                    if (await canLaunch(link.url)) {
+                      await launch(link.url);
+                    } else {
+                      // show message
+                      Fluttertoast.showToast(
+                        msg: 'Could not launch $link',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                      );
+                    }
+                  },
+                  style: bodyText(),
+                  linkStyle: TextStyle(color: Colors.green),
+                ),
+                trailing: Icon(Icons.link),
               ),
-              leading: Icon(Icons.info_outline),
-            ),
-            ListTile(
-              title: Text(
-                'FlatMapp is an engineering project, aiming at creation of '
-                'geolocation manager, triggering user-defined actions in '
-                'declared geographical position.',
-                style: bodyText(),
-              ),
-            ),
-            ListTile(
-              title: Text(
-                'FlatMapp is free to use and is not gathering any personal data '
-                'without user consent.',
-                style: bodyText(),
-              ),
-            ),
+              SizedBox(height: 10),
 
-            ListTile(
-              title: Linkify(
-                text: "Application repository: \nhttps://github.com/AdamLewicki/flatmapp_app",
-                onOpen: (link) async {
-                  if (await canLaunch(link.url)) {
-                    await launch(link.url);
-                  } else {
-                    // show message
-                    Fluttertoast.showToast(
-                      msg: 'Could not launch $link',
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                    );
-                  }
-                },
-                style: bodyText(),
-                linkStyle: TextStyle(color: Colors.green),
+              ListTile(
+                title: SelectableLinkify(
+                  text: "Server repository: \nhttps://github.com/AdamLewicki/flatmapp_server",
+                  onOpen: (link) async {
+                    if (await canLaunch(link.url)) {
+                      await launch(link.url);
+                    } else {
+                      // show message
+                      Fluttertoast.showToast(
+                        msg: 'Could not launch $link',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                      );
+                    }
+                  },
+                  style: bodyText(),
+                  linkStyle: TextStyle(color: Colors.green),
+                ),
+                trailing: Icon(Icons.link),
               ),
-              trailing: Icon(Icons.link),
-            ),
+              SizedBox(height: 10),
 
-            ListTile(
-              title: SelectableLinkify(
-                text: "Server repository: \nhttps://github.com/AdamLewicki/flatmapp_server",
-                onOpen: (link) async {
-                  if (await canLaunch(link.url)) {
-                    await launch(link.url);
-                  } else {
-                    // show message
-                    Fluttertoast.showToast(
-                      msg: 'Could not launch $link',
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                    );
-                  }
-                },
-                style: bodyText(),
-                linkStyle: TextStyle(color: Colors.green),
+              Container(
+                decoration: buttonFieldStyle(),
+                child: ListTile(
+                  title: Text(
+                    'Please rate our effort on Google Play Store!',
+                    style: bodyText(),
+                  ),
+                  trailing: Icon(Icons.star_border),
+                  onTap: (){
+                    // TODO go to Google Play app review
+                  },
+                ),
               ),
-              trailing: Icon(Icons.link),
-            ),
+              SizedBox(height: 10),
 
-
-            ListTile(
-              title: Text(
-                'Please rate our effort on Google Play Store!',
-                style: bodyText(),
+              ListTile(
+                title: Text(
+                  'FlatMapp Team @ 2020',
+                  style: footer(),
+                ),
               ),
-              trailing: Icon(Icons.star_border),
-              onTap: (){
-                // TODO go to Google Play app review
-              },
-            ),
-
-            ListTile(
-              title: Text(
-                'FlatMapp Team @ 2020',
-                style: footer(),
-              ),
-            ),
-          ],
-        ).toList(),
+            ],
+          ).toList(),
+        ),
       ),
 
       // SIDE PANEL MENU

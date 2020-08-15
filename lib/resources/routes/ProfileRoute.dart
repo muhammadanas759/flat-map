@@ -127,22 +127,41 @@ class _ProfileRouteState extends State<ProfileRoute> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Tooltip(
-          message: "Remove all markers",
-          child: ListTile(
-            title: Text('Active markers: #' + (
-              widget._markerLoader.getDescriptionsKeys().length - 1 > 0 ?
-              '${widget._markerLoader.getDescriptionsKeys().length - 1}' : '0'
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Expanded(
+              child: ListTile(
+                title: Text(
+                    'Active markers: #' + (
+                        widget._markerLoader.getDescriptionsKeys().length - 1 > 0 ?
+                        '${widget._markerLoader.getDescriptionsKeys().length - 1}' : '0'
+                    ),
+                    style: bodyText()
+                ),
+                leading: Icon(Icons.bookmark_border),
+              ),
             ),
-                style: bodyText()
+            Expanded(
+              child: Container(
+                decoration: buttonFieldStyle(),
+                child: Tooltip(
+                  message: "Remove all markers",
+                  child: ListTile(
+                    title: Text(
+                        'Remove all',
+                        style: bodyText()
+                    ),
+                    trailing: Icon(Icons.delete_forever),
+                    onTap: (){
+                      // remove all markers with alert dialog
+                      _raiseAlertDialogRemoveAllMarkers(context);
+                    },
+                  ),
+                ),
+              ),
             ),
-            leading: Icon(Icons.bookmark_border),
-            trailing: Icon(Icons.delete_forever),
-            onTap: (){
-              // remove all markers with alert dialog
-              _raiseAlertDialogRemoveAllMarkers(context);
-            },
-          ),
+          ],
         ),
 
         // list of active markers
@@ -358,7 +377,10 @@ class _ProfileRouteState extends State<ProfileRoute> {
     ];
     return Scaffold(
       appBar: appBar(),
-      body: _views.elementAt(_selectedIndex),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child:  _views.elementAt(_selectedIndex),
+      ),
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
 
