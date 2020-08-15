@@ -21,6 +21,8 @@ Incoming versions:
 
 APK file can be found under path: *build\app\outputs\apk\release\app-release.apk*
 
+Kotlin subprocess script can be found under path: *android/app/src/main/kotlin/deadsmond/net/flatmapp*
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

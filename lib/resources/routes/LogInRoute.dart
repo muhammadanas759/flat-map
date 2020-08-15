@@ -31,23 +31,27 @@ class _LogInRouteState extends State<LogInRoute> {
   };
   final focusPassword = FocusNode();
 
-  Widget _buildEmailField(context) {
+  Widget _buildUsernameField(context) {
     return TextFormField(
       style: bodyText(),
       key: Key('login_email_field_key'),
       decoration: textFieldStyle(
-          labelTextStr: "Email",
-          hintTextStr: "Your email goes here"
+          labelTextStr: "Username",
+          hintTextStr: "Your username goes here"
       ),
       validator: (String value) {
-        if (!RegExp(
-            r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-            .hasMatch(value)) {
-          return 'Invalid email format';
+//        if (!RegExp(
+//            r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+//            .hasMatch(value)) {
+        if (value == ''){
+          return 'Invalid username format';
         }
         return null;
       },
       onSaved: (String value) {
+        _formData['username'] = value;
+      },
+      onChanged: (String value) {
         _formData['username'] = value;
       },
       textInputAction: TextInputAction.next,
@@ -76,7 +80,8 @@ class _LogInRouteState extends State<LogInRoute> {
         _formData['password'] = value;
       },
       focusNode: focusPassword,
-      onFieldSubmitted: (v) {
+      onFieldSubmitted: (value) {
+        _formData['password'] = value;
         _submitForm();
       },
     );
@@ -129,65 +134,29 @@ class _LogInRouteState extends State<LogInRoute> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           SizedBox(height: 20),
-          _buildEmailField(context),
+          _buildUsernameField(context),
           SizedBox(height: 20),
           _buildPasswordField(),
-//            SizedBox(height: 20),
-//            Row(
-//              // mainAxisSize: MainAxisSize.min,
-//              children: <Widget>[
-////                textFieldButton(text: "Log in", onPressedMethod: _submitForm),
-////                SizedBox(width: 20),
-////                textFieldButton(text: "Sign up", onPressedMethod: _submitForm),
-////                SizedBox(width: 20),
-////                textFieldButton(
-////                  text: "Use as guest",
-////                  onPressedMethod: (){resetView(context);}
-////                ),
-//
-//                Expanded(
-//                  child: ListTile(
-//                    title: Text(
-//                      'Log in',
-//                      style: bodyText(),
-//                      textAlign: TextAlign.left,
-//                    ),
-//                    leading: Icon(Icons.input),
-//                    onTap: (){
-//                      _submitForm();
-//                    },
-//                  ),
-//                ),
-//                SizedBox(width: 20),
-//                Expanded(
-//                  child: ListTile(
-//                    title: Text(
-//                      'Register',
-//                      style: bodyText(),
-//                      textAlign: TextAlign.center,
-//                    ),
-//                    trailing: Icon(Icons.queue),
-//                    onTap: (){
-//                      // TODO register procedure
-//                    },
-//                  ),
-//                ),
-//                SizedBox(width: 20),
-//                Expanded(
-//                  child: ListTile(
-//                    title: Text(
-//                      'Use as guest',
-//                      style: bodyText(),
-//                      textAlign: TextAlign.right,
-//                    ),
-//                    trailing: Icon(Icons.cloud_off),
-//                    onTap: (){
-//                      Navigator.of(context).pop();
-//                    },
-//                  ),
-//                ),
-//              ],
-//            ),
+          SizedBox(height: 20),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(width: 0.5),
+              borderRadius: BorderRadius.all(
+                  Radius.circular(10.0) //         <--- border radius here
+              ),
+            ), //       <--- BoxDecoration here
+            child: ListTile(
+              title: Text(
+                'Log in',
+                style: bodyText(),
+                textAlign: TextAlign.left,
+              ),
+              leading: Icon(Icons.input),
+              onTap: (){
+                _submitForm();
+              },
+            ),
+          ),
         ],
       )
     );

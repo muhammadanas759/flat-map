@@ -36,20 +36,22 @@ class _RegisterRouteState extends State<RegisterRoute> {
     return TextFormField(
       style: bodyText(),
       decoration: textFieldStyle(
-          labelTextStr: "Email",
-          hintTextStr: "Your email goes here"
+          labelTextStr: "Username",
+          hintTextStr: "Your username goes here"
       ),
       validator: (String value) {
-        if (!RegExp(
-            r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-            .hasMatch(value))
-//        if (value == "")
-        {
-          return 'Invalid email format';
+//        if (!RegExp(
+//            r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+//            .hasMatch(value)) {
+        if (value == ''){
+          return 'Invalid username format';
         }
         return null;
       },
       onSaved: (String value) {
+        _formData['username'] = value;
+      },
+      onChanged: (String value) {
         _formData['username'] = value;
       },
       textInputAction: TextInputAction.next,
@@ -75,6 +77,9 @@ class _RegisterRouteState extends State<RegisterRoute> {
         return null;
       },
       onSaved: (String value) {
+        _formData['password'] = value;
+      },
+      onChanged: (String value) {
         _formData['password'] = value;
       },
       focusNode: focusPassword,
@@ -105,7 +110,9 @@ class _RegisterRouteState extends State<RegisterRoute> {
       onSaved: (String value) {
         _formData['password2'] = value;
       },
-
+      onChanged: (String value) {
+        _formData['password2'] = value;
+      },
       focusNode: focusPassword2,
       onFieldSubmitted: (v) {
         _formData['password2'] = v;
@@ -158,6 +165,26 @@ class _RegisterRouteState extends State<RegisterRoute> {
           _buildPasswordField(),
           SizedBox(height: 20),
           _buildPasswordField2(),
+          SizedBox(height: 20),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(width: 0.5),
+              borderRadius: BorderRadius.all(
+                Radius.circular(10.0) //         <--- border radius here
+              ),
+            ), //       <--- BoxDecoration here
+            child: ListTile(
+              title: Text(
+                'Register',
+                style: bodyText(),
+                textAlign: TextAlign.left,
+              ),
+              leading: Icon(Icons.queue),
+              onTap: (){
+                _submitForm();
+              },
+            ),
+          ),
         ],
       )
     );
