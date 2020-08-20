@@ -11,29 +11,44 @@ class CommunityIconsRoute extends StatelessWidget {
 
   final IconsLoader icons = IconsLoader();
 
-  Widget _iconsListView(BuildContext context) {
-    return ListView.builder(
+  Widget _iconCard(context, key){
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        height: 60.0,
+        // icon change button
+        child: Container(
+            decoration: buttonFieldStyle(),
+            child: ConstrainedBox(
+                constraints: BoxConstraints.expand(),
+                child: FlatButton(
+                  onPressed: (){
+                    // set selected marker id for map screen
+                    PrefService.setString('selected_icon', key);
+                    // Navigate back
+                    Navigator.pop(context);
+                  },
+                  padding: EdgeInsets.all(0.0),
+                  child: Image.asset(
+                      icons.markerImageLocal[key]
+                  ),
+                )
+            )
+        ),
+      ),
+    );
+  }
+
+  Widget _iconsGridView(BuildContext context) {
+    return GridView.builder(
+      gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4
+      ),
       itemCount: icons.markerImageLocal.length,
       itemBuilder: (context, index) {
-        String key = icons.markerImageLocal.keys.elementAt(index);
-        return Card( //                           <-- Card widget
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.white,
-              backgroundImage: AssetImage(icons.markerImageLocal[key]),
-            ),
-            title: Text(
-                key,
-                style: bodyText()
-            ),
-            trailing: Icon(Icons.keyboard_arrow_right),
-            onTap: () {
-              // set selected marker id for map screen
-              PrefService.setString('community_icon', key);
-              // Navigate back
-              Navigator.pop(context);
-            },
-          ),
+        return _iconCard(
+            context,
+            icons.markerImageLocal.keys.elementAt(index)
         );
       },
     );
@@ -45,7 +60,7 @@ class CommunityIconsRoute extends StatelessWidget {
       appBar: appBar(title: 'Choose icon for community'),
       body:
       // BODY
-      _iconsListView(context),
+      _iconsGridView(context),
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
     );
