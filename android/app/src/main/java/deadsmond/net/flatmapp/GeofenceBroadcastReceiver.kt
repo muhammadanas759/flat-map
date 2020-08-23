@@ -155,10 +155,44 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                             "wi-fi" ->
                             {
                                 Log.i(TAG, "called wifi action")
+                                if(action.params[0] != "")
+                                {
+                                    when(action.params[0]) {
+                                        "0" -> {
+                                            disableWIFI()
+                                        }
+                                        "1" -> {
+                                            enableWIFI()
+                                        }
+                                        else -> {
+                                            enableWIFI()
+                                        }
+                                    }
+                                }
                             }
                             "bluetooth" ->
                             {
                                 Log.i(TAG, "called bluetooth action")
+                                if(action.params[0] != "")
+                                {
+                                    when(action.params[0])
+                                    {
+                                        "0" ->
+                                        {
+                                            disableBluetooth()
+                                        }
+                                        "1" ->
+                                        {
+                                            enableBluetooth()
+                                        }
+                                        else ->
+                                        {
+                                            enableBluetooth()
+                                        }
+                                    }
+
+
+                                }
                             }
                             else ->
                             {
@@ -178,8 +212,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
         private fun setRingVolume(volume:Int)
         {
-            val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
             try{
+                val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
                 audioManager.setStreamVolume(AudioManager.STREAM_RING, volume, 0)
             }catch(e:SecurityException){
                 Log.i(TAG, e.toString())
@@ -189,8 +223,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
         private fun setAlarmVolume(volume:Int)
         {
-            val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
             try{
+                val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
                 audioManager.setStreamVolume(AudioManager.STREAM_ALARM, volume, 0)
             }catch(e:SecurityException){
                 Log.i(TAG, e.toString())
@@ -200,8 +234,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
         private fun setMusicVolume(volume:Int)
         {
-            val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
             try{
+                val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
                 audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0)
             }catch(e:SecurityException){
                 Log.i(TAG, e.toString())
@@ -210,29 +244,49 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
         private fun enableWIFI()
         {
-            val wifiManager: WifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
-            wifiManager.isWifiEnabled = true
+            try {
+                val wifiManager: WifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+                wifiManager.isWifiEnabled = true
+            }catch (e:Exception)
+            {
+                Log.i(TAG, e.toString())
+            }
         }
 
 
         private fun disableWIFI()
         {
-            val wifiManager: WifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
-            wifiManager.isWifiEnabled = false
+            try{
+                val wifiManager: WifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+                wifiManager.isWifiEnabled = false
+            }catch (e:Exception)
+            {
+                Log.i(TAG, e.toString())
+            }
         }
 
         private fun enableBluetooth()
         {
-            val bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-            if(!bluetoothAdapter.isEnabled)
-                bluetoothAdapter.enable()
+            try {
+                val bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+                if (!bluetoothAdapter.isEnabled)
+                    bluetoothAdapter.enable()
+            }catch (e:Exception)
+            {
+                Log.i(TAG, e.toString())
+            }
         }
 
         private fun disableBluetooth()
         {
-            val bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-            if(bluetoothAdapter.isEnabled)
-                bluetoothAdapter.disable()
+            try{
+                val bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+                if(bluetoothAdapter.isEnabled)
+                    bluetoothAdapter.disable()
+            }catch (e:Exception)
+            {
+                Log.i(TAG, e.toString())
+            }
         }
 
     }
