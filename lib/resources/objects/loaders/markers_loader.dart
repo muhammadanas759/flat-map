@@ -128,11 +128,6 @@ class MarkerLoader {
         addTemporaryMarker(_firstCoordinates);
         saveMarkers();
       }
-//      } catch (error) {
-//        print(error);
-//        print('could not load marker descriptions from local storage...');
-//        _repairFile(path);
-//      }
     } else {
       _repairFile(path);
       print('local storage did not exist, created new one...');
@@ -243,15 +238,12 @@ class MarkerLoader {
       icon: 'default',
       title: "",
       description: "",
-      range: 10,
+      range: 12,
       actions: [],
     );
   }
 
-  FlatMappMarker getMarkerDescription({String id}){
-    if(_markersDescriptions[id] == null){
-      getFilePath().then((path){_repairFile(path);});
-    }
+  FlatMappMarker getMarkerDescription(String id){
     return _markersDescriptions[id];
   }
 
@@ -309,13 +301,18 @@ class MarkerLoader {
   }
 
   Future<void> removeAllMarkers() async {
+    // copy temporary marker
+    FlatMappMarker _temp = getMarkerDescription("temporary");
+
     // from non-persistent storage
     _markersDescriptions.clear();
     googleMarkers.clear();
     zones.clear();
 
     // add temporary marker
-    addTemporaryMarker(_firstCoordinates);
+    addTemporaryMarker(LatLng(_temp.position_x, _temp.position_y));
+    _temp = null;
+
     saveMarkers();
   }
 }

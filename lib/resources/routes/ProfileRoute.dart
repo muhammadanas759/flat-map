@@ -41,7 +41,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
   // ==================  ALERT DIALOGS =========================================
   Future<void> raiseAlertDialogRemoveMarker(String id) async {
 
-    FlatMappMarker _marker = widget._markerLoader.getMarkerDescription(id: id);
+    FlatMappMarker _marker = widget._markerLoader.getMarkerDescription(id);
 
     return showDialog<void>(
       context: context,
@@ -212,7 +212,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
               } else {
                 // marker data for card
                 String _id = _markersDescriptionsKeys.elementAt(index);
-                FlatMappMarker _marker = widget._markerLoader.getMarkerDescription(id: _id);
+                FlatMappMarker _marker = widget._markerLoader.getMarkerDescription(_id);
 
                 // don't add temporary marker to the list
                 if(_id == 'temporary'){

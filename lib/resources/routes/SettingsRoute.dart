@@ -63,35 +63,22 @@ class _SettingsRouteState extends State<SettingsRoute> {
         SwitchPreference(
           'Enable map loading',
           'map_enabled',
-          defaultVal: false,
+          defaultVal: true,
         ),
-        SwitchPreference(
-          'Enable isolate subprocess',
-          'isolate_enabled',
-          defaultVal: false,
+        PreferenceText(
+          'Remove cloud backup markers',
+          leading: Icon(Icons.cloud_off),
+          onTap: () {
+            _netLoader.removeBackup();
+          },
         ),
-        PreferencePageLink(
-          'Delete data',
+        PreferenceText(
+          'Remove account',
           leading: Icon(Icons.remove_circle),
-          trailing: Icon(Icons.keyboard_arrow_right),
-          page: PreferencePage([
-            PreferenceTitle('Outside data', style: header()),
-            PreferenceText(
-              'Remove backup markers',
-              leading: Icon(Icons.cloud_off),
-              onTap: () {
-                _netLoader.removeBackup();
-              },
-            ),
-            PreferenceText(
-              'Remove account',
-              leading: Icon(Icons.remove_circle),
-              onTap: () {
-                // move to account removal form
-                Navigator.pushNamed(context, '/erase_account');
-              },
-            ),
-          ]),
+          onTap: () {
+            // move to account removal form
+            Navigator.pushNamed(context, '/erase_account');
+          },
         ),
       ], '!advanced_enabled'), // Use ! to get reversed boolean values
 

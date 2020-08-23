@@ -140,12 +140,11 @@ class _MapRouteState extends State<MapRoute> {
     try{
       return CameraPosition(
         target: widget._markerLoader.getGoogleMarker(
-            id: PrefService.getString('selected_marker')
+          id: PrefService.getString('selected_marker')
         ).position,
         zoom: _currentZoom,
       );
-    } on NoSuchMethodError catch(e){
-      print(e);
+    } on NoSuchMethodError {
       // try to repair the phantom marker bug by selecting temporary marker
       PrefService.setString('selected_marker', 'temporary');
       return CameraPosition(
@@ -181,7 +180,7 @@ class _MapRouteState extends State<MapRoute> {
   // -------------------- MARKER FORM WIDGET SECTION ---------------------------
   Future<void> raiseAlertDialogRemoveMarker(String id) async {
 
-    FlatMappMarker _marker = widget._markerLoader.getMarkerDescription(id: id);
+    FlatMappMarker _marker = widget._markerLoader.getMarkerDescription(id);
 
     return showDialog<void>(
       context: context,
@@ -224,7 +223,7 @@ class _MapRouteState extends State<MapRoute> {
 
   void updateFormData(){
     FlatMappMarker temp = widget._markerLoader.getMarkerDescription(
-      id: PrefService.getString('selected_marker')
+      PrefService.getString('selected_marker')
     );
     // set marker data to temporary marker
     if (temp != null){

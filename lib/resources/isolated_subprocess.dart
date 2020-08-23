@@ -1,3 +1,5 @@
+// TODO REMOVE THIS SCRIPT
+
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/trigger_loader.dart';
 

@@ -20,7 +20,7 @@ Future<void> main() async {
         range: 12.5
       );
 
-      FlatMappMarker _marker = markerLoader.getMarkerDescription(id: "test1");
+      FlatMappMarker _marker = markerLoader.getMarkerDescription("test1");
 
       expect(_marker.position_x, -43.0);
       expect(_marker.position_y, 170.0);
@@ -72,7 +72,7 @@ Future<void> main() async {
           range: 12.5
       );
 
-      FlatMappMarker _marker = markerLoader.getMarkerDescription(id: "test1");
+      FlatMappMarker _marker = markerLoader.getMarkerDescription("test1");
 
       expect(_marker.position_x, 70.0);
       expect(_marker.position_y, 20.0);
@@ -86,7 +86,7 @@ Future<void> main() async {
           range: 12.5
       );
 
-      _marker = markerLoader.getMarkerDescription(id: "test1");
+      _marker = markerLoader.getMarkerDescription("test1");
 
       expect(_marker.position_x, -73.0);
       expect(_marker.position_y, 120.0);

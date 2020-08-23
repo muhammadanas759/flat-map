@@ -126,7 +126,7 @@ class TriggerLoader {
   Future<void> getActivatedMarkers(LatLng user) async {
 
     _markerLoader.getDescriptionsKeys().forEach((String markerID){
-      FlatMappMarker markerData = _markerLoader.getMarkerDescription(id: markerID);
+      FlatMappMarker markerData = _markerLoader.getMarkerDescription(markerID);
       LatLng markerPos = LatLng(markerData.position_x, markerData.position_y);
       double range = markerData.range;
 

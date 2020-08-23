@@ -11,9 +11,9 @@ import 'package:flatmapp/resources/routes/CommunityIconsRoute.dart';
 import 'package:flatmapp/resources/routes/RegisterRoute.dart';
 import 'package:flatmapp/resources/routes/SettingsRoute.dart';
 import 'package:flatmapp/resources/routes/AboutRoute.dart';
+import 'package:flatmapp/resources/extensions.dart';
 
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
-import 'package:flatmapp/resources/isolated_subprocess.dart';
 
 import 'package:flutter/material.dart';
 import 'package:global_configuration/global_configuration.dart';
@@ -21,8 +21,8 @@ import 'package:preferences/preferences.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 
 import 'package:flutter/services.dart';
-// import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:geolocator/geolocator.dart';
 
 
 // store chosen starting route
@@ -30,6 +30,30 @@ String initScreen;
 
 // data loader
 final MarkerLoader _markerLoader = MarkerLoader();
+
+void _setUserPosition() async {
+  // move temporary marker to user's location
+//  Geolocator().isLocationServiceEnabled().then((status) async {
+//    if (status == false) {
+//      print("GEOLOCATION MODULE IS TURNED OFF");
+//    } else {
+//      Position _position = await Geolocator()
+//          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+//      _markerLoader.addTemporaryMarker(_position.toLatLng());
+//      // send position to garbage collector
+//      _position = null;
+//    }
+//  });
+
+  bool _geoEnabled = await Geolocator().isLocationServiceEnabled();
+  if (_geoEnabled) {
+    Position _position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    _markerLoader.addTemporaryMarker(_position.toLatLng());
+    // send position to garbage collector
+    _position = null;
+  }
+}
 
 // =============================================================================
 // ----------------------- MAIN PROCESS SECTION --------------------------------
@@ -44,13 +68,12 @@ main() async {
     'start_page': 'Map',
     'ui_theme': 'light',
     "cloud_enabled": false,
+    "map_enabled": true,
     'selected_marker': 'temporary',
     'selected_action': 0,
     'selected_icon': 'default',
-    'isolate_port': 0,
     'token': '',
     'login': '',
-    'isolate_enabled': false,
     'isolate_spawned': false,
     'community_icon': 'default'
   });
@@ -75,22 +98,7 @@ main() async {
     Permission.location.request();
   }
 
-  if(PrefService.getBool('isolate_enabled') && !PrefService.getBool('isolate_spawned')){
-
-    triggerEntryPoint(null);
-
-    // initiate isolated subprocess
-    // ignore: unused_local_variable
-//    final isolate = await FlutterIsolate.spawn(
-//        triggerEntryPoint,
-//        ""
-//    );
-//
-//    PrefService.setString('isolate_port', isolate.controlPort.toString());
-//    print("isolate control port: " + isolate.controlPort.toString());
-
-    // PrefService.setBool('isolate_spawned', true);
-  }
+  _setUserPosition();
 
   // disable device orientation changes and force portrait
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
@@ -104,22 +112,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context){
-
-    // initiate isolated subprocess TODO remove or use test section
-    // ignore: unused_local_variable
-//    final isolate = await FlutterIsolate.spawn(
-//        triggerEntryPoint,
-//        context
-//    );
-//
-//    PrefService.setString('isolate_port', isolate.controlPort.toString());
-//    print("isolate control port: " + isolate.controlPort.toString());
-
     return new DynamicTheme(
       defaultBrightness: Brightness.light,
       data: (brightness) => new ThemeData(
-          brightness: brightness,
-          accentColor: Colors.green
+        brightness: brightness,
+        accentColor: Colors.green
       ),
       themedWidgetBuilder: (context, theme){
         return MaterialApp(
