@@ -5,19 +5,12 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
-import android.media.RingtoneManager
-import android.net.Uri
 import android.net.wifi.WifiManager
-import android.nfc.Tag
 import android.os.AsyncTask
 import android.os.Build
-import android.provider.Settings
 import android.util.JsonReader
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.core.R
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
 import java.io.*
@@ -52,6 +45,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
         override fun doInBackground(vararg p0: List<Geofence>?): Void? {
             try {
+                var notificationHelper:NotificationHelper = NotificationHelper(context)
                 var markerPath = context.filesDir.path + "/../app_flutter"
                 var markerFile = File(markerPath + "/marker_storage.json")
                 var markerMap = HashMap<String, ArrayList<Action>>()
@@ -146,6 +140,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                         {
                             "notification" ->
                             {
+                                notificationHelper.sendHighPriorityNotification(action.params[0], action.params[1], null)
                                 Log.i(TAG, "called notification action")
                             }
                             "mute" ->
