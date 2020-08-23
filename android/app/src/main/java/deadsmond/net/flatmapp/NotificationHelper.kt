@@ -8,9 +8,10 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Color
+import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.core.R
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import java.util.*
@@ -19,13 +20,14 @@ import java.util.*
 class NotificationHelper(base: Context?) : ContextWrapper(base) {
     private val CHANNEL_NAME = "High priority channel"
     private val CHANNEL_ID = "com.example.notifications$CHANNEL_NAME"
+    private val DEFAULT_NOTIFICATION_SOUND: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private fun createChannels() {
         val notificationChannel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
         notificationChannel.enableLights(true)
         notificationChannel.enableVibration(true)
-        notificationChannel.description = "this is the description of the channel."
+        notificationChannel.description = "Notifications sent as FlatMapp triggered action."
         notificationChannel.lightColor = Color.RED
         notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -37,7 +39,8 @@ class NotificationHelper(base: Context?) : ContextWrapper(base) {
         val pendingIntent = PendingIntent.getActivity(this, 267, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val notification = NotificationCompat.Builder(this, CHANNEL_ID) //                .setContentTitle(title)
                 //                .setContentText(body)
-                .setSmallIcon(R.drawable.notification_icon_background)
+                .setSmallIcon(deadsmond.net.flatmapp.R.drawable.ic_notifications_active_black_24dp)
+                .setSound(DEFAULT_NOTIFICATION_SOUND)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setStyle(NotificationCompat.BigTextStyle().setSummaryText("summary").setBigContentTitle(title).bigText(body))
                 .setContentIntent(pendingIntent)
