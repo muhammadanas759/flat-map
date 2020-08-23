@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/loaders/geofence_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/icons_loader.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_action.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_marker.dart';
@@ -212,12 +213,17 @@ class MarkerLoader {
         strokeColor: Colors.redAccent,
       );
     });
+
+    if(id != "temporary") {
+      GeofenceLoader.addGeofence("$id;${position.latitude};${position.longitude};${range}");
+    }
   }
 
   void removeMarker({String id}){
     _markersDescriptions.remove(id);
     googleMarkers.remove(id);
     zones.remove(id);
+    if(id != "temporary") GeofenceLoader.deleteGeofence(id);
 
     if(PrefService.get('selected_marker') == id){
       PrefService.setString('selected_marker', 'temporary');

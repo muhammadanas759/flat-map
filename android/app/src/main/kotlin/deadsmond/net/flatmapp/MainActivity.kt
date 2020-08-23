@@ -2,6 +2,7 @@ package deadsmond.net.flatmapp
 
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build
 import androidx.annotation.NonNull
 import com.google.android.gms.location.Geofence
@@ -23,6 +24,7 @@ class MainActivity: FlutterActivity() {
   var CHANNEL:String = "com.flatmapp.messeges"
   private lateinit var geofencingClient: GeofencingClient
   private lateinit var geofenceHelper: GeofenceHelper
+  private var receiver = GeofenceBroadcastReceiver()
 
   override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
     super.configureFlutterEngine(flutterEngine)
@@ -30,16 +32,17 @@ class MainActivity: FlutterActivity() {
     geofencingClient = LocationServices.getGeofencingClient(this)
     geofenceHelper = GeofenceHelper(this)
     //addGeofence("[#148b5]", 52.4669, 16.9270, 100.0F)
-//    flatMappServiceIntent = Intent(this, FlatMappService::class.java)
+//    flatMappServiceIntent = Intent(this, GeofenceBroadcastReceiver::class.java)
     MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
       call, result ->
       when(call.method){
 //        "startService" -> {
-//          startService()
+////          startService()
+//
 //          result.success("Service start was called!")
 //        }
 //        "stopService" -> {
-//          stopService(flatMappServiceIntent)
+////          stopService(flatMappServiceIntent)
 //          result.success("Service stop was called!")
 //        }
         "addMarker" ->

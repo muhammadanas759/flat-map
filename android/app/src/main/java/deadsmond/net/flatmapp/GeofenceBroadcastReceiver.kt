@@ -1,14 +1,20 @@
 package deadsmond.net.flatmapp
 
+import android.bluetooth.BluetoothAdapter
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.media.AudioManager
 import android.media.RingtoneManager
 import android.net.Uri
+import android.net.wifi.WifiManager
 import android.nfc.Tag
 import android.os.AsyncTask
+import android.os.Build
+import android.provider.Settings
 import android.util.JsonReader
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.R
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -19,8 +25,6 @@ import java.lang.Exception
 
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
     val TAG = "GeofenceBroadcast"
-    val DEFAULT_NOTIFICATION_SOUND: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-    var activatedNow = mutableSetOf<String>()
 
     override fun onReceive(context: Context, intent: Intent) {
         // This method is called when the BroadcastReceiver is receiving an Intent broadcast.
@@ -138,6 +142,34 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                     for(action:Action in markerMap[marker]!!)
                     {
                         Log.i(TAG, action.name)
+                        when(action.name)
+                        {
+                            "notification" ->
+                            {
+                                Log.i(TAG, "called notification action")
+                            }
+                            "mute" ->
+                            {
+                                Log.i(TAG, "called mute action")
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                                    setRingVolume(0)
+                                    setAlarmVolume(0)
+                                    setMusicVolume(0)
+                                }
+                            }
+                            "wi-fi" ->
+                            {
+                                Log.i(TAG, "called wifi action")
+                            }
+                            "bluetooth" ->
+                            {
+                                Log.i(TAG, "called bluetooth action")
+                            }
+                            else ->
+                            {
+                                Log.i(TAG, "called not implemented action ${action.name}")
+                            }
+                        }
                     }
                 }
             }catch(e:Exception)
@@ -148,6 +180,65 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         }
 
 
+        @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+        private fun setRingVolume(volume:Int)
+        {
+            val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            try{
+                audioManager.setStreamVolume(AudioManager.STREAM_RING, volume, 0)
+            }catch(e:SecurityException){
+                Log.i(TAG, e.toString())
+            }
+        }
+
+        @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+        private fun setAlarmVolume(volume:Int)
+        {
+            val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            try{
+                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, volume, 0)
+            }catch(e:SecurityException){
+                Log.i(TAG, e.toString())
+            }
+        }
+
+        @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+        private fun setMusicVolume(volume:Int)
+        {
+            val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            try{
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0)
+            }catch(e:SecurityException){
+                Log.i(TAG, e.toString())
+            }
+        }
+
+        private fun enableWIFI()
+        {
+            val wifiManager: WifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            wifiManager.isWifiEnabled = true
+        }
+
+
+        private fun disableWIFI()
+        {
+            val wifiManager: WifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            wifiManager.isWifiEnabled = false
+        }
+
+        private fun enableBluetooth()
+        {
+            val bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+            if(!bluetoothAdapter.isEnabled)
+                bluetoothAdapter.enable()
+        }
+
+        private fun disableBluetooth()
+        {
+            val bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+            if(bluetoothAdapter.isEnabled)
+                bluetoothAdapter.disable()
+        }
 
     }
 
