@@ -140,7 +140,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                         {
                             "notification" ->
                             {
-                                notificationHelper.sendHighPriorityNotification(action.params[0], action.params[1], null)
+                                notificationHelper.sendHighPriorityNotification(action.params[0], action.params[1], MainActivity::class.java)
                                 Log.i(TAG, "called notification action")
                             }
                             "mute" ->
