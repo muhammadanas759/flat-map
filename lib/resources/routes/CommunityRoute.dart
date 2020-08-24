@@ -121,20 +121,20 @@ class _CommunityRouteState extends State<CommunityRoute> {
                 ),
               ), //
               child: ListTile(
-                  title: Text('Search', style: bodyText()),
-                  trailing: Icon(Icons.search),
-                  onTap: (){
-                    if (_formKey.currentState.validate()) {
-                      if (_last_search != _formCategoryData['category']){
-                        // send request
-                        sendCategoryRequest();
-                      } else {
-                        netLoader.showToast("No new category to search");
-                      }
+                title: Text('Search', style: bodyText()),
+                trailing: Icon(Icons.search),
+                onTap: (){
+                  if (_formKey.currentState.validate()) {
+                    if (_last_search != _formCategoryData['category']){
+                      // send request
+                      sendCategoryRequest();
                     } else {
-                      print("field didn't pass validation");
+                      netLoader.showToast("No new category to search");
                     }
+                  } else {
+                    print("field didn't pass validation");
                   }
+                }
               ),
             ),
           ),

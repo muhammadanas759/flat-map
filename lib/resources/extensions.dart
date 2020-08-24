@@ -18,3 +18,10 @@ extension TranslatePosition on Position {
     return LatLng(this.latitude, this.longitude);
   }
 }
+
+// add extension to translate string to boolean
+extension TranslateString on String {
+  bool toBool() {
+    return this.toLowerCase() == 'true';
+  }
+}

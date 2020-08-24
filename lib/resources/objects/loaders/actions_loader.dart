@@ -4,10 +4,11 @@
 class ActionsLoader {
 
   final Map<String, String> actionsMap = {
-    'mute':             'assets/actions/speaker.png',
+    'sound':            'assets/actions/speaker.png',
     'bluetooth':        'assets/actions/bluetooth.png',
     'notification':     'assets/actions/notification.png',
-    'wi-fi':            'assets/actions/wi-fi.png'
+    'wi-fi':            'assets/actions/wi-fi.png',
+    'flight':           'assets/actions/sleep-mode.png',
   };
 
   final Map<String, String> unusedActionsMap = {
@@ -36,7 +37,6 @@ class ActionsLoader {
     'shutdown':         'assets/actions/shutdown.png',
     'sim-card':         'assets/actions/sim-card.png',
     'skype':            'assets/actions/skype.png',
-    'sleep-mode':       'assets/actions/sleep-mode.png',
     'sms':              'assets/actions/sms.png',
     'tiktok':           'assets/actions/tiktok.png',
     'usb-connector':    'assets/actions/usb-connector.png',

@@ -10,6 +10,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:preferences/preferences.dart';
 
 
+bool toBool(String str, bool _default) {
+  return str == "" || str == null ? _default : str.toLowerCase() == 'true';
+}
+
+double toDouble(String str, double _default) {
+  return str == "" || str == null ? _default : double.parse(str);
+}
+
 // ignore: must_be_immutable
 class ActionParametersRoute extends StatefulWidget {
   // data loader
@@ -35,47 +43,138 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
   final focusParam2 = FocusNode();
 
   //----------------------- ACTION PARAMETERS WIDGETS --------------------------
-  Widget _muteWidget(){
+
+  Widget _soundWidget(){
     return Form(
       key: _formKey,
       child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height: 20),
-            TextFormField(
-              style: bodyText(),
-              decoration: textFieldStyle(
-                  labelTextStr: "Mute parameter 1"
+            CheckboxListTile(
+              title: Text(
+                'Change alarm sound volume',
+                style: bodyText(),
               ),
-              initialValue: _formData['param1'].toString(),
-              onSaved: (String value) {
-                _formData['param1'] = value;
+              value: toBool(_formData['param1'], false),
+              onChanged: (bool value) {
+                setState(() {
+                  _formData['param1'] = value.toString();
+                });
               },
-              textInputAction: TextInputAction.next,
-              onFieldSubmitted: (value) {
-                _formData['param1'] = value;
-                FocusScope.of(context).requestFocus(focusParam2);
-              },
-              focusNode: focusParam1,
+              secondary: const Icon(Icons.alarm),
             ),
+            Slider(
+              value: toDouble(_formData['param2'], 0),
+              activeColor: Colors.green,
+              inactiveColor: Colors.grey,
+              min: 0,
+              max: 100,
+              divisions: 100,
+              label: _formData['param2'],
+              onChanged: (double value) {
+                setState(() {
+                  _formData['param2'] = value.round().toString();
+                });
+              },
+            ),
+
             SizedBox(height: 20),
-            TextFormField(
-              style: bodyText(),
-              decoration: textFieldStyle(
-                  labelTextStr: "Mute parameter 2"
+
+            CheckboxListTile(
+              title: Text(
+                'Change ringtone sound volume',
+                style: bodyText(),
               ),
-              initialValue: _formData['param2'].toString(),
-              onSaved: (String value) {
-                _formData['param2'] = value;
+              value: toBool(_formData['param3'], false),
+              onChanged: (bool value) {
+                setState(() {
+                  _formData['param3'] = value.toString();
+                });
               },
-              textInputAction: TextInputAction.next,
-              onFieldSubmitted: (value) {
-                _formData['param2'] = value;
-                focusParam2.unfocus();
+              secondary: const Icon(Icons.ring_volume),
+            ),
+            Slider(
+              value: toDouble(_formData['param4'], 0),
+              activeColor: Colors.green,
+              inactiveColor: Colors.grey,
+              min: 0,
+              max: 100,
+              divisions: 100,
+              label: _formData['param4'],
+              onChanged: (double value) {
+                setState(() {
+                  _formData['param4'] = value.round().toString();
+                });
               },
-              focusNode: focusParam2,
+            ),
+
+            SizedBox(height: 20),
+
+            CheckboxListTile(
+              title: Text(
+                'Change multimedia sound volume',
+                style: bodyText(),
+              ),
+              value: toBool(_formData['param5'], false),
+              onChanged: (bool value) {
+                setState(() {
+                  _formData['param5'] = value.toString();
+                });
+              },
+              secondary: const Icon(Icons.music_note),
+            ),
+            Slider(
+              value: toDouble(_formData['param6'], 0),
+              activeColor: Colors.green,
+              inactiveColor: Colors.grey,
+              min: 0,
+              max: 100,
+              divisions: 100,
+              label: _formData['param6'],
+              onChanged: (double value) {
+                setState(() {
+                  _formData['param6'] = value.round().toString();
+                });
+              },
             ),
           ]
+      ),
+    );
+  }
+
+  Widget _wifiWidget(){
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          RadioListTile(
+            title: Text(
+              'Turn wi-fi on',
+              style: bodyText(),
+            ),
+            value: true,
+            groupValue: toBool(_formData['param1'], true),
+            onChanged: (value) {
+              setState(() {
+                _formData['param1'] = value.toString();
+              });
+            },
+          ),
+          RadioListTile(
+            title: Text(
+              'Turn wi-fi off',
+              style: bodyText(),
+            ),
+            value: false,
+            groupValue: toBool(_formData['param1'], true),
+            onChanged: (value) {
+              setState(() {
+                _formData['param1'] = value.toString();
+              });
+            },
+          ),
+        ]
       ),
     );
   }
@@ -86,40 +185,66 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
       child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height: 20),
-            TextFormField(
-              style: bodyText(),
-              decoration: textFieldStyle(
-                  labelTextStr: "Bluetooth parameter 1"
+            RadioListTile(
+              title: Text(
+                'Turn bluetooth on',
+                style: bodyText(),
               ),
-              initialValue: _formData['param1'].toString(),
-              onSaved: (String value) {
-                _formData['param1'] = value;
+              value: true,
+              groupValue: toBool(_formData['param1'], true),
+              onChanged: (value) {
+                setState(() {
+                  _formData['param1'] = value.toString();
+                });
               },
-              textInputAction: TextInputAction.next,
-              onFieldSubmitted: (value) {
-                _formData['param1'] = value;
-                FocusScope.of(context).requestFocus(focusParam2);
-              },
-              focusNode: focusParam1,
             ),
-            SizedBox(height: 20),
-            TextFormField(
-              style: bodyText(),
-              decoration: textFieldStyle(
-                  labelTextStr: "Bluetooth parameter 2"
+            RadioListTile(
+              title: Text(
+                'Turn bluetooth off',
+                style: bodyText(),
               ),
-              initialValue: _formData['param2'].toString(),
-              onSaved: (String value) {
-                _formData['param2'] = value;
+              value: false,
+              groupValue: toBool(_formData['param1'], true),
+              onChanged: (value) {
+                setState(() {
+                  _formData['param1'] = value.toString();
+                });
               },
-              textInputAction: TextInputAction.next,
-              onFieldSubmitted: (value) {
-                _formData['param2'] = value;
-                focusParam2.unfocus();
-              },
-              focusNode: focusParam2,
             ),
+//
+//            TextFormField(
+//              style: bodyText(),
+//              decoration: textFieldStyle(
+//                  labelTextStr: "Bluetooth parameter 1"
+//              ),
+//              initialValue: _formData['param1'].toString(),
+//              onSaved: (String value) {
+//                _formData['param1'] = value;
+//              },
+//              textInputAction: TextInputAction.next,
+//              onFieldSubmitted: (value) {
+//                _formData['param1'] = value;
+//                FocusScope.of(context).requestFocus(focusParam2);
+//              },
+//              focusNode: focusParam1,
+//            ),
+//            SizedBox(height: 20),
+//            TextFormField(
+//              style: bodyText(),
+//              decoration: textFieldStyle(
+//                  labelTextStr: "Bluetooth parameter 2"
+//              ),
+//              initialValue: _formData['param2'].toString(),
+//              onSaved: (String value) {
+//                _formData['param2'] = value;
+//              },
+//              textInputAction: TextInputAction.next,
+//              onFieldSubmitted: (value) {
+//                _formData['param2'] = value;
+//                focusParam2.unfocus();
+//              },
+//              focusNode: focusParam2,
+//            ),
           ]
       ),
     );
@@ -131,7 +256,6 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          SizedBox(height: 20),
           TextFormField(
             style: bodyText(),
             decoration: textFieldStyle(
@@ -170,48 +294,13 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
     );
   }
 
-  Widget _wifiWidget(){
-    return Form(
-      key: _formKey,
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(height: 20),
-            TextFormField(
-              style: bodyText(),
-              decoration: textFieldStyle(
-                  labelTextStr: "WIFI parameter 1"
-              ),
-              initialValue: _formData['param1'].toString(),
-              onSaved: (String value) {
-                _formData['param1'] = value;
-              },
-              textInputAction: TextInputAction.next,
-              onFieldSubmitted: (value) {
-                _formData['param1'] = value;
-                FocusScope.of(context).requestFocus(focusParam2);
-              },
-              focusNode: focusParam1,
-            ),
-            SizedBox(height: 20),
-            TextFormField(
-              style: bodyText(),
-              decoration: textFieldStyle(
-                  labelTextStr: "WIFI parameter 2"
-              ),
-              initialValue: _formData['param2'].toString(),
-              onSaved: (String value) {
-                _formData['param2'] = value;
-              },
-              textInputAction: TextInputAction.next,
-              onFieldSubmitted: (value) {
-                _formData['param2'] = value;
-                focusParam2.unfocus();
-              },
-              focusNode: focusParam2,
-            ),
-          ]
+  Widget _noWidget(BuildContext context, String actionname){
+    return ListTile(
+      title: Text(
+        'Action "$actionname" has no parameters',
+        style: bodyText()
       ),
+      trailing: Icon(Icons.not_interested),
     );
   }
 
@@ -219,8 +308,8 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
   Widget _actionSelectorWidget(BuildContext context, String selected_widget){
     // TODO this section has to match completely with actions_loader.actionsMap!
     switch(selected_widget){
-      case "mute":
-        return _muteWidget();
+      case "sound":
+        return _soundWidget();
         break;
       case "bluetooth":
         return _bluetoothWidget();
@@ -230,6 +319,8 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
         break;
       case "wi-fi":
         return _wifiWidget();
+      case "flight":
+        return _noWidget(context, "Flight mode");
         break;
       default:
         return ListTile(
@@ -264,15 +355,17 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
 
   Future<void> _submitForm() async {
     // validate form
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
+    if(_formKey.currentState != null){
+      if (_formKey.currentState.validate()) {
+        _formKey.currentState.save();
 
-      // save data from form to action
-      widget._markerLoader.setMarkerActionSingle(
-          marker_id: PrefService.getString('selected_marker'),
-          action_position: PrefService.getInt('selected_action'),
-          action_parameters: _formData
-      );
+        // save data from form to action
+        widget._markerLoader.setMarkerActionSingle(
+            marker_id: PrefService.getString('selected_marker'),
+            action_position: PrefService.getInt('selected_action'),
+            action_parameters: _formData
+        );
+      }
     }
   }
 
