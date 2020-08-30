@@ -49,6 +49,7 @@ class _ActionsRouteState extends State<ActionsRoute> {
                   'param3': '',
                   'param4': '',
                   'param5': '',
+                  'param6': '',
                 })
               );
               // TODO Navigate to parameters after adding action
