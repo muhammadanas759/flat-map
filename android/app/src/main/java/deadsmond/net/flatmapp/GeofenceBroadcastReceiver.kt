@@ -15,6 +15,7 @@ import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
 import java.io.*
 import java.lang.Exception
+import kotlin.math.roundToInt
 
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
     val TAG = "GeofenceBroadcast"
@@ -22,14 +23,14 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         // This method is called when the BroadcastReceiver is receiving an Intent broadcast.
         Log.d(TAG, "onReceive: Geofence triggered.")
-        var geofencingEvent:GeofencingEvent = GeofencingEvent.fromIntent(intent)
+        val geofencingEvent:GeofencingEvent = GeofencingEvent.fromIntent(intent)
         if(geofencingEvent.hasError())
         {
             Log.d(TAG, "onReceive: Error receiving geofence event...")
             return
         }
 
-        var pendingResult:PendingResult = goAsync()
+        val pendingResult:PendingResult = goAsync()
         Task(pendingResult, intent, context).execute(geofencingEvent.triggeringGeofences)
 
     }
@@ -45,39 +46,39 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
         override fun doInBackground(vararg p0: List<Geofence>?): Void? {
             try {
-                var notificationHelper:NotificationHelper = NotificationHelper(context)
-                var markerPath = context.filesDir.path + "/../app_flutter"
-                var markerFile = File(markerPath + "/marker_storage.json")
-                var markerMap = HashMap<String, ArrayList<Action>>()
+                val notificationHelper = NotificationHelper(context)
+                val markerPath = context.filesDir.path + "/../app_flutter"
+                val markerFile = File(markerPath + "/marker_storage.json")
+                val markerMap = HashMap<String, ArrayList<Action>>()
                 Log.i(TAG, markerFile.readText())
                 for(geofence:Geofence in p0[0]!!)
                 {
-                    var geo:Geofence = geofence
+                    val geo:Geofence = geofence
                     markerMap[geo.requestId] = ArrayList()
                 }
                 val targetStream: InputStream = FileInputStream(markerFile)
                 val reader = JsonReader(InputStreamReader(targetStream, "UTF-8"))
                 reader.beginObject()
                 while (reader.hasNext()) {
-                    var name = reader.nextName()
+                    val name = reader.nextName()
                     if (name in markerMap.keys) {
                         reader.beginObject()
                         while (reader.hasNext()) {
-                            var name2 = reader.nextName()
+                            val name2 = reader.nextName()
                             when (name2) {
                                 "actions" -> {
                                     reader.beginArray()
                                     while (reader.hasNext()) {
-                                        var action = Action()
+                                        val action = Action()
                                         reader.beginObject()
                                         while (reader.hasNext()) {
-                                            var name3 = reader.nextName()
+                                            val name3 = reader.nextName()
                                             when (name3) {
                                                 "Action_Name" -> {
                                                     action.name = reader.nextString()
                                                 }
                                                 "action_detail" -> {
-                                                    var params = reader.nextString()
+                                                    val params = reader.nextString()
                                                     val paramsStream: InputStream = ByteArrayInputStream(params.toByteArray(Charsets.UTF_8))
                                                     val paramReader = JsonReader(InputStreamReader(paramsStream, "UTF-8"))
                                                     paramReader.beginObject()
@@ -98,6 +99,9 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                                                             }
                                                             "param5" -> {
                                                                 action.params[4] = paramReader.nextString()
+                                                            }
+                                                            "param6" -> {
+                                                                action.params[5] = paramReader.nextString()
                                                             }
                                                             else -> {
                                                                 paramReader.skipValue()
@@ -147,9 +151,24 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                             {
                                 Log.i(TAG, "called mute action")
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                                    setRingVolume(0)
-                                    setAlarmVolume(0)
-                                    setMusicVolume(0)
+                                    if(action.params[0] == "true")
+                                        try{
+                                            setAlarmVolume(action.params[1].toDouble())
+                                        }catch(e:Exception) {
+                                         Log.i(TAG, e.toString())
+                                        }
+                                    if(action.params[2] == "true")
+                                        try{
+                                        setRingVolume(action.params[3].toDouble())
+                                        }catch(e:Exception) {
+                                            Log.i(TAG, e.toString())
+                                        }
+                                    if(action.params[4] == "true")
+                                        try{
+                                        setMusicVolume(action.params[5].toDouble())
+                                        }catch(e:Exception) {
+                                            Log.i(TAG, e.toString())
+                                        }
                                 }
                             }
                             "wi-fi" ->
@@ -158,10 +177,10 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                                 if(action.params[0] != "")
                                 {
                                     when(action.params[0]) {
-                                        "0" -> {
+                                        "false" -> {
                                             disableWIFI()
                                         }
-                                        "1" -> {
+                                        "true" -> {
                                             enableWIFI()
                                         }
                                         else -> {
@@ -177,11 +196,11 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                                 {
                                     when(action.params[0])
                                     {
-                                        "0" ->
+                                        "false" ->
                                         {
                                             disableBluetooth()
                                         }
-                                        "1" ->
+                                        "true" ->
                                         {
                                             enableBluetooth()
                                         }
@@ -190,8 +209,6 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                                             enableBluetooth()
                                         }
                                     }
-
-
                                 }
                             }
                             else ->
@@ -210,33 +227,39 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
 
         @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-        private fun setRingVolume(volume:Int)
+        private fun setRingVolume(volume:Double)
         {
             try{
                 val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-                audioManager.setStreamVolume(AudioManager.STREAM_RING, volume, 0)
+                val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING)
+                val vol = volume / 100.0 * maxVolume.toDouble()
+                        audioManager.setStreamVolume(AudioManager.STREAM_RING, vol.roundToInt(), 0)
             }catch(e:SecurityException){
                 Log.i(TAG, e.toString())
             }
         }
 
         @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-        private fun setAlarmVolume(volume:Int)
+        private fun setAlarmVolume(volume:Double)
         {
             try{
                 val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, volume, 0)
+                val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
+                val vol = volume / 100.0 * maxVolume.toDouble()
+                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, vol.roundToInt(), 0)
             }catch(e:SecurityException){
                 Log.i(TAG, e.toString())
             }
         }
 
         @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-        private fun setMusicVolume(volume:Int)
+        private fun setMusicVolume(volume:Double)
         {
             try{
                 val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0)
+                val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+                val vol = volume / 100.0 * maxVolume.toDouble()
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, vol.roundToInt(), 0)
             }catch(e:SecurityException){
                 Log.i(TAG, e.toString())
             }
@@ -245,7 +268,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         private fun enableWIFI()
         {
             try {
-                val wifiManager: WifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+                val wifiManager: WifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
                 wifiManager.isWifiEnabled = true
             }catch (e:Exception)
             {
@@ -257,7 +280,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         private fun disableWIFI()
         {
             try{
-                val wifiManager: WifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+                val wifiManager: WifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
                 wifiManager.isWifiEnabled = false
             }catch (e:Exception)
             {

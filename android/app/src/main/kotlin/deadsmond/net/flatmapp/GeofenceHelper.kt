@@ -19,7 +19,7 @@ class GeofenceHelper(base: Context) : ContextWrapper(base) {
     fun getGeofencingRequest(geofence: Geofence): GeofencingRequest {
         return GeofencingRequest.Builder()
                 .addGeofence(geofence)
-                .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+                .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL)
                 .build()
     }
 
@@ -38,7 +38,7 @@ class GeofenceHelper(base: Context) : ContextWrapper(base) {
             return pendingIntent
         }
 
-        var intent = Intent(this, GeofenceBroadcastReceiver::class.java)
+        val intent = Intent(this, GeofenceBroadcastReceiver::class.java)
         pendingIntent = PendingIntent.getBroadcast(this, 3251, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         return pendingIntent
@@ -47,7 +47,7 @@ class GeofenceHelper(base: Context) : ContextWrapper(base) {
     fun getErrorString(e: Exception):String{
         if(e is ApiException)
         {
-            var apiException: ApiException = e as ApiException
+            val apiException: ApiException = e
             when(apiException.statusCode){
                 GeofenceStatusCodes.GEOFENCE_NOT_AVAILABLE -> {
                     return "GEOFENCE_NOT_AVAILABLE"
