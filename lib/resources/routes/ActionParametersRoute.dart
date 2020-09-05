@@ -39,8 +39,33 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
 
   final _formKey = GlobalKey<FormState>();
   Map<String, dynamic> _formData = {};
+  Map<String, dynamic> _defaultFormData = {
+    'sound': {
+      'param1': 'false',
+      'param2': '0',
+      'param3': 'false',
+      'param4': '0',
+      'param5': 'false',
+      'param6': '0',
+    },
+    'bluetooth': {
+      'param1': 'true'
+    },
+    'wi-fi': {
+      'param1': 'true'
+    },
+  };
+
   final focusParam1 = FocusNode();
   final focusParam2 = FocusNode();
+
+  void _walidateDefaultValues(){
+    _defaultFormData[_selected_action.name].forEach((key, value) {
+      if(_formData[key] == ""){
+        _formData[key] = value;
+      }
+    });
+  }
 
   //----------------------- ACTION PARAMETERS WIDGETS --------------------------
 
@@ -307,6 +332,9 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
   // ---------------------------------------------------------------------------
   Widget _actionSelectorWidget(BuildContext context, String selected_widget){
     // TODO this section has to match completely with actions_loader.actionsMap!
+    // TODO validation has to match with switch!
+    _walidateDefaultValues();
+
     switch(selected_widget){
       case "sound":
         return _soundWidget();
@@ -358,6 +386,8 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
     if(_formKey.currentState != null){
       if (_formKey.currentState.validate()) {
         _formKey.currentState.save();
+
+        print(_formData);
 
         // save data from form to action
         widget._markerLoader.setMarkerActionSingle(
