@@ -60,11 +60,13 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
   final focusParam2 = FocusNode();
 
   void _walidateDefaultValues(){
-    _defaultFormData[_selected_action.name].forEach((key, value) {
-      if(_formData[key] == ""){
-        _formData[key] = value;
-      }
-    });
+    if(_defaultFormData.containsKey(_selected_action.name)){
+      _defaultFormData[_selected_action.name].forEach((key, value) {
+        if(_formData[key] == ""){
+          _formData[key] = value;
+        }
+      });
+    }
   }
 
   //----------------------- ACTION PARAMETERS WIDGETS --------------------------
