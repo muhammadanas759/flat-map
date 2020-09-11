@@ -45,7 +45,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "deadsmond.net.flatmapp"
+        applicationId "flatmapp.project"
         minSdkVersion 25
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
@@ -64,7 +64,7 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
 }

@@ -17,7 +17,7 @@ import 'package:connectivity/connectivity.dart';
 
 class NetLoader {
 
-  String _serverURL = GlobalConfiguration().getString("server_url");
+  String _serverURL = GlobalConfiguration().getValue("server_url");
 
   Future<bool> checkNetworkConnection() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -93,6 +93,7 @@ class NetLoader {
   Future<http.Response> _putToServer2({
     String endpoint, Map<String, dynamic> content
   }) async {
+
     http.Response _response = await http.post(
         _serverURL + endpoint,
         headers: {
