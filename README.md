@@ -6,16 +6,16 @@ Previous versions:
 * **v0.1:** google map example created
 * **v0.2:** basic interface introduced
 * **v0.3:** basic geotrigger
-
-**Current version:**
 * **v0.4:** parallel processing introduced
-
-Incoming versions:
-
 * **v0.5:** server communication
 * **v0.6:** beta release
 * **v0.7:** multiple marker category adding system
+
+**Current version:**
 * **v0.8:** interface enhancements
+
+Incoming versions:
+
 * **v0.9:** rebuild, new actions package
 * **v1.0:** full release
 
@@ -47,6 +47,53 @@ samples, guidance on mobile development, and a full API reference.
 * install packages required for this project with `flutter pub get`, run in **your project folder!**
 
     Any additional packages should be implemented in **pubspec.yaml file** and installed as written above.
+
+## Release app
+
+[Flutter Dev deployment](https://flutter.dev/docs/deployment/android)
+
+### Build an app bundle
+
+From the command line:
+
+Run `flutter build appbundle`
+
+(Running flutter build defaults to a release build.)
+
+The release bundle for your app is created at <app dir>/build/app/outputs/bundle/release/app.aab.
+
+### Build light APK
+
+From the command line:
+
+Run `flutter build apk --split-per-abi`
+
+(The flutter build command defaults to --release.)
+
+This command results in three APK files:
+
+* *app dir/build/app/outputs/apk/release/app-armeabi-v7a-release.apk*
+* *app dir/build/app/outputs/apk/release/app-arm64-v8a-release.apk*
+* *app dir/build/app/outputs/apk/release/app-x86_64-release.apk*
+
+### Build fat APK
+
+From the command line:
+
+Run `flutter build apk`
+
+(The flutter build command defaults to --release.)
+
+This command results in one APK file:
+
+* *app dir/build/app/outputs/apk/release/app-release.apk*
+
+### Updating the version number
+
+The default version number of the app is 1.0.0.
+To update it, navigate to the `pubspec.yaml` file and update the following line:
+
+`version: 1.0.0+1`
 
 ## Tutorials
 

@@ -436,23 +436,25 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.green,
         onTap: (int index) {
-          switch(index){
-            case 0:
+          setState(() {
+            switch(index){
+              case 0:
               // save changes from form
-              _submitForm();
-              // return to previous screen
-              Navigator.of(context).pop();
-              // show message
-              Fluttertoast.showToast(
-                msg: "Action parameters saved",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-              );
-              break;
-            case 1:
-              Navigator.of(context).pop();
-              break;
-          }
+                _submitForm();
+                // return to previous screen
+                Navigator.of(context).pop();
+                // show message
+                Fluttertoast.showToast(
+                  msg: "Action parameters saved",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                );
+                break;
+              case 1:
+                Navigator.of(context).pop();
+                break;
+            }
+          });
         }
       ),
     );
