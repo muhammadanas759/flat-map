@@ -41,12 +41,16 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
   Map<String, dynamic> _formData = {};
   Map<String, dynamic> _defaultFormData = {
     'sound': {
-      'param1': 'false',
-      'param2': '0',
-      'param3': 'false',
-      'param4': '0',
-      'param5': 'false',
-      'param6': '0',
+      'param1': '0',
+    },
+    'change alarm volume': {
+      'param1': '0',
+    },
+    'change ringtone volume': {
+      'param1': '0',
+    },
+    'change multimedia volume': {
+      'param1': '0',
     },
     'bluetooth': {
       'param1': 'true'
@@ -71,100 +75,77 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
 
   //----------------------- ACTION PARAMETERS WIDGETS --------------------------
 
-  Widget _soundWidget(){
+  Widget _soundAlarmWidget(){
     return Form(
       key: _formKey,
       child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            CheckboxListTile(
-              title: Text(
-                'Change alarm sound volume',
-                style: bodyText(),
-              ),
-              value: toBool(_formData['param1'], false),
-              onChanged: (bool value) {
-                setState(() {
-                  _formData['param1'] = value.toString();
-                });
-              },
-              secondary: const Icon(Icons.alarm),
-            ),
-            Slider(
-              value: toDouble(_formData['param2'], 0),
-              activeColor: Colors.green,
-              inactiveColor: Colors.grey,
-              min: 0,
-              max: 100,
-              divisions: 100,
-              label: _formData['param2'],
-              onChanged: (double value) {
-                setState(() {
-                  _formData['param2'] = value.round().toString();
-                });
-              },
-            ),
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Slider(
+            value: toDouble(_formData['param1'], 0),
+            activeColor: Colors.green,
+            inactiveColor: Colors.grey,
+            min: 0,
+            max: 100,
+            divisions: 100,
+            label: _formData['param1'],
+            onChanged: (double value) {
+              setState(() {
+                _formData['param1'] = value.round().toString();
+              });
+            },
+          ),
+        ]
+      ),
+    );
+  }
 
-            SizedBox(height: 20),
+  Widget _soundRingtoneWidget(){
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Slider(
+            value: toDouble(_formData['param1'], 0),
+            activeColor: Colors.green,
+            inactiveColor: Colors.grey,
+            min: 0,
+            max: 100,
+            divisions: 100,
+            label: _formData['param1'],
+            onChanged: (double value) {
+              setState(() {
+                _formData['param1'] = value.round().toString();
+              });
+            },
+          ),
+        ]
+      ),
+    );
+  }
 
-            CheckboxListTile(
-              title: Text(
-                'Change ringtone sound volume',
-                style: bodyText(),
-              ),
-              value: toBool(_formData['param3'], false),
-              onChanged: (bool value) {
-                setState(() {
-                  _formData['param3'] = value.toString();
-                });
-              },
-              secondary: const Icon(Icons.ring_volume),
-            ),
-            Slider(
-              value: toDouble(_formData['param4'], 0),
-              activeColor: Colors.green,
-              inactiveColor: Colors.grey,
-              min: 0,
-              max: 100,
-              divisions: 100,
-              label: _formData['param4'],
-              onChanged: (double value) {
-                setState(() {
-                  _formData['param4'] = value.round().toString();
-                });
-              },
-            ),
-
-            SizedBox(height: 20),
-
-            CheckboxListTile(
-              title: Text(
-                'Change multimedia sound volume',
-                style: bodyText(),
-              ),
-              value: toBool(_formData['param5'], false),
-              onChanged: (bool value) {
-                setState(() {
-                  _formData['param5'] = value.toString();
-                });
-              },
-              secondary: const Icon(Icons.music_note),
-            ),
-            Slider(
-              value: toDouble(_formData['param6'], 0),
-              activeColor: Colors.green,
-              inactiveColor: Colors.grey,
-              min: 0,
-              max: 100,
-              divisions: 100,
-              label: _formData['param6'],
-              onChanged: (double value) {
-                setState(() {
-                  _formData['param6'] = value.round().toString();
-                });
-              },
-            ),
-          ]
+  Widget _soundMultimediaWidget(){
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Slider(
+            value: toDouble(_formData['param1'], 0),
+            activeColor: Colors.green,
+            inactiveColor: Colors.grey,
+            min: 0,
+            max: 100,
+            divisions: 100,
+            label: _formData['param1'],
+            onChanged: (double value) {
+              setState(() {
+                _formData['param1'] = value.round().toString();
+              });
+            },
+          ),
+        ]
       ),
     );
   }
@@ -338,8 +319,14 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
     _walidateDefaultValues();
 
     switch(selected_widget){
-      case "sound":
-        return _soundWidget();
+      case "change alarm volume":
+        return _soundAlarmWidget();
+        break;
+      case "change ringtone volume":
+        return _soundRingtoneWidget();
+        break;
+      case "change multimedia volume":
+        return _soundMultimediaWidget();
         break;
       case "bluetooth":
         return _bluetoothWidget();
@@ -351,6 +338,9 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
         return _wifiWidget();
       case "flight":
         return _noWidget(context, "Flight mode");
+        break;
+      case "mute":
+        return _noWidget(context, "Mute");
         break;
       default:
         return ListTile(

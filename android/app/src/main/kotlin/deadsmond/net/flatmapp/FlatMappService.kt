@@ -52,7 +52,7 @@ class FlatMappService : IntentService("FlatMapp Service"){
         showLog("onStartCommand")
         var builder:NotificationCompat.Builder = NotificationCompat.Builder(this, "FlatMappMesseges")
                 .setContentText("FlatMapp Service")
-                .setContentTitle("FlutMapp service is running in the background")
+                .setContentTitle("FlatMapp service is running in the background")
                 .setSmallIcon(R.drawable.ic_popup_reminder)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
 
