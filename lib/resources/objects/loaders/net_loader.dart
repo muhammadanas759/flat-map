@@ -17,7 +17,7 @@ import 'package:connectivity/connectivity.dart';
 
 class NetLoader {
 
-  String _serverURL = GlobalConfiguration().getValue("server_url");
+  String _serverURL = GlobalConfiguration().getString("server_url");
 
   Future<bool> checkNetworkConnection() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
