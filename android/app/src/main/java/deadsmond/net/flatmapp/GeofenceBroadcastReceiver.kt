@@ -147,30 +147,30 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                                 notificationHelper.sendHighPriorityNotification(action.params[0], action.params[1], MainActivity::class.java)
                                 Log.i(TAG, "called notification action. Title: ${action.params[0]}, body: ${action.params[1]}")
                             }
-                            "sound" ->
-                            {
-                                Log.i(TAG, "called mute action")
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                                    if(action.params[0] == "true")
-                                        try{
-                                            setAlarmVolume(action.params[1].toDouble())
-                                        }catch(e:Exception) {
-                                         Log.i(TAG, e.toString())
-                                        }
-                                    if(action.params[2] == "true")
-                                        try{
-                                        setRingVolume(action.params[3].toDouble())
-                                        }catch(e:Exception) {
-                                            Log.i(TAG, e.toString())
-                                        }
-                                    if(action.params[4] == "true")
-                                        try{
-                                        setMusicVolume(action.params[5].toDouble())
-                                        }catch(e:Exception) {
-                                            Log.i(TAG, e.toString())
-                                        }
-                                }
-                            }
+//                            "sound" ->
+//                            {
+//                                Log.i(TAG, "called mute action")
+//                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+//                                    if(action.params[0] == "true")
+//                                        try{
+//                                            setAlarmVolume(action.params[1].toDouble())
+//                                        }catch(e:Exception) {
+//                                         Log.i(TAG, e.toString())
+//                                        }
+//                                    if(action.params[2] == "true")
+//                                        try{
+//                                        setRingVolume(action.params[3].toDouble())
+//                                        }catch(e:Exception) {
+//                                            Log.i(TAG, e.toString())
+//                                        }
+//                                    if(action.params[4] == "true")
+//                                        try{
+//                                        setMusicVolume(action.params[5].toDouble())
+//                                        }catch(e:Exception) {
+//                                            Log.i(TAG, e.toString())
+//                                        }
+//                                }
+//                            }
                             "wi-fi" ->
                             {
                                 Log.i(TAG, "called wifi action")
@@ -211,6 +211,42 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                                     }
                                 }
                             }
+                            "mute" ->
+                            {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                                    mutePhone()
+                                }
+                            }
+                            "change alarm volume" ->
+                            {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                                    try{
+                                        setAlarmVolume(action.params[0].toDouble())
+                                    }catch(e:Exception) {
+                                        Log.i(TAG, e.toString())
+                                    }
+                                }
+                            }
+                            "change ringtone volume" ->
+                            {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                                    try{
+                                        setRingVolume(action.params[0].toDouble())
+                                    }catch(e:Exception) {
+                                        Log.i(TAG, e.toString())
+                                    }
+                                }
+                            }
+                            "change multimedia volume" ->
+                            {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                                    try{
+                                        setMusicVolume(action.params[0].toDouble())
+                                    }catch(e:Exception) {
+                                        Log.i(TAG, e.toString())
+                                    }
+                                }
+                            }
                             else ->
                             {
                                 Log.i(TAG, "called not implemented action ${action.name}")
@@ -223,6 +259,18 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 e.printStackTrace()
             }
             return null
+        }
+
+
+        @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+        private fun mutePhone()
+        {
+            try{
+                val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                audioManager.setStreamVolume(AudioManager.STREAM_RING, 0, 0)
+            }catch(e:SecurityException){
+                Log.i(TAG, e.toString())
+            }
         }
 
 
