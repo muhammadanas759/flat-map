@@ -8,10 +8,17 @@ TextStyle header(){
   );
 }
 
-TextStyle bodyText(){
-  return TextStyle(
-    fontSize: 16,
-  );
+TextStyle bodyText({Color color}){
+  if(color!=null){
+    return TextStyle(
+      fontSize: 16,
+      color: color
+    );
+  } else {
+    return TextStyle(
+      fontSize: 16,
+    );
+  }
 }
 
 TextStyle footer(){

@@ -7,7 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
 
 
-class CommunityIconsRoute extends StatelessWidget {
+// ignore: must_be_immutable
+class CommunityIconsRoute extends StatefulWidget {
+  @override
+  _CommunityIconsRouteState createState() => _CommunityIconsRouteState();
+}
+
+class _CommunityIconsRouteState extends State<CommunityIconsRoute> {
 
   final IconsLoader icons = IconsLoader();
 
@@ -23,34 +29,21 @@ class CommunityIconsRoute extends StatelessWidget {
                 constraints: BoxConstraints.expand(),
                 child: FlatButton(
                   onPressed: (){
-                    // set selected marker id for map screen
-                    PrefService.setString('selected_icon', key);
-                    // Navigate back
-                    Navigator.pop(context);
+                    setState(() {
+                      // set selected marker id for map screen
+                      PrefService.setString('community_icon', key);
+                      // Navigate back
+                      Navigator.pop(context);
+                    });
                   },
                   padding: EdgeInsets.all(0.0),
                   child: Image.asset(
-                      icons.markerImageLocal[key]
+                    icons.markerImageLocal[key]
                   ),
                 )
             )
         ),
       ),
-    );
-  }
-
-  Widget _iconsGridView(BuildContext context) {
-    return GridView.builder(
-      gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4
-      ),
-      itemCount: icons.markerImageLocal.length,
-      itemBuilder: (context, index) {
-        return _iconCard(
-            context,
-            icons.markerImageLocal.keys.elementAt(index)
-        );
-      },
     );
   }
 
@@ -60,7 +53,18 @@ class CommunityIconsRoute extends StatelessWidget {
       appBar: appBar(title: 'Choose icon for community'),
       body:
       // BODY
-      _iconsGridView(context),
+      GridView.builder(
+        gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4
+        ),
+        itemCount: icons.markerImageLocal.length,
+        itemBuilder: (context, index) {
+          return _iconCard(
+            context,
+            icons.markerImageLocal.keys.elementAt(index)
+          );
+        },
+      ),
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
     );

@@ -616,10 +616,12 @@ class _MapRouteState extends State<MapRoute> {
               child: Container(
                 decoration: BoxDecoration(
                   color: _preset == 'dark' ? Colors.black : Colors.white,
+                  // color: Colors.green,
                   borderRadius: radius,
                 ),
                 child: Center(
                   child: Text(
+                    // PrefService.getString('selected_marker') == 'temporary' ? "Tap here to add marker" : "Tap here to modify marker",
                     "Tap here to open form",
                     style: bodyText(),
                   ),

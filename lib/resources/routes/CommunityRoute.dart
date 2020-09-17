@@ -318,7 +318,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
                   padding: EdgeInsets.all(0.0),
                   child: Image.asset(
                     widget._markerLoader.iconsLoader.markerImageLocal[
-                      PrefService.get('community_icon')
+                      PrefService.getString('community_icon')
                     ]
                   )
                 )
