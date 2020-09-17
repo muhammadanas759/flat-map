@@ -42,7 +42,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
     'range': 100,
     'position_x': 0,
     'position_y': 0,
-    'approximate': false,
+    'approximate': true,
     'language': 'EN',
   };
 
@@ -143,6 +143,30 @@ class _CommunityRouteState extends State<CommunityRoute> {
           },
         ),
       ],
+    );
+  }
+
+  Widget _buildApproximatedCheckboxField(){
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(width: 0.5),
+        borderRadius: BorderRadius.all(
+            Radius.circular(10.0) //         <--- border radius here
+        ),
+      ), //       <--- BoxDecoration here
+      child: CheckboxListTile(
+        title: Text(
+          'Use "Google nearby" range',
+          style: bodyText(),
+        ),
+        value: _formCategoryData['approximate'],
+        onChanged: (value) {
+          setState(() {
+            _formCategoryData['approximate'] = value;
+          });
+        },
+        controlAffinity: ListTileControlAffinity.trailing, //or leading
+      ),
     );
   }
 
@@ -429,31 +453,9 @@ class _CommunityRouteState extends State<CommunityRoute> {
                 ),
               ),
 
-              _buildMarkerRangeField(),
-
-              SizedBox(height: 10),
-
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(width: 0.5),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10.0) //         <--- border radius here
-                  ),
-                ), //       <--- BoxDecoration here
-                child: CheckboxListTile(
-                  title: Text(
-                    'Use "Google nearby" range',
-                    style: bodyText(),
-                  ),
-                  value: _formCategoryData['approximate'],
-                  onChanged: (value) {
-                    setState(() {
-                      _formCategoryData['approximate'] = value;
-                    });
-                  },
-                  controlAffinity: ListTileControlAffinity.trailing, //or leading
-                ),
-              ),
+              //_buildMarkerRangeField(), TODO repair marker range widget
+              // SizedBox(height: 10),
+              // _buildApproximatedCheckboxField(),
 
               SizedBox(height: 10),
 
