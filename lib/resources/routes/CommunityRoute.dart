@@ -442,7 +442,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
                 ), //       <--- BoxDecoration here
                 child: CheckboxListTile(
                   title: Text(
-                    "Use approximated range",
+                    'Use "Google nearby" range',
                     style: bodyText(),
                   ),
                   value: _formCategoryData['approximate'],
