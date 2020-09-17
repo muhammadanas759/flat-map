@@ -19,6 +19,36 @@ ListTile sideBarMenuElement(context, String name, Icon icon, String route){
   );
 }
 
+ListTile sideBarMenuElementLogin(context, String name, Icon icon, String route){
+  return ListTile(
+    leading: icon,
+    title: Text(
+      name,
+      style: (PrefService.getString('token') == '') ?
+        sideBarMenuStyleGrey() : sideBarMenuStyle(),
+    ),
+    onTap: () {
+      if(PrefService.getString('token') == ''){
+        // Then close the drawer
+        Navigator.pop(context);
+        // go to login page
+        Navigator.pushNamed(context, '/login');
+        // show message
+        Fluttertoast.showToast(
+          msg: "You need to log in to use " + name,
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
+      } else {
+        // Then close the drawer
+        Navigator.pop(context);
+        // Navigate to the profile screen using a named route.
+        Navigator.pushNamed(context, route);
+      }
+    },
+  );
+}
+
 Drawer sideBarMenu(context){
   return Drawer(
     // Add a ListView to the drawer. This ensures the user can scroll
@@ -41,36 +71,37 @@ Drawer sideBarMenu(context){
           ),
         ),
         sideBarMenuElement(context, 'Map', Icon(Icons.location_on), '/map'),
-        sideBarMenuElement(context, 'Profile', Icon(Icons.account_circle), '/profile'),
+        sideBarMenuElement(context, 'Markers', Icon(Icons.bookmark_border), '/markers'),
+        sideBarMenuElementLogin(context, 'Profile', Icon(Icons.account_circle), '/profile'),
+        sideBarMenuElementLogin(context, 'Community', Icon(Icons.language), '/community'),
 
-        // community tile
-        ListTile(
-          leading: Icon(Icons.language),
-          title: Text(
-            'Community',
-            style: (PrefService.getString('token') == '') ?
-                    sideBarMenuStyleGrey() : sideBarMenuStyle(),
-          ),
-          onTap: () {
-            if(PrefService.getString('token') == ''){
-              // Then close the drawer
-              Navigator.pop(context);
-              // go to login page
-              Navigator.pushNamed(context, '/login');
-              // show message
-              Fluttertoast.showToast(
-                msg: "You need to log in to use Community",
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.BOTTOM,
-              );
-            } else {
-              // Then close the drawer
-              Navigator.pop(context);
-              // Navigate to the profile screen using a named route.
-              Navigator.pushNamed(context, '/community');
-            }
-          },
-        ),
+        // ListTile(
+        //   leading: Icon(Icons.language),
+        //   title: Text(
+        //     'Community',
+        //     style: (PrefService.getString('token') == '') ?
+        //             sideBarMenuStyleGrey() : sideBarMenuStyle(),
+        //   ),
+        //   onTap: () {
+        //     if(PrefService.getString('token') == ''){
+        //       // Then close the drawer
+        //       Navigator.pop(context);
+        //       // go to login page
+        //       Navigator.pushNamed(context, '/login');
+        //       // show message
+        //       Fluttertoast.showToast(
+        //         msg: "You need to log in to use Community",
+        //         toastLength: Toast.LENGTH_LONG,
+        //         gravity: ToastGravity.BOTTOM,
+        //       );
+        //     } else {
+        //       // Then close the drawer
+        //       Navigator.pop(context);
+        //       // Navigate to the profile screen using a named route.
+        //       Navigator.pushNamed(context, '/community');
+        //     }
+        //   },
+        // ),
 
         sideBarMenuElement(context, 'Settings', Icon(Icons.settings_applications), '/settings'),
         sideBarMenuElement(context, 'About', Icon(Icons.info_outline), '/about'),

@@ -25,7 +25,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
         'Start Page',
         'start_page',
         defaultVal: 'Map',
-        values: ['Map', 'Profile', 'Community', 'Settings', 'About'],
+        values: ['Map', 'Markers', 'Profile', 'Community', 'Settings', 'About'],
       ),
 
       PreferenceTitle('Personalization', style: header()),

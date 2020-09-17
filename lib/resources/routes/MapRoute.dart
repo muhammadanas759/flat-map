@@ -459,7 +459,9 @@ class _MapRouteState extends State<MapRoute> {
                     color: (PrefService.get('ui_theme') == 'dark') ? Colors.white : Colors.black,
                     tooltip: 'Close form',
                     onPressed: (){
-                      _closePanel(context);
+                      setState(() {
+                        _closePanel(context);
+                      });
                     },
                   ),
                 ),
@@ -622,7 +624,7 @@ class _MapRouteState extends State<MapRoute> {
                 child: Center(
                   child: Text(
                     // PrefService.getString('selected_marker') == 'temporary' ? "Tap here to add marker" : "Tap here to modify marker",
-                    "Tap here to open form",
+                    "Tap here to create or modify markers",
                     style: bodyText(),
                   ),
                 ),
@@ -631,6 +633,20 @@ class _MapRouteState extends State<MapRoute> {
           ),
         ],
       ),
+
+      // // floating button to open form
+      // floatingActionButton: new Visibility(
+      //   visible: _slidingFormController.isPanelClosed,
+      //   child: new FloatingActionButton(
+      //     onPressed: () {
+      //       _mapLongPress(LatLng(0, 0));
+      //     },
+      //     tooltip: 'Add or modify markers',
+      //     child: new Icon(Icons.add),
+      //     elevation: 8.0,
+      //   ),
+      // ),
+
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),
     );

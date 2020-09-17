@@ -4,6 +4,7 @@ import 'package:flatmapp/resources/routes/ChangePasswordRoute.dart';
 import 'package:flatmapp/resources/routes/EraseAccountRoute.dart';
 import 'package:flatmapp/resources/routes/LogInRoute.dart';
 import 'package:flatmapp/resources/routes/MapRoute.dart';
+import 'package:flatmapp/resources/routes/MarkersRoute.dart';
 import 'package:flatmapp/resources/routes/ProfileRoute.dart';
 import 'package:flatmapp/resources/routes/IconsRoute.dart';
 import 'package:flatmapp/resources/routes/CommunityRoute.dart';
@@ -82,6 +83,7 @@ main() async {
   initScreen = PrefService.getString('start_page');
   switch(initScreen) {
     case 'Map': {initScreen = '/map';} break;
+    case 'Markers': {initScreen = '/markers';} break;
     case 'Profile': {initScreen = '/profile';} break;
     case 'Community': {initScreen = '/community';} break;
     case 'Settings': {initScreen = '/settings';} break;
@@ -138,7 +140,8 @@ class MyApp extends StatelessWidget {
             '/change_password': (context) => ChangePasswordRoute(),
             '/erase_account': (context) => EraseAccountRoute(),
             '/register': (context) => RegisterRoute(),
-            '/action_parameters': (context) => ActionParametersRoute(_markerLoader)
+            '/action_parameters': (context) => ActionParametersRoute(_markerLoader),
+            '/markers': (context) => MarkersRoute(_markerLoader),
           },
         );
       }
