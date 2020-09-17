@@ -25,3 +25,11 @@ extension TranslateString on String {
     return this.toLowerCase() == 'true';
   }
 }
+
+bool toBool(String str, bool _default) {
+  return str == "" || str == null ? _default : str.toLowerCase() == 'true';
+}
+
+double toDouble(String str, double _default) {
+  return str == "" || str == null ? _default : double.parse(str);
+}

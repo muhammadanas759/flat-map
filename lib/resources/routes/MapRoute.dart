@@ -1,19 +1,20 @@
+import 'package:flatmapp/resources/extensions.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_marker.dart';
 import 'package:flatmapp/resources/objects/widgets/actions_list.dart';
-
-import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter/services.dart';
 
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:preferences/preferences.dart';
 
 import 'dart:async';
+
 
 
 // ignore: must_be_immutable
@@ -40,6 +41,7 @@ class _MapRouteState extends State<MapRoute> {
   // form controllers:
   TextEditingController _formTitleController = new TextEditingController();
   TextEditingController _formDescriptionController = new TextEditingController();
+  TextEditingController _formRangeController = new TextEditingController();
 
   // map style preset
   final String _preset = PrefService.getString('ui_theme');
@@ -58,7 +60,7 @@ class _MapRouteState extends State<MapRoute> {
     'id': "temporary",
     'title': "temporary marker",
     'description': "marker presenting chosen position",
-    'range': 10,
+    'range': 12,
     'actions': [],
   };
 
@@ -235,6 +237,7 @@ class _MapRouteState extends State<MapRoute> {
     // update controllers
     _formTitleController.text = _formMarkerData['title'].toString();
     _formDescriptionController.text = _formMarkerData['description'].toString();
+    _formRangeController.text = _formMarkerData['range'].toString();
   }
 
   Widget _iconChangeButton(){
@@ -315,11 +318,65 @@ class _MapRouteState extends State<MapRoute> {
   }
 
   Widget _buildMarkerRangeField() {
-    return CounterFormField(
-      initialValue: widget._markerLoader.getRange(
-          id: PrefService.getString('selected_marker')
-      ).toInt(),
-      onSaved: (value) => this._formMarkerData['range'] = value,
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Tooltip(
+          message: "marker range in meters",
+          child: new Text(
+            "Range:",
+            style: bodyText(),
+          ),
+        ),
+        SizedBox(height: 20),
+        IconButton(
+          icon: Icon(Icons.remove),
+          onPressed: () {
+            if (_formMarkerData['range'] > 1) {
+              setState(() {
+                _formMarkerData['range'] -= 1;
+                _formRangeController.text = _formMarkerData['range'].toString();
+              });
+            }
+          },
+        ),
+        SizedBox(
+          width: 100,
+          child: TextFormField(
+            controller: _formRangeController,
+            onSaved: (String input) {
+              _formMarkerData['range'] = toDouble(input, 12);
+            },
+            onFieldSubmitted: (String value) {
+              _formMarkerData['range'] = value;
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              // labelText: state.value.toString(),
+            ),
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              WhitelistingTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(7),
+            ],
+          ),
+        ),
+        Text(
+          " m",
+          style: bodyText(),
+        ),
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () {
+            setState(() {
+              _formMarkerData['range'] += 1;
+              _formRangeController.text = _formMarkerData['range'].toString();
+            });
+          },
+        ),
+      ],
     );
   }
 

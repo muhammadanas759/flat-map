@@ -2,10 +2,10 @@ import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
-import 'package:flatmapp/resources/objects/widgets/text_form_fields.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:preferences/preference_service.dart';
 import 'package:geolocator/geolocator.dart';
@@ -30,6 +30,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
 
   // form controllers:
   TextEditingController _categoryController = new TextEditingController();
+  TextEditingController _formRangeController = new TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -44,6 +45,18 @@ class _CommunityRouteState extends State<CommunityRoute> {
     'approximate': false,
     'language': 'EN',
   };
+
+  @override
+  void initState() {
+    super.initState();
+
+    // update form
+    updateFormData();
+  }
+
+  void updateFormData(){
+    _formRangeController.text = _formCategoryData['range'].toString();
+  }
 
   Future<LatLng> getCurrentPosition() async {
     Position temp = await _geolocator.getCurrentPosition();
@@ -71,9 +84,65 @@ class _CommunityRouteState extends State<CommunityRoute> {
   }
 
   Widget _buildMarkerRangeField() {
-    return CounterFormField(
-      initialValue: _formCategoryData['range'],
-      onSaved: (value) => this._formCategoryData['range'] = value,
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Tooltip(
+          message: "marker range in meters",
+          child: new Text(
+            "Range:",
+            style: bodyText(),
+          ),
+        ),
+        SizedBox(height: 20),
+        IconButton(
+          icon: Icon(Icons.remove),
+          onPressed: () {
+            if (_formCategoryData['range'] > 1) {
+              setState(() {
+                _formCategoryData['range'] -= 1;
+                _formRangeController.text = _formCategoryData['range'].toString();
+              });
+            }
+          },
+        ),
+        SizedBox(
+          width: 100,
+          child: TextFormField(
+            controller: _formRangeController,
+            onSaved: (String input) {
+              _formCategoryData['range'] = toDouble(input, 100);
+            },
+            onFieldSubmitted: (String value) {
+              _formCategoryData['range'] = value;
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              // labelText: state.value.toString(),
+            ),
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              WhitelistingTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(7),
+            ],
+          ),
+        ),
+        Text(
+          " m",
+          style: bodyText(),
+        ),
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () {
+            setState(() {
+              _formCategoryData['range'] += 1;
+              _formRangeController.text = _formCategoryData['range'].toString();
+            });
+          },
+        ),
+      ],
     );
   }
 

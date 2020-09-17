@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/extensions.dart';
 import 'package:flatmapp/resources/objects/loaders/actions_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_action.dart';
@@ -8,15 +9,6 @@ import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:preferences/preferences.dart';
-
-
-bool toBool(String str, bool _default) {
-  return str == "" || str == null ? _default : str.toLowerCase() == 'true';
-}
-
-double toDouble(String str, double _default) {
-  return str == "" || str == null ? _default : double.parse(str);
-}
 
 // ignore: must_be_immutable
 class ActionParametersRoute extends StatefulWidget {
