@@ -1,9 +1,8 @@
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:preferences/preference_service.dart';
+import 'package:flutter/material.dart';
 
 import 'text_styles.dart';
-
-import 'package:flutter/material.dart';
 
 
 ListTile sideBarMenuElement(context, String name, Icon icon, String route){
@@ -70,41 +69,14 @@ Drawer sideBarMenu(context){
               padding: EdgeInsets.all(0.0)
           ),
         ),
+
         sideBarMenuElement(context, 'Map', Icon(Icons.location_on), '/map'),
         sideBarMenuElement(context, 'Markers', Icon(Icons.bookmark_border), '/markers'),
         sideBarMenuElementLogin(context, 'Profile', Icon(Icons.account_circle), '/profile'),
         sideBarMenuElementLogin(context, 'Community', Icon(Icons.language), '/community'),
-
-        // ListTile(
-        //   leading: Icon(Icons.language),
-        //   title: Text(
-        //     'Community',
-        //     style: (PrefService.getString('token') == '') ?
-        //             sideBarMenuStyleGrey() : sideBarMenuStyle(),
-        //   ),
-        //   onTap: () {
-        //     if(PrefService.getString('token') == ''){
-        //       // Then close the drawer
-        //       Navigator.pop(context);
-        //       // go to login page
-        //       Navigator.pushNamed(context, '/login');
-        //       // show message
-        //       Fluttertoast.showToast(
-        //         msg: "You need to log in to use Community",
-        //         toastLength: Toast.LENGTH_LONG,
-        //         gravity: ToastGravity.BOTTOM,
-        //       );
-        //     } else {
-        //       // Then close the drawer
-        //       Navigator.pop(context);
-        //       // Navigate to the profile screen using a named route.
-        //       Navigator.pushNamed(context, '/community');
-        //     }
-        //   },
-        // ),
-
         sideBarMenuElement(context, 'Settings', Icon(Icons.settings_applications), '/settings'),
         sideBarMenuElement(context, 'About', Icon(Icons.info_outline), '/about'),
+
         PrefService.getString('token') == '' ?
           sideBarMenuElement(context, 'Log In', Icon(Icons.subdirectory_arrow_right), '/login'):
           sideBarMenuElement(context, 'Log out', Icon(Icons.subdirectory_arrow_right), '/login'),

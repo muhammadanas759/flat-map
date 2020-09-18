@@ -78,8 +78,8 @@ class ActionsList {
       Card( //                           <-- Card widget
         child: ListTile(
           title: Text(
-              "no actions added",
-              style: bodyText()
+            "no actions added",
+            style: bodyText()
           ),
         ),
       ) :

@@ -11,7 +11,6 @@ class ActionsLoader {
     'bluetooth':        'assets/actions/bluetooth.png',
     'notification':     'assets/actions/notification.png',
     'wi-fi':            'assets/actions/wi-fi.png',
-    'flight':           'assets/actions/sleep-mode.png',
   };
 
   final Map<String, String> unusedActionsMap = {

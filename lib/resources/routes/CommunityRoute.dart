@@ -1,5 +1,6 @@
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
+import 'package:flatmapp/resources/objects/widgets/actions_list.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
@@ -11,6 +12,7 @@ import 'package:preferences/preference_service.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:flatmapp/resources/extensions.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 // ignore: must_be_immutable
 class CommunityRoute extends StatefulWidget {
@@ -24,6 +26,9 @@ class CommunityRoute extends StatefulWidget {
 
 class _CommunityRouteState extends State<CommunityRoute> {
 
+  // style preset
+  final String _preset = PrefService.getString('ui_theme');
+
   NetLoader netLoader = NetLoader();
   List<Map<String, dynamic>> _placesDescriptions = [];
   Geolocator _geolocator = Geolocator();
@@ -32,7 +37,11 @@ class _CommunityRouteState extends State<CommunityRoute> {
   TextEditingController _categoryController = new TextEditingController();
   TextEditingController _formRangeController = new TextEditingController();
 
+  // sliding form controller
+  PanelController _slidingFormController = new PanelController();
+
   final _formKey = GlobalKey<FormState>();
+  final _formKey2 = GlobalKey<FormState>();
 
   bool if_already_added = false;
   String _last_search = "text"; // something not empty
@@ -58,6 +67,13 @@ class _CommunityRouteState extends State<CommunityRoute> {
     _formRangeController.text = _formCategoryData['range'].toString();
   }
 
+  void _closePanel(context){
+    // close keyboard
+    FocusScope.of(context).requestFocus(FocusNode());
+    // close panel
+    _slidingFormController.close();
+  }
+
   Future<LatLng> getCurrentPosition() async {
     Position temp = await _geolocator.getCurrentPosition();
     return temp.toLatLng();
@@ -65,9 +81,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
 
   void addMarkerFromCategory(Map<String, dynamic> item, String _id){
 
-    if (item['radius'] == null) {
-      item['radius'] = 110;
-    }
+    item['radius'] = _formCategoryData['range'];
 
     widget._markerLoader.addMarker(
       id: _id,
@@ -79,7 +93,72 @@ class _CommunityRouteState extends State<CommunityRoute> {
       title: item['name'],
       description: item['address'],
       range: item['radius'].toDouble(),
-      actions: [],
+      actions: widget._markerLoader.getMarkerActions(
+        id: "temporary"
+      ),
+    );
+  }
+
+  Widget _buildMarkerApproximateRangeField() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Tooltip(
+          message: "marker range in meters",
+          child: new Text(
+            "Range:",
+            style: bodyText(),
+          ),
+        ),
+        SizedBox(height: 20),
+        IconButton(
+          icon: Icon(Icons.remove),
+          onPressed: () {
+            if (_formCategoryData['range'] > 1) {
+              setState(() {
+                _formCategoryData['range'] -= 1;
+                _formRangeController.text = _formCategoryData['range'].toString();
+              });
+            }
+          },
+        ),
+        SizedBox(
+          width: 100,
+          child: TextFormField(
+            controller: _formRangeController,
+            onSaved: (String input) {
+              _formCategoryData['range'] = toDouble(input, 100);
+            },
+            onFieldSubmitted: (String value) {
+              _formCategoryData['range'] = value;
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              // labelText: state.value.toString(),
+            ),
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              WhitelistingTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(7),
+            ],
+          ),
+        ),
+        Text(
+          " m",
+          style: bodyText(),
+        ),
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () {
+            setState(() {
+              _formCategoryData['range'] += 1;
+              _formRangeController.text = _formCategoryData['range'].toString();
+            });
+          },
+        ),
+      ],
     );
   }
 
@@ -113,8 +192,8 @@ class _CommunityRouteState extends State<CommunityRoute> {
             onSaved: (String input) {
               _formCategoryData['range'] = toDouble(input, 100);
             },
-            onFieldSubmitted: (String value) {
-              _formCategoryData['range'] = value;
+            onFieldSubmitted: (String input) {
+              _formCategoryData['range'] = toDouble(input, 100);
               FocusScope.of(context).requestFocus(FocusNode());
             },
             textInputAction: TextInputAction.next,
@@ -301,28 +380,53 @@ class _CommunityRouteState extends State<CommunityRoute> {
     );
   }
 
+  Widget openDefaultMarkerForm(BuildContext context){
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(width: 0.5),
+        borderRadius: BorderRadius.all(
+            Radius.circular(10.0) //         <--- border radius here
+        ),
+      ), //       <--- BoxDecoration here
+      child: ListTile(
+        title: Text( 'Change default marker',
+          style: bodyText(),
+        ),
+        leading: Icon(Icons.edit),
+        onTap: () {
+          // reload icon in form - requires setState update on preferences
+          setState(() { });
+          // update form
+          updateFormData();
+          // open sliding form
+          _slidingFormController.open();
+        },
+      ),
+    );
+  }
+
   Widget _iconChangeButton(){
     return Expanded(
       child: SizedBox(
         height: 60.0,
         // icon change button
         child: Container(
-            decoration: buttonFieldStyle(),
-            child: ConstrainedBox(
-                constraints: BoxConstraints.expand(),
-                child: FlatButton(
-                  onPressed: (){
-                    // Navigate to the icons screen using a named route.
-                    Navigator.pushNamed(context, '/community_icons');
-                  },
-                  padding: EdgeInsets.all(0.0),
-                  child: Image.asset(
-                    widget._markerLoader.iconsLoader.markerImageLocal[
-                      PrefService.getString('community_icon')
-                    ]
-                  )
-                )
+          decoration: buttonFieldStyle(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints.expand(),
+            child: FlatButton(
+              onPressed: (){
+                // Navigate to the icons screen using a named route.
+                Navigator.pushNamed(context, '/community_icons');
+              },
+              padding: EdgeInsets.all(0.0),
+              child: Image.asset(
+                widget._markerLoader.iconsLoader.markerImageLocal[
+                  PrefService.getString('community_icon')
+                ]
+              )
             )
+          )
         ),
       ),
     );
@@ -416,6 +520,79 @@ class _CommunityRouteState extends State<CommunityRoute> {
     }
   }
 
+  Widget _markerAddForm(context){
+
+    ActionsList _actionsList = ActionsList(widget._markerLoader);
+    return Form(
+      key: _formKey2,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Container(
+                child: Opacity(
+                  opacity: 0.2,
+                  child: IconButton(
+                    icon: Icon(Icons.keyboard_arrow_down, size: 40),
+                    color: (PrefService.get('ui_theme') == 'dark') ? Colors.white : Colors.black,
+                    tooltip: 'Close form',
+                    onPressed: (){
+                      setState(() {
+                        _closePanel(context);
+                      });
+                    },
+                  ),
+                ),
+                alignment: Alignment(0.0, 0.0),
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              // icon change button
+              _iconChangeButton(),
+              SizedBox(width: 10),
+              // range counter
+              _buildMarkerRangeField(),
+            ],
+          ),
+          SizedBox(height: 10),
+
+          Row(children: <Widget>[
+            Expanded(
+              child: new Container(
+                  margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                  child: Divider(
+                    // color: Colors.black,
+                    // height: 36,
+                  )),
+            ),
+            Text("Actions List", style: bodyText()),
+            Expanded(
+              child: new Container(
+                margin: const EdgeInsets.only(left: 20.0, right: 10.0),
+                child: Divider(
+//                    color: Colors.black,
+//                    height: 36,
+                )
+              ),
+            ),
+          ]),
+
+          _actionsList.buildActionsList(
+            context,
+            "temporary"
+          ),
+        ],
+      )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -428,64 +605,93 @@ class _CommunityRouteState extends State<CommunityRoute> {
 //      print(permission);
 //    });
 
+    // set selected marker to temporary
+    PrefService.setString('selected_marker', "temporary");
+
+    // add form radius
+    BorderRadiusGeometry radius = BorderRadius.only(
+      topLeft: Radius.circular(24.0),
+      topRight: Radius.circular(24.0),
+    );
+
     return Scaffold(
       appBar: appBar(),
       body:
       // BODY
       PrefService.getString('token') == ''
           ? textInfo('You need to log in to use community options.' ?? '') :
-      SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              ListTile( title: Text( 'Community',
-                  style: header(),
-                ),
-                leading: Icon(Icons.language),
-              ),
-              ListTile(
-                title: Text( 'Select range of search and category of places '
-                  'to look up for places nearby in declared range.',
-                  style: bodyText(),
-                ),
-              ),
 
-              //_buildMarkerRangeField(), TODO repair marker range widget
-              // SizedBox(height: 10),
-              // _buildApproximatedCheckboxField(),
+      Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          SlidingUpPanel(
+            color: _preset == 'dark' ? Colors.black : Colors.white,
+            minHeight: 0,
+            padding: EdgeInsets.only(left: 30, right: 30,),
+            borderRadius: radius,
+            isDraggable: false,
+            defaultPanelState: PanelState.CLOSED,
+            controller: _slidingFormController,
 
-              SizedBox(height: 10),
+            panel: _markerAddForm(context),
 
-              // dropdown list
-              _buildCategoryTextFieldAndButton(),
-
-              _placesDescriptions.length != 0 && !if_already_added ?
-                Row(
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Expanded(
-                      child: addAllPlaces(context),
+                    ListTile( title: Text( 'Community',
+                      style: header(),
                     ),
+                      leading: Icon(Icons.language),
+                    ),
+                    ListTile(
+                      title: Text( 'Select range of search and category of places '
+                          'to look up for places nearby in declared range.',
+                        style: bodyText(),
+                      ),
+                    ),
+
+                    // SizedBox(height: 10),
+                    // _buildApproximatedCheckboxField(),
+
+                    SizedBox(height: 10),
+
+                    // dropdown list
+                    _buildCategoryTextFieldAndButton(),
+
+                    _placesDescriptions.length != 0 && !if_already_added ?
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Expanded(
+                          child: addAllPlaces(context),
+                        ),
+                        Expanded(
+                          child: openDefaultMarkerForm(context),
+                        ),
+                        // SizedBox(
+                        //     width: 100,
+                        //     child: _iconChangeButton()
+                        // ),
+                      ],
+                    )
+                        : SizedBox.shrink(),
+
+                    // places cards list
                     SizedBox(
-                      width: 100,
-                      child: _iconChangeButton()
+                      height: 400, // fixed height
+                      child: _listPlaces(context),
                     ),
                   ],
-                )
-              : SizedBox.shrink(),
-
-              // places cards list
-              SizedBox(
-                height: 400, // fixed height
-                child: _listPlaces(context),
+                ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
 
       // SIDE PANEL MENU
