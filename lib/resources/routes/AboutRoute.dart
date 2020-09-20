@@ -91,20 +91,74 @@ class AboutRoute extends StatelessWidget {
               ),
               SizedBox(height: 10),
 
-              Container(
-                decoration: buttonFieldStyle(),
-                child: ListTile(
-                  title: Text(
-                    'Please rate our effort on Google Play Store!',
-                    style: bodyText(),
-                  ),
-                  trailing: Icon(Icons.star_border),
-                  onTap: (){
-                    // TODO go to Google Play app review
+              ListTile(
+                title: SelectableLinkify(
+                  text: "Test report: \nhttps://forms.gle/T4XomZRWfQ1iRBQD8",
+                  onOpen: (link) async {
+                    Fluttertoast.showToast(
+                      msg: 'Opening test report...',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                    );
+                    if (await canLaunch(link.url)) {
+                      await launch(link.url);
+                    } else {
+                      // show message
+                      Fluttertoast.showToast(
+                        msg: 'Could not launch $link',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                      );
+                    }
                   },
+                  style: bodyText(),
+                  linkStyle: TextStyle(color: Colors.green),
                 ),
+                trailing: Icon(Icons.link),
               ),
               SizedBox(height: 10),
+
+              ListTile(
+                title: SelectableLinkify(
+                  text: "Bug report: \nhttps://forms.gle/V7MRhwb7fDVFc8TV8",
+                  onOpen: (link) async {
+                    Fluttertoast.showToast(
+                      msg: 'Opening bug report...',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                    );
+                    if (await canLaunch(link.url)) {
+                      await launch(link.url);
+                    } else {
+                      // show message
+                      Fluttertoast.showToast(
+                        msg: 'Could not launch $link',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                      );
+                    }
+                  },
+                  style: bodyText(),
+                  linkStyle: TextStyle(color: Colors.green),
+                ),
+                trailing: Icon(Icons.link),
+              ),
+              SizedBox(height: 10),
+
+              // Container(
+              //   decoration: buttonFieldStyle(),
+              //   child: ListTile(
+              //     title: Text(
+              //       'Please rate our effort on Google Play Store!',
+              //       style: bodyText(),
+              //     ),
+              //     trailing: Icon(Icons.star_border),
+              //     onTap: (){
+              //       // TODO go to Google Play app review
+              //     },
+              //   ),
+              // ),
+              // SizedBox(height: 10),
 
               ListTile(
                 title: Text(
