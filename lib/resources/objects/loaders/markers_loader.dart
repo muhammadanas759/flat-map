@@ -209,6 +209,9 @@ class MarkerLoader {
       );
     });
 
+    // save markers
+    saveMarkers();
+
     if(id != "temporary") {
       GeofenceLoader.addGeofence("$id;${position.latitude};${position.longitude};${range}");
     }
