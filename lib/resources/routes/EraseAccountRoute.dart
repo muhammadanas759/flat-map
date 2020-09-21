@@ -79,7 +79,9 @@ class _EraseAccountRouteState extends State<EraseAccountRoute> {
                     ),
                     leading: Icon(Icons.cloud_off),
                     onTap: (){
-                      _submitForm();
+                      setState(() {
+                        _submitForm();
+                      });
                     },
                   ),
                 ),
