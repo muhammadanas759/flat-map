@@ -116,6 +116,8 @@ class _EraseAccountRouteState extends State<EraseAccountRoute> {
         if(200 <= _response.statusCode && _response.statusCode < 300){
           // move back
           Navigator.of(context).pop();
+          // move to map
+          Navigator.pushNamed(context, '/map');
           // show message
           Fluttertoast.showToast(
             msg: "Account erased successfully",
