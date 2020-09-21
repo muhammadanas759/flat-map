@@ -68,7 +68,7 @@ main() async {
     'project_description': 'FlatMapp prototype',
     'start_page': 'Map',
     'ui_theme': 'light',
-    "cloud_enabled": false,
+    "cloud_enabled": true,
     "map_enabled": true,
     'selected_marker': 'temporary',
     'selected_action': 0,

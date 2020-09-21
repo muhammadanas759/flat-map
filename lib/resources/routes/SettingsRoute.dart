@@ -54,33 +54,33 @@ class _SettingsRouteState extends State<SettingsRoute> {
           PrefService.setBool('show_exp', false);
         },
       ),
-      PreferenceHider([
-        SwitchPreference(
-          'Enable cloud save',
-          'cloud_enabled',
-          defaultVal: false,
-        ),
-        SwitchPreference(
-          'Enable map loading',
-          'map_enabled',
-          defaultVal: true,
-        ),
-        PreferenceText(
-          'Remove cloud backup markers',
-          leading: Icon(Icons.cloud_off),
-          onTap: () {
-            _netLoader.removeBackup();
-          },
-        ),
-        PreferenceText(
-          'Remove account',
-          leading: Icon(Icons.remove_circle),
-          onTap: () {
-            // move to account removal form
-            Navigator.pushNamed(context, '/erase_account');
-          },
-        ),
-      ], '!advanced_enabled'), // Use ! to get reversed boolean values
+      // PreferenceHider([
+      //   SwitchPreference(
+      //     'Enable cloud save',
+      //     'cloud_enabled',
+      //     defaultVal: true,
+      //   ),
+      //   SwitchPreference(
+      //     'Enable map loading',
+      //     'map_enabled',
+      //     defaultVal: true,
+      //   ),
+      //   PreferenceText(
+      //     'Remove cloud backup markers',
+      //     leading: Icon(Icons.cloud_off),
+      //     onTap: () {
+      //       _netLoader.removeBackup();
+      //     },
+      //   ),
+      //   PreferenceText(
+      //     'Remove account',
+      //     leading: Icon(Icons.remove_circle),
+      //     onTap: () {
+      //       // move to account removal form
+      //       Navigator.pushNamed(context, '/erase_account');
+      //     },
+      //   ),
+      // ], '!advanced_enabled'), // Use ! to get reversed boolean values
 
     ]);
   }
