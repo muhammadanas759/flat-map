@@ -43,17 +43,17 @@ class _SettingsRouteState extends State<SettingsRoute> {
         },
       ),
 
-      PreferenceTitle('Advanced', style: header()),
-      CheckboxPreference(
-        'Enable Advanced Features',
-        'advanced_enabled',
-        onChange: () {
-          setState(() {});
-        },
-        onDisable: () {
-          PrefService.setBool('show_exp', false);
-        },
-      ),
+      // PreferenceTitle('Advanced', style: header()),
+      // CheckboxPreference(
+      //   'Enable Advanced Features',
+      //   'advanced_enabled',
+      //   onChange: () {
+      //     setState(() {});
+      //   },
+      //   onDisable: () {
+      //     PrefService.setBool('show_exp', false);
+      //   },
+      // ),
       // PreferenceHider([
       //   SwitchPreference(
       //     'Enable cloud save',
