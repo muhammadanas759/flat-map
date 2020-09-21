@@ -430,10 +430,12 @@ class _MapRouteState extends State<MapRoute> {
   }
 
   void _closePanel(context){
-    // close keyboard
-    FocusScope.of(context).requestFocus(FocusNode());
-    // close panel
-    _slidingFormController.close();
+    setState(() {
+      // close keyboard
+      FocusScope.of(context).requestFocus(FocusNode());
+      // close panel
+      _slidingFormController.close();
+    });
   }
 
   Widget _markerAddForm(context){
