@@ -1,4 +1,5 @@
 import 'package:flatmapp/resources/objects/loaders/icons_loader.dart';
+import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_marker.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
@@ -41,23 +42,30 @@ class _MarkersRouteState extends State<MarkersRoute> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-            title: Text("Remove marker?"),
+            title: Text(
+                LanguagesLoader.of(context).translate("Remove marker?"),
+            ),
             content: Text(
-                "You are about to remove marker\n"
-                    "${_marker.title}\n"
-                    "${_marker.description}."
+              LanguagesLoader.of(context).translate("You are about to remove marker") +
+              "\n"
+              "${_marker.title}\n"
+              "${_marker.description}"
             ),
             actions: [
               // set up the buttons
               FlatButton(
-                child: Text("no nO NO"),
+                child: Text(
+                  LanguagesLoader.of(context).translate("No")
+                ),
                 onPressed:  () {
                   // dismiss alert
                   Navigator.of(context).pop();
                 },
               ),
               FlatButton(
-                child: Text("HELL YEAH"),
+                child: Text(
+                    LanguagesLoader.of(context).translate("Yes")
+                ),
                 onPressed:  () {
                   // remove marker
                   widget._markerLoader.removeMarker(id: id);
@@ -81,22 +89,25 @@ class _MarkersRouteState extends State<MarkersRoute> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-            title: Text("Remove ALL markers?"),
+            title: Text(
+              LanguagesLoader.of(context).translate("Remove ALL markers?")
+            ),
             content: Text(
-                "You are about to remove all markers \n"
-                    "from local storage.\n"
+              LanguagesLoader.of(context).translate("You are about to remove all markers from local storage")
             ),
             actions: [
               // set up the buttons
               FlatButton(
-                child: Text("no nO NO"),
+                child: Text(
+                  LanguagesLoader.of(context).translate("No")
+                ),
                 onPressed:  () {
                   // dismiss alert
                   Navigator.of(context).pop();
                 },
               ),
               FlatButton(
-                child: Text("REMOVE. THEM. ALL."),
+                child: Text(LanguagesLoader.of(context).translate("Remove all markers")),
                 onPressed:  () {
                   // remove all markers
                   setState(() {
@@ -126,7 +137,8 @@ class _MarkersRouteState extends State<MarkersRoute> {
             Expanded(
               child: ListTile(
                 title: Text(
-                    'Active markers: #' + (
+                    LanguagesLoader.of(context).translate("Active markers:") +
+                    ' #' + (
                         widget._markerLoader.getDescriptionsKeys().length - 1 > 0 ?
                         '${widget._markerLoader.getDescriptionsKeys().length - 1}' : '0'
                     ),
@@ -139,11 +151,11 @@ class _MarkersRouteState extends State<MarkersRoute> {
               child: Container(
                 decoration: buttonFieldStyle(),
                 child: Tooltip(
-                  message: "Remove all markers",
+                  message: LanguagesLoader.of(context).translate("Remove all markers"),
                   child: ListTile(
                     title: Text(
-                        'Remove all',
-                        style: bodyText()
+                      LanguagesLoader.of(context).translate("Remove all"),
+                      style: bodyText()
                     ),
                     trailing: Icon(Icons.delete_forever),
                     onTap: (){
@@ -162,7 +174,7 @@ class _MarkersRouteState extends State<MarkersRoute> {
 
         ListTile(
           title: Text(
-            'FlatMapp Team @ 2020',
+            LanguagesLoader.of(context).translate("flatmapp_footer"),
             style: footer(),
           ),
         ),
@@ -265,7 +277,10 @@ class _MarkersRouteState extends State<MarkersRoute> {
       );
     } else {
       return ListTile(
-        title: Text('no markers found', style: footer()),
+        title: Text(
+            LanguagesLoader.of(context).translate("no markers found"),
+            style: footer()
+        ),
         leading: Icon(Icons.error_outline),
       );
     }

@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
@@ -98,7 +99,7 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
                 Expanded(
                   child: ListTile(
                     title: Text(
-                      'Change password',
+                      LanguagesLoader.of(context).translate("Change password"),
                       style: bodyText(),
                     ),
                     leading: Icon(Icons.check),
@@ -111,7 +112,7 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
                 Expanded(
                   child: ListTile(
                     title: Text(
-                      'Don\'t do it',
+                      LanguagesLoader.of(context).translate("Don't do it"),
                       style: bodyText(),
                       textAlign: TextAlign.right,
                     ),

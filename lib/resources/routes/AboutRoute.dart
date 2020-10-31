@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
@@ -23,7 +24,7 @@ class AboutRoute extends StatelessWidget {
             tiles: [
               ListTile(
                 title: Text(
-                  'About',
+                  LanguagesLoader.of(context).translate("About"),
                   style: header(),
                 ),
                 leading: Icon(Icons.info_outline),
@@ -31,17 +32,14 @@ class AboutRoute extends StatelessWidget {
               SizedBox(height: 10),
               ListTile(
                 title: Text(
-                  'FlatMapp is an engineering project, aiming at creation of '
-                  'geolocation manager, triggering user-defined actions in '
-                  'declared geographical position.',
+                  LanguagesLoader.of(context).translate("about_section_1"),
                   style: bodyText(),
                 ),
               ),
               SizedBox(height: 20),
               ListTile(
                 title: Text(
-                  'FlatMapp is free to use and is not gathering any personal data '
-                  'without user consent.',
+                  LanguagesLoader.of(context).translate("about_section_2"),
                   style: bodyText(),
                 ),
               ),
@@ -162,7 +160,7 @@ class AboutRoute extends StatelessWidget {
 
               ListTile(
                 title: Text(
-                  'FlatMapp Team @ 2020',
+                  LanguagesLoader.of(context).translate("flatmapp_footer"),
                   style: footer(),
                 ),
               ),

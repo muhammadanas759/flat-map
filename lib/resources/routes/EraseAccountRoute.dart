@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
@@ -74,7 +75,7 @@ class _EraseAccountRouteState extends State<EraseAccountRoute> {
                 Expanded(
                   child: ListTile(
                     title: Text(
-                      'Erase the account',
+                      LanguagesLoader.of(context).translate("Erase the account"),
                       style: bodyText(),
                     ),
                     leading: Icon(Icons.cloud_off),
@@ -89,7 +90,7 @@ class _EraseAccountRouteState extends State<EraseAccountRoute> {
                 Expanded(
                   child: ListTile(
                     title: Text(
-                      'Don\'t do it',
+                      LanguagesLoader.of(context).translate("Don't do it"),
                       style: bodyText(),
                       textAlign: TextAlign.right,
                     ),

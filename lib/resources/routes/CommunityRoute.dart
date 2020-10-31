@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/actions_list.dart';
@@ -104,9 +105,9 @@ class _CommunityRouteState extends State<CommunityRoute> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Tooltip(
-          message: "marker range in meters",
+          message: LanguagesLoader.of(context).translate("marker range in meters"),
           child: new Text(
-            "Range:",
+            LanguagesLoader.of(context).translate("Range:"),
             style: bodyText(),
           ),
         ),
@@ -167,9 +168,9 @@ class _CommunityRouteState extends State<CommunityRoute> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Tooltip(
-          message: "marker range in meters",
+          message: LanguagesLoader.of(context).translate("marker range in meters"),
           child: new Text(
-            "Range:",
+            LanguagesLoader.of(context).translate("Range:"),
             style: bodyText(),
           ),
         ),
@@ -235,7 +236,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
       ), //       <--- BoxDecoration here
       child: CheckboxListTile(
         title: Text(
-          'Use "Google nearby" range',
+          LanguagesLoader.of(context).translate("Use >Google nearby< range"),
           style: bodyText(),
         ),
         value: _formCategoryData['approximate'],
@@ -293,7 +294,10 @@ class _CommunityRouteState extends State<CommunityRoute> {
                 ),
               ), //
               child: ListTile(
-                title: Text('Search', style: bodyText()),
+                title: Text(
+                    LanguagesLoader.of(context).translate("Search"),
+                    style: bodyText()
+                ),
                 trailing: Icon(Icons.search),
                 onTap: (){
                   if (_formKey.currentState.validate()) {
@@ -360,7 +364,8 @@ class _CommunityRouteState extends State<CommunityRoute> {
         ),
       ), //       <--- BoxDecoration here
       child: ListTile(
-        title: Text( 'Add all placemarks from list',
+        title: Text(
+          LanguagesLoader.of(context).translate("Add all placemarks from list"),
           style: bodyText(),
         ),
         leading: Icon(Icons.add_circle_outline),
@@ -389,7 +394,8 @@ class _CommunityRouteState extends State<CommunityRoute> {
         ),
       ), //       <--- BoxDecoration here
       child: ListTile(
-        title: Text( 'Change default marker',
+        title: Text(
+          LanguagesLoader.of(context).translate("Change default marker"),
           style: bodyText(),
         ),
         leading: Icon(Icons.edit),
@@ -514,7 +520,10 @@ class _CommunityRouteState extends State<CommunityRoute> {
       );
     } else {
       return ListTile(
-        title: Text('no places found', style: footer()),
+        title: Text(
+          LanguagesLoader.of(context).translate("no places found"),
+          style: footer()
+        ),
         leading: Icon(Icons.error_outline),
       );
     }
@@ -572,7 +581,10 @@ class _CommunityRouteState extends State<CommunityRoute> {
                     // height: 36,
                   )),
             ),
-            Text("Actions List", style: bodyText()),
+            Text(
+                LanguagesLoader.of(context).translate("Actions List"),
+                style: bodyText()
+            ),
             Expanded(
               child: new Container(
                 margin: const EdgeInsets.only(left: 20.0, right: 10.0),
@@ -642,14 +654,16 @@ class _CommunityRouteState extends State<CommunityRoute> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    ListTile( title: Text( 'Community',
-                      style: header(),
-                    ),
+                    ListTile(
+                      title: Text(
+                        LanguagesLoader.of(context).translate("Community"),
+                        style: header(),
+                      ),
                       leading: Icon(Icons.language),
                     ),
                     ListTile(
-                      title: Text( 'Select range of search and category of places '
-                          'to look up for places nearby in declared range.',
+                      title: Text(
+                        LanguagesLoader.of(context).translate("community_descrtiption_1"),
                         style: bodyText(),
                       ),
                     ),

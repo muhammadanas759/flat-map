@@ -3,12 +3,15 @@ import 'package:preferences/preference_service.dart';
 import 'package:flutter/material.dart';
 
 import 'text_styles.dart';
-
+import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 
 ListTile sideBarMenuElement(context, String name, Icon icon, String route){
   return ListTile(
     leading: icon,
-    title: Text(name, style: sideBarMenuStyle(),),
+    title: Text(
+      LanguagesLoader.of(context).translate(name),
+      style: sideBarMenuStyle(),
+    ),
     onTap: () {
       // Then close the drawer
       Navigator.pop(context);
@@ -22,7 +25,7 @@ ListTile sideBarMenuElementLogin(context, String name, Icon icon, String route){
   return ListTile(
     leading: icon,
     title: Text(
-      name,
+      LanguagesLoader.of(context).translate(name),
       style: (PrefService.getString('token') == '') ?
         sideBarMenuStyleGrey() : sideBarMenuStyle(),
     ),

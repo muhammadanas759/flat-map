@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
@@ -170,7 +171,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
             decoration: buttonFieldStyle(),
             child: ListTile(
               title: Text(
-                'Register',
+                LanguagesLoader.of(context).translate("Register"),
                 style: bodyText(),
                 textAlign: TextAlign.left,
               ),
@@ -205,6 +206,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
       SizedBox.shrink() :
       BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
+          // TODO navigation bar can not contain translations
           BottomNavigationBarItem(
             icon: Icon(Icons.input),
             title: Text('Log in'),

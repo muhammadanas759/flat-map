@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/loaders/languages/languages_localizations_delegate.dart';
 import 'package:flatmapp/resources/routes/ActionParametersRoute.dart';
 import 'package:flatmapp/resources/routes/ActionsRoute.dart';
 import 'package:flatmapp/resources/routes/ChangePasswordRoute.dart';
@@ -24,6 +25,8 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:geolocator/geolocator.dart';
+
+import 'package:flutter\_localizations/flutter\_localizations.dart';
 
 
 // store chosen starting route
@@ -111,7 +114,6 @@ main() async {
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context){
     return new DynamicTheme(
@@ -142,6 +144,24 @@ class MyApp extends StatelessWidget {
             '/register': (context) => RegisterRoute(),
             '/action_parameters': (context) => ActionParametersRoute(_markerLoader),
             '/markers': (context) => MarkersRoute(_markerLoader),
+          },
+          supportedLocales: [
+            const Locale('pl', 'PL'),
+            const Locale('en', 'US'),
+            const Locale('es', 'ES'),
+          ],
+          localizationsDelegates: [
+            const LanguagesLocalizationsDelegate(),
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate
+          ],
+          localeResolutionCallback: (Locale locale, Iterable<Locale> supportedLocales) {
+            for (Locale supportedLocale in supportedLocales) {
+              if (supportedLocale.languageCode == locale.languageCode || supportedLocale.countryCode == locale.countryCode) {
+                return supportedLocale;
+              }
+            }
+            return supportedLocales.first;
           },
         );
       }

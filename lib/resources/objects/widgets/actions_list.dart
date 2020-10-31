@@ -1,4 +1,5 @@
 import 'package:flatmapp/resources/objects/loaders/actions_loader.dart';
+import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_action.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
@@ -25,21 +26,27 @@ class ActionsList {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Remove action?"),
+          title: Text(
+              LanguagesLoader.of(context).translate("Remove action?"),
+          ),
           content: Text(
-            "You are about to remove action\n" + description
+              LanguagesLoader.of(context).translate("You are about to remove action") + ":\n" + description
           ),
           actions: [
             // set up the buttons
             FlatButton(
-              child: Text("no nO NO"),
+              child: Text(
+                  LanguagesLoader.of(context).translate("No")
+              ),
               onPressed:  () {
                 // dismiss alert
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
-              child: Text("HELL YEAH"),
+              child: Text(
+                  LanguagesLoader.of(context).translate("Yes")
+              ),
               onPressed:  () {
                 // remove marker
                 _markerLoader.removeMarkerAction(id: id, index: index);
@@ -78,7 +85,7 @@ class ActionsList {
       Card( //                           <-- Card widget
         child: ListTile(
           title: Text(
-            "no actions added",
+            LanguagesLoader.of(context).translate("no actions added"),
             style: bodyText()
           ),
         ),
@@ -95,7 +102,7 @@ class ActionsList {
                 child: IconButton(
                     icon: Icon(Icons.add_circle_outline, size: 40,),
                     color: (PrefService.get('ui_theme') == 'dark') ? Colors.white : Colors.black,
-                    tooltip: "Add action",
+                    tooltip: LanguagesLoader.of(context).translate("Add action"),
                     onPressed: () {
                       addAction(context, index);
                     }
@@ -115,7 +122,6 @@ class ActionsList {
                 _actionsList[index].icon,
                 style: bodyText()
               ),
-//              subtitle: Text("", style: footer()),
               trailing: Icon(Icons.keyboard_arrow_down),
               children: <Widget>[
                 Row(
@@ -123,7 +129,7 @@ class ActionsList {
                   children: <Widget>[
                     IconButton(
                       icon: Icon(Icons.edit),
-                      tooltip: 'Edit parameters',
+                      tooltip: LanguagesLoader.of(context).translate("Edit parameters"),
                       onPressed: () {
                         // set selected marker id for map screen
                         PrefService.setInt('selected_action', index);

@@ -1,5 +1,6 @@
 import 'package:flatmapp/resources/extensions.dart';
 import 'package:flatmapp/resources/objects/loaders/actions_loader.dart';
+import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_action.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
@@ -150,7 +151,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
         children: <Widget>[
           RadioListTile(
             title: Text(
-              'Turn wi-fi on',
+              LanguagesLoader.of(context).translate("Turn wi-fi on"),
               style: bodyText(),
             ),
             value: true,
@@ -163,7 +164,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
           ),
           RadioListTile(
             title: Text(
-              'Turn wi-fi off',
+              LanguagesLoader.of(context).translate("Turn wi-fi off"),
               style: bodyText(),
             ),
             value: false,
@@ -187,7 +188,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
           children: <Widget>[
             RadioListTile(
               title: Text(
-                'Turn bluetooth on',
+                LanguagesLoader.of(context).translate("Turn bluetooth on"),
                 style: bodyText(),
               ),
               value: true,
@@ -200,7 +201,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
             ),
             RadioListTile(
               title: Text(
-                'Turn bluetooth off',
+                LanguagesLoader.of(context).translate("Turn bluetooth off"),
                 style: bodyText(),
               ),
               value: false,
@@ -297,7 +298,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
   Widget _noWidget(BuildContext context, String actionname){
     return ListTile(
       title: Text(
-        'Action "$actionname" has no parameters',
+        '$actionname ' + LanguagesLoader.of(context).translate("[action] has no parameters"),
         style: bodyText()
       ),
       trailing: Icon(Icons.not_interested),
@@ -337,7 +338,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
       default:
         return ListTile(
           title: Text(
-            'Could not find widget for $selected_widget!',
+            LanguagesLoader.of(context).translate("Could not find widget for: ") + '$selected_widget!',
             style: bodyText(),
           ),
           leading: Icon(Icons.error_outline)
@@ -408,11 +409,15 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.check),
-            title: Text('Accept'),
+            // TODO add static translation
+            title: Text("Accept"),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.keyboard_return),
-            title: Text('Return'),
+            // TODO add static translation
+            title: Text(
+                'Return'
+            ),
           ),
         ],
         currentIndex: _selectedIndex,
