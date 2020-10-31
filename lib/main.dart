@@ -145,6 +145,7 @@ class MyApp extends StatelessWidget {
             '/action_parameters': (context) => ActionParametersRoute(_markerLoader),
             '/markers': (context) => MarkersRoute(_markerLoader),
           },
+          // TODO add all languages available here
           supportedLocales: [
             const Locale('pl', 'PL'),
             const Locale('en', 'US'),

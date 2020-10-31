@@ -55,5 +55,8 @@
   "Get your markers from Backup": "Get your markers from Backup",
   "Change user data": "Change user data",
   "Erase account from system": "Erase account from system",
-  "Register": "Register"
+  "Register": "Register",
+
+  "---------------": "new lines should be added after this line in order to add them to other dictionaries",
+  "new line of text": "temptemptemptemp"
 }
