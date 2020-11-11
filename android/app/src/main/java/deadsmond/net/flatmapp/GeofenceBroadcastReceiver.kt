@@ -29,7 +29,6 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
             Log.d(TAG, "onReceive: Error receiving geofence event...")
             return
         }
-
         val pendingResult:PendingResult = goAsync()
         Task(pendingResult, intent, context).execute(geofencingEvent.triggeringGeofences)
 
