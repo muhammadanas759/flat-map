@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/actions_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_action.dart';
@@ -8,7 +9,7 @@ import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
 
-
+// Putting language dictionaries seams done
 // ignore: must_be_immutable
 class ActionsRoute extends StatefulWidget {
   // data loader
@@ -64,7 +65,7 @@ class _ActionsRouteState extends State<ActionsRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(title: 'Choose action'),
+      appBar: appBar(title: LanguagesLoader.of(context).translate("Choose action")),
       body:
       // BODY
       _actionsListView(context),

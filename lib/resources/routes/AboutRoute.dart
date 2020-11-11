@@ -8,6 +8,7 @@ import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// Putting language dictionaries seams done
 
 class AboutRoute extends StatelessWidget {
 
@@ -47,14 +48,14 @@ class AboutRoute extends StatelessWidget {
 
               ListTile(
                 title: Linkify(
-                  text: "Application repository: \nhttps://github.com/AdamLewicki/flatmapp_app",
+                  text: "${LanguagesLoader.of(context).translate("Application repository")}: \nhttps://github.com/AdamLewicki/flatmapp_app",
                   onOpen: (link) async {
                     if (await canLaunch(link.url)) {
                       await launch(link.url);
                     } else {
                       // show message
                       Fluttertoast.showToast(
-                        msg: 'Could not launch $link',
+                        msg: '${LanguagesLoader.of(context).translate("Could not launch")} $link',
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.BOTTOM,
                       );
@@ -69,14 +70,14 @@ class AboutRoute extends StatelessWidget {
 
               ListTile(
                 title: SelectableLinkify(
-                  text: "Server repository: \nhttps://github.com/AdamLewicki/flatmapp_server",
+                  text: "${LanguagesLoader.of(context).translate("Server repository")}: \nhttps://github.com/AdamLewicki/flatmapp_server",
                   onOpen: (link) async {
                     if (await canLaunch(link.url)) {
                       await launch(link.url);
                     } else {
                       // show message
                       Fluttertoast.showToast(
-                        msg: 'Could not launch $link',
+                        msg: '${LanguagesLoader.of(context).translate("Could not launch")} $link',
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.BOTTOM,
                       );
@@ -91,10 +92,10 @@ class AboutRoute extends StatelessWidget {
 
               ListTile(
                 title: SelectableLinkify(
-                  text: "Test report: \nhttps://forms.gle/T4XomZRWfQ1iRBQD8",
+                  text: "${LanguagesLoader.of(context).translate("Test report")}: \nhttps://forms.gle/T4XomZRWfQ1iRBQD8",
                   onOpen: (link) async {
                     Fluttertoast.showToast(
-                      msg: 'Opening test report...',
+                      msg: '${LanguagesLoader.of(context).translate("Opening test report")}',
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.BOTTOM,
                     );
@@ -103,7 +104,7 @@ class AboutRoute extends StatelessWidget {
                     } else {
                       // show message
                       Fluttertoast.showToast(
-                        msg: 'Could not launch $link',
+                        msg: '${LanguagesLoader.of(context).translate("Could not launch")} $link',
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.BOTTOM,
                       );
@@ -118,10 +119,10 @@ class AboutRoute extends StatelessWidget {
 
               ListTile(
                 title: SelectableLinkify(
-                  text: "Bug report: \nhttps://forms.gle/V7MRhwb7fDVFc8TV8",
+                  text: "${LanguagesLoader.of(context).translate("Bug report")}: \nhttps://forms.gle/V7MRhwb7fDVFc8TV8",
                   onOpen: (link) async {
                     Fluttertoast.showToast(
-                      msg: 'Opening bug report...',
+                      msg: '${LanguagesLoader.of(context).translate("Opening bug report")}',
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.BOTTOM,
                     );
@@ -130,7 +131,7 @@ class AboutRoute extends StatelessWidget {
                     } else {
                       // show message
                       Fluttertoast.showToast(
-                        msg: 'Could not launch $link',
+                        msg: '${LanguagesLoader.of(context).translate("Could not launch")} $link',
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.BOTTOM,
                       );
@@ -147,7 +148,7 @@ class AboutRoute extends StatelessWidget {
               //   decoration: buttonFieldStyle(),
               //   child: ListTile(
               //     title: Text(
-              //       'Please rate our effort on Google Play Store!',
+              //       '${LanguagesLoader.of(context).translate("rate_on_google")}',
               //       style: bodyText(),
               //     ),
               //     trailing: Icon(Icons.star_border),

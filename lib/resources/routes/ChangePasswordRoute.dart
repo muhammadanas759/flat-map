@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:preferences/preferences.dart';
 
+// Putting language dictionaries seams done
 
 class ChangePasswordRoute extends StatefulWidget {
 
@@ -71,24 +72,24 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
           children: <Widget>[
             SizedBox(height: 20),
             _buildPasswordField(context,
-                label: "Old password",
-                hint: "Please provide your old password",
+                label: LanguagesLoader.of(context).translate("Old password"),
+                hint: LanguagesLoader.of(context).translate("provide_old_password"),
                 form_var: "old_password",
                 focus_current: focusPasswordOld,
                 focus_next: focusPasswordNew1
             ),
             SizedBox(height: 20),
             _buildPasswordField(context,
-                label: "New password",
-                hint: "Please provide your new password",
+                label: LanguagesLoader.of(context).translate("New password"),
+                hint: LanguagesLoader.of(context).translate("provide_new_password"),
                 form_var: "new_password",
                 focus_current: focusPasswordNew1,
                 focus_next: focusPasswordNew2
             ),
             SizedBox(height: 20),
             _buildPasswordField(context,
-                label: "Repeat new password",
-                hint: "Please repeat your new password",
+                label: LanguagesLoader.of(context).translate("Repeat new password"),
+                hint: LanguagesLoader.of(context).translate("repeat_new_password"),
                 form_var: "new_password2",
                 focus_current: focusPasswordNew2,
                 focus_next: null
@@ -147,13 +148,13 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
           Navigator.pushNamed(context, '/login');
           // show message
           Fluttertoast.showToast(
-            msg: "Password changed successfully",
+            msg: LanguagesLoader.of(context).translate("Password changed successfully"),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
           );
         }
       } else {
-        netLoader.showToast("Network connection is off");
+        netLoader.showToast(LanguagesLoader.of(context).translate("Network connection is off"));
       }
     }
   }
@@ -161,7 +162,7 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(title: 'Change password'),
+      appBar: appBar(title: LanguagesLoader.of(context).translate("Change password")),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child:  _changePasswordForm(),

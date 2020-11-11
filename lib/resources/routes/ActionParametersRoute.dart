@@ -396,6 +396,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
 
     return Scaffold(
       appBar: appBar(title: 'Action parameters'),
+//      appBar: appBar(title: 'Action parameters'),
       body:
       // BODY
       Padding(
@@ -411,13 +412,13 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
             icon: Icon(Icons.check),
             // TODO add static translation
             title: Text("Accept"),
+//            title: Text("Accept"),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.keyboard_return),
             // TODO add static translation
-            title: Text(
-                'Return'
-            ),
+            title: Text('Return'),
+//            title: Text('Return'),
           ),
         ],
         currentIndex: _selectedIndex,
@@ -433,6 +434,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
                 // show message
                 Fluttertoast.showToast(
                   msg: "Action parameters saved",
+//                  msg: "Action parameters saved",
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.BOTTOM,
                 );
