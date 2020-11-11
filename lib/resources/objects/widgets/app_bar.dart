@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 
 
-AppBar appBar({String title = 'FlatMApp - geomanager'}){
+AppBar appBar({String title = "Flatmapp"}){
   return new AppBar(
     title: Text(title),
     backgroundColor: Color(0xFF4CAF50),

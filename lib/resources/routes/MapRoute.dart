@@ -1,4 +1,5 @@
 import 'package:flatmapp/resources/extensions.dart';
+import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_marker.dart';
 import 'package:flatmapp/resources/objects/widgets/actions_list.dart';
@@ -189,23 +190,30 @@ class _MapRouteState extends State<MapRoute> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-            title: Text("Remove marker?"),
+            title: Text(
+                LanguagesLoader.of(context).translate("Remove marker?")
+            ),
             content: Text(
-                "You are about to remove marker\n"
-                    "${_marker.title}\n"
-                    "${_marker.description}."
+              LanguagesLoader.of(context).translate("You are about to remove marker") +
+              "\n"
+              "${_marker.title}\n"
+              "${_marker.description}."
             ),
             actions: [
               // set up the buttons
               FlatButton(
-                child: Text("no nO NO"),
+                child: Text(
+                  LanguagesLoader.of(context).translate("No")
+                ),
                 onPressed:  () {
                   // dismiss alert
                   Navigator.of(context).pop();
                 },
               ),
               FlatButton(
-                child: Text("HELL YEAH"),
+                child: Text(
+                  LanguagesLoader.of(context).translate("Yes")
+                ),
                 onPressed:  () {
                   // remove marker
                   widget._markerLoader.removeMarker(id: id);
@@ -322,9 +330,9 @@ class _MapRouteState extends State<MapRoute> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Tooltip(
-          message: "marker range in meters",
+          message: LanguagesLoader.of(context).translate("marker range in meters"),
           child: new Text(
-            "Range:",
+            LanguagesLoader.of(context).translate("Range:"),
             style: bodyText(),
           ),
         ),
@@ -498,7 +506,10 @@ class _MapRouteState extends State<MapRoute> {
                     // height: 36,
                   )),
             ),
-            Text("Actions List", style: bodyText()),
+            Text(
+                LanguagesLoader.of(context).translate("Actions List"),
+                style: bodyText()
+            ),
             Expanded(
               child: new Container(
                   margin: const EdgeInsets.only(left: 20.0, right: 10.0),
@@ -534,8 +545,14 @@ class _MapRouteState extends State<MapRoute> {
                     margin: const EdgeInsets.only(left: 10.0, right: 20.0),
                     child: ListTile(
                         title: PrefService.getString("selected_marker") == 'temporary' ?
-                        Text('Add\nmarker', style: bodyText()) :
-                        Text('Save\nmarker', style: bodyText()),
+                        Text(
+                          LanguagesLoader.of(context).translate("Add marker"),
+                          style: bodyText()
+                        ) :
+                        Text(
+                            LanguagesLoader.of(context).translate("Save marker"),
+                            style: bodyText()
+                        ),
                         leading: Icon(Icons.bookmark_border),
                         onTap: (){
                           // submit form and add marker to dictionary
@@ -550,7 +567,10 @@ class _MapRouteState extends State<MapRoute> {
                   child: new Container(
                     margin: const EdgeInsets.only(left: 10.0, right: 20.0),
                     child: ListTile(
-                        title: Text('Delete\nmarker', style: bodyText()),
+                        title: Text(
+                          LanguagesLoader.of(context).translate("Delete marker"),
+                          style: bodyText()
+                        ),
                         trailing: Icon(Icons.delete_forever),
                         onTap: (){
                           // set up the AlertDialog
@@ -626,7 +646,7 @@ class _MapRouteState extends State<MapRoute> {
                 child: Center(
                   child: Text(
                     // PrefService.getString('selected_marker') == 'temporary' ? "Tap here to add marker" : "Tap here to modify marker",
-                    "Tap here to create or modify markers",
+                    LanguagesLoader.of(context).translate("Tap here to create or modify markers"),
                     style: bodyText(),
                   ),
                 ),

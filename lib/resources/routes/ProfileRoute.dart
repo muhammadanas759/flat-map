@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_marker.dart';
@@ -39,23 +40,28 @@ class _ProfileRouteState extends State<ProfileRoute> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-            title: Text("Remove marker?"),
+            title: Text(
+                LanguagesLoader.of(context).translate("Remove marker?")
+            ),
             content: Text(
-                "You are about to remove marker\n"
-                    "${_marker.title}\n"
-                    "${_marker.description}."
+                LanguagesLoader.of(context).translate("You are about to remove marker") +
+                "\n"
+                "${_marker.title}\n"
+                "${_marker.description}."
             ),
             actions: [
               // set up the buttons
               FlatButton(
-                child: Text("no nO NO"),
+                child: Text(
+                  LanguagesLoader.of(context).translate("No")
+                ),
                 onPressed:  () {
                   // dismiss alert
                   Navigator.of(context).pop();
                 },
               ),
               FlatButton(
-                child: Text("HELL YEAH"),
+                child: Text(LanguagesLoader.of(context).translate("Yes")),
                 onPressed:  () {
                   // remove marker
                   widget._markerLoader.removeMarker(id: id);
@@ -82,15 +88,19 @@ class _ProfileRouteState extends State<ProfileRoute> {
     Column(
       children: <Widget>[
         ListTile(
-          title: Text('Profile', style: header()),
+          title: Text(
+            LanguagesLoader.of(context).translate("Profile"),
+            style: header()
+          ),
           leading: Icon(Icons.account_circle),
         ),
 
         Tooltip(
-          message: "Change username",
+          message: LanguagesLoader.of(context).translate("Change username"),
           child: ListTile(
             title: Text(
-              'Username: ' + PrefService.getString("login"),
+              LanguagesLoader.of(context).translate("Username") +
+                ': ' + PrefService.getString("login"),
               style: bodyText(),
             ),
             leading: Icon(Icons.laptop),
@@ -102,7 +112,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
 
         ListTile(
           title: Text(
-            'Back up your markers to server',
+            LanguagesLoader.of(context).translate("Back up your markers to server"),
             style: bodyText(),
           ),
           trailing: Icon(Icons.backup),
@@ -113,7 +123,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
 
         ListTile(
           title: Text(
-            'Get your markers from Backup',
+            LanguagesLoader.of(context).translate("Get your markers from Backup"),
             style: bodyText(),
           ),
           trailing: Icon(Icons.file_download),
@@ -124,12 +134,16 @@ class _ProfileRouteState extends State<ProfileRoute> {
 
         ExpansionTile(
           leading: Icon(Icons.laptop),
-          title: Text("Change user data", style: bodyText()),
+          title: Text(
+              LanguagesLoader.of(context).translate("Change user data"),
+              style: bodyText()
+          ),
+
           trailing: Icon(Icons.keyboard_arrow_down),
           children: <Widget>[
             ListTile(
               title: Text(
-                'Change password',
+                LanguagesLoader.of(context).translate("Change password"),
                 style: bodyText(),
               ),
               // leading: Icon(Icons.keyboard_arrow_right),
@@ -142,7 +156,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
 
             ListTile(
               title: Text(
-                'Erase account from system',
+                LanguagesLoader.of(context).translate("Erase account from system"),
                 style: bodyText(),
               ),
               trailing: Icon(Icons.remove_circle),
@@ -157,7 +171,7 @@ class _ProfileRouteState extends State<ProfileRoute> {
 
         ListTile(
           title: Text(
-            'FlatMapp Team @ 2020',
+            LanguagesLoader.of(context).translate("flatmapp_footer"),
             style: footer(),
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -147,7 +148,7 @@ class _LogInRouteState extends State<LogInRoute> {
             ), //       <--- BoxDecoration here
             child: ListTile(
               title: Text(
-                'Log in',
+                LanguagesLoader.of(context).translate("Log In"),
                 style: bodyText(),
                 textAlign: TextAlign.left,
               ),
@@ -173,7 +174,7 @@ class _LogInRouteState extends State<LogInRoute> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                'Are you sure you want to log out?',
+                LanguagesLoader.of(context).translate("Are you sure you want to log out?"),
                 style: header(),
               ),
             ]
@@ -187,7 +188,7 @@ class _LogInRouteState extends State<LogInRoute> {
                   child: ListTile(
                     key: Key("logout_yes_list_tile"),
                     title: Text(
-                      'Yes',
+                      LanguagesLoader.of(context).translate("Yes"),
                       style: bodyText(),
                     ),
                     leading: Icon(Icons.check),
@@ -204,7 +205,7 @@ class _LogInRouteState extends State<LogInRoute> {
                   child: ListTile(
                     key: Key("logout_no_list_tile"),
                     title: Text(
-                      'No',
+                      LanguagesLoader.of(context).translate("No"),
                       style: bodyText(),
                       textAlign: TextAlign.right,
                     ),
@@ -277,9 +278,10 @@ class _LogInRouteState extends State<LogInRoute> {
       BottomNavigationBar(
         key: Key("login_button"),
         items: const <BottomNavigationBarItem>[
+          // TODO bottom navigation bar can not contain translations
           BottomNavigationBarItem(
             icon: Icon(Icons.input),
-            title: Text('Log in'),
+            title: Text("Log In"),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.queue),
@@ -287,7 +289,9 @@ class _LogInRouteState extends State<LogInRoute> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.cloud_off),
-            title: Text('Use as guest'),
+            title: Text(
+              'Use as guest'
+            ),
           ),
         ],
         currentIndex: _selectedIndex,
