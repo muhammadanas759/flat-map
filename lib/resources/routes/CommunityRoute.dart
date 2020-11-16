@@ -15,6 +15,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flatmapp/resources/extensions.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+// Putting language dictionaries seams done
 // ignore: must_be_immutable
 class CommunityRoute extends StatefulWidget {
 
@@ -262,8 +263,8 @@ class _CommunityRouteState extends State<CommunityRoute> {
                 controller: _categoryController,
                 style: bodyText(),
                 decoration: textFieldStyle(
-                  labelTextStr: "Category name",
-                  hintTextStr: "please provide category for search"
+                  labelTextStr: LanguagesLoader.of(context).translate("Category name"),
+                  hintTextStr: LanguagesLoader.of(context).translate("please provide category for search")
                 ),
                 onSaved: (String value) {
                   _formCategoryData['category'] = value;
@@ -271,7 +272,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
                 textInputAction: TextInputAction.next,
                 validator: (text) {
                   if (text == null || text.isEmpty) {
-                    return 'This field can not be empty';
+                    return LanguagesLoader.of(context).translate("This field can not be empty");
                   }
                   return null;
                 },
@@ -305,7 +306,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
                       // send request
                       sendCategoryRequest();
                     } else {
-                      netLoader.showToast("No new category to search");
+                      netLoader.showToast(LanguagesLoader.of(context).translate("No new category to search"));
                     }
                   } else {
                     print("field didn't pass validation");
@@ -327,7 +328,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
     // UPDATE USER POSITION
     _geolocator.isLocationServiceEnabled().then((status){
       if (status == false){
-        netLoader.showToast("Geolocation is turned off");
+        netLoader.showToast(LanguagesLoader.of(context).translate("Geolocation is turned off"));
       } else {
         netLoader.checkNetworkConnection().then((connected){
           if(connected){
@@ -348,7 +349,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
             // reset control of category add button
             if_already_added = false;
           } else {
-            netLoader.showToast("Network connection is off");
+            netLoader.showToast(LanguagesLoader.of(context).translate("Network connection is off"));
           }
         });
       }
@@ -379,7 +380,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
           setState(() {
             if_already_added = true;
           });
-          netLoader.showToast("All placemarks added successfully");
+          netLoader.showToast(LanguagesLoader.of(context).translate("All placemarks added successfully"));
         },
       ),
     );
@@ -469,7 +470,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
                       children: <Widget>[
                         IconButton(
                           icon: Icon(Icons.location_searching),
-                          tooltip: 'Find placemark',
+                          tooltip: LanguagesLoader.of(context).translate("Find placemark"),
                           onPressed: () {
                             // move temporary marker to new position
                             widget._markerLoader.addTemporaryMarker(
@@ -486,7 +487,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
                         ),
                         IconButton(
                           icon: Icon(Icons.delete_forever),
-                          tooltip: 'Delete placemark from list',
+                          tooltip: LanguagesLoader.of(context).translate("Delete placemark from list"),
                           onPressed: () {
                             // remove element from list
                             setState(() {
@@ -496,7 +497,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
                         ),
                         IconButton(
                           icon: Icon(Icons.add),
-                          tooltip: 'Add marker',
+                          tooltip: LanguagesLoader.of(context).translate("add_marker"),
                           onPressed: () {
                             // add placemark method
                             String _id = widget._markerLoader.generateId();
@@ -547,7 +548,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
                   child: IconButton(
                     icon: Icon(Icons.keyboard_arrow_down, size: 40),
                     color: (PrefService.get('ui_theme') == 'dark') ? Colors.white : Colors.black,
-                    tooltip: 'Close form',
+                    tooltip: LanguagesLoader.of(context).translate("Close form"),
                     onPressed: (){
                       setState(() {
                         _closePanel(context);
@@ -631,7 +632,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
       body:
       // BODY
       PrefService.getString('token') == ''
-          ? textInfo('You need to log in to use community options.' ?? '') :
+          ? textInfo(LanguagesLoader.of(context).translate("You need to log") ?? '') :
 
       Stack(
         fit: StackFit.expand,

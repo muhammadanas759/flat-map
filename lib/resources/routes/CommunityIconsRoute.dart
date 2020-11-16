@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
@@ -50,7 +51,7 @@ class _CommunityIconsRouteState extends State<CommunityIconsRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(title: 'Choose icon for community'),
+      appBar: appBar(title: LanguagesLoader.of(context).translate("Choose icon for community")),
       body:
       // BODY
       GridView.builder(

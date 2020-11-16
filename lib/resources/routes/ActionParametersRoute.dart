@@ -21,6 +21,8 @@ class ActionParametersRoute extends StatefulWidget {
   _ActionParametersRouteState createState() => _ActionParametersRouteState();
 }
 
+// Putting language dictionaries seams done
+
 class _ActionParametersRouteState extends State<ActionParametersRoute> {
 
   ActionsLoader _actionsLoader = ActionsLoader();
@@ -260,7 +262,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
           TextFormField(
             style: bodyText(),
             decoration: textFieldStyle(
-              labelTextStr: "Notification title"
+              labelTextStr: LanguagesLoader.of(context).translate("Notification title")
             ),
             initialValue: _formData['param1'].toString(),
             onSaved: (String value) {
@@ -277,7 +279,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
           TextFormField(
             style: bodyText(),
             decoration: textFieldStyle(
-              labelTextStr: "Notification description"
+              labelTextStr: LanguagesLoader.of(context).translate("Notification description")
             ),
             initialValue: _formData['param2'].toString(),
             onSaved: (String value) {
@@ -395,7 +397,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
     _formData = _selected_action.parameters;
 
     return Scaffold(
-      appBar: appBar(title: 'Action parameters'),
+      appBar: appBar(title: LanguagesLoader.of(context).translate("Action parameters")),
 //      appBar: appBar(title: 'Action parameters'),
       body:
       // BODY
@@ -433,7 +435,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
                 Navigator.of(context).pop();
                 // show message
                 Fluttertoast.showToast(
-                  msg: "Action parameters saved",
+                  msg: LanguagesLoader.of(context).translate("Action parameters saved"),
 //                  msg: "Action parameters saved",
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.BOTTOM,
