@@ -17,6 +17,8 @@ class LogInRoute extends StatefulWidget {
   _LogInRouteState createState() => _LogInRouteState();
 }
 
+// Putting language dictionaries seams done
+
 class _LogInRouteState extends State<LogInRoute> {
 
   // selected menu in navigator
@@ -37,15 +39,15 @@ class _LogInRouteState extends State<LogInRoute> {
       style: bodyText(),
       key: Key('login_email_field_key'),
       decoration: textFieldStyle(
-          labelTextStr: "Username",
-          hintTextStr: "Your username goes here"
+          labelTextStr: LanguagesLoader.of(context).translate("Username"),
+          hintTextStr: LanguagesLoader.of(context).translate("Your username goes here")
       ),
       validator: (String value) {
 //        if (!RegExp(
 //            r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
 //            .hasMatch(value)) {
         if (value == ''){
-          return 'Invalid username format';
+          return LanguagesLoader.of(context).translate("Invalid username format");
         }
         return null;
       },
@@ -67,13 +69,13 @@ class _LogInRouteState extends State<LogInRoute> {
       style: bodyText(),
       key: Key('login_password_field_key'),
       decoration: textFieldStyle(
-          labelTextStr: "Password",
-          hintTextStr: "Your password goes here"
+          labelTextStr: LanguagesLoader.of(context).translate("Password"),
+          hintTextStr: LanguagesLoader.of(context).translate("Your password goes here")
       ),
       obscureText: true,
       validator: (String value) {
         if (value.isEmpty) {
-          return 'Password can not be empty';
+          return LanguagesLoader.of(context).translate("Password can not be empty");
         }
         return null;
       },
@@ -118,7 +120,7 @@ class _LogInRouteState extends State<LogInRoute> {
           print(_response.body);
         }
       } else {
-        netLoader.showToast("Network connection is off");
+        netLoader.showToast(LanguagesLoader.of(context).translate("Network connection is off"));
       }
     }
   }

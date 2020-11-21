@@ -16,7 +16,7 @@ import 'package:preferences/preferences.dart';
 
 import 'dart:async';
 
-
+// Putting language dictionaries seams done
 
 // ignore: must_be_immutable
 class MapRoute extends StatefulWidget {
@@ -280,8 +280,8 @@ class _MapRouteState extends State<MapRoute> {
       controller: _formTitleController,
       style: bodyText(),
       decoration: textFieldStyle(
-          labelTextStr: "Marker title",
-          hintTextStr: "Marker title goes here"
+          labelTextStr: LanguagesLoader.of(context).translate("Marker title"),
+          hintTextStr: LanguagesLoader.of(context).translate("Marker title goes here")
       ),
       onSaved: (String value) {
         _formMarkerData['title'] = value;
@@ -289,7 +289,7 @@ class _MapRouteState extends State<MapRoute> {
       textInputAction: TextInputAction.next,
       validator: (text) {
         if (text == null || text.isEmpty) {
-          return 'This field can not be empty';
+          return LanguagesLoader.of(context).translate("This field can not be empty");
         }
         return null;
       },
@@ -305,8 +305,8 @@ class _MapRouteState extends State<MapRoute> {
       controller: _formDescriptionController,
       style: bodyText(),
       decoration: textFieldStyle(
-          labelTextStr: "Marker description",
-          hintTextStr: "Marker description goes here"
+          labelTextStr: LanguagesLoader.of(context).translate("Marker description"),
+          hintTextStr: LanguagesLoader.of(context).translate("Marker description goes here")
       ),
       onSaved: (String value) {
         _formMarkerData['description'] = value;
@@ -314,7 +314,7 @@ class _MapRouteState extends State<MapRoute> {
       textInputAction: TextInputAction.next,
       validator: (text) {
         if (text == null || text.isEmpty) {
-          return 'This field can not be empty';
+          return LanguagesLoader.of(context).translate("This field can not be empty");
         }
         return null;
       },
@@ -396,7 +396,7 @@ class _MapRouteState extends State<MapRoute> {
       // To prevent this behaviour, additional if is present.
       if(_formMarkerData['title'] == "" || _formMarkerData['description'] == ""){
         Fluttertoast.showToast(
-          msg: "Please submit title and description and press enter",
+          msg: LanguagesLoader.of(context).translate("Please submit title and description and press enter"),
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
         );
@@ -429,7 +429,7 @@ class _MapRouteState extends State<MapRoute> {
 
         // show message
         Fluttertoast.showToast(
-          msg: "Added marker",
+          msg: LanguagesLoader.of(context).translate("Added marker"),
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
         );

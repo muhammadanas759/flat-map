@@ -100,6 +100,18 @@
   "Change user data": "Change user data",
   "Erase account from system": "Erase account from system",
   "Register": "Register",
+  "Your username goes here": "Your username goes here",
+  "Invalid username format": "Invalid username format",
+  "Password": "Password",
+  "Your password goes here": "Your password goes here",
+  "Password can not be empty": "Password can not be empty",
+
+  "Marker title": "Marker title",
+  "Marker title goes here": "Marker title goes here",
+  "Marker description": "Marker description",
+  "Marker description goes here": "Marker description goes here",
+  "Please submit title and description and press enter": "Please submit title and description and press enter",
+  "Added marker": "Added marker",
 
   "---------------": "new lines should be added after this line in order to add them to other dictionaries",
   "new line of text": "temptemptemptemp"
