@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:preferences/preference_service.dart';
 
+// Putting language dictionaries seams done
 
 class RegisterRoute extends StatefulWidget {
   @override
@@ -37,15 +38,15 @@ class _RegisterRouteState extends State<RegisterRoute> {
     return TextFormField(
       style: bodyText(),
       decoration: textFieldStyle(
-          labelTextStr: "Username",
-          hintTextStr: "Your username goes here"
+          labelTextStr: LanguagesLoader.of(context).translate("Username"),
+          hintTextStr: LanguagesLoader.of(context).translate("Your username goes here")
       ),
       validator: (String value) {
 //        if (!RegExp(
 //            r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
 //            .hasMatch(value)) {
         if (value == ''){
-          return 'Invalid username format';
+          return LanguagesLoader.of(context).translate("Invalid username format");
         }
         return null;
       },
@@ -67,13 +68,13 @@ class _RegisterRouteState extends State<RegisterRoute> {
     return TextFormField(
       style: bodyText(),
       decoration: textFieldStyle(
-          labelTextStr: "Password",
-          hintTextStr: "Your password goes here"
+          labelTextStr: LanguagesLoader.of(context).translate("Password"),
+          hintTextStr: LanguagesLoader.of(context).translate("Your password goes here")
       ),
       obscureText: true,
       validator: (String value) {
         if (value.isEmpty) {
-          return 'Password can not be empty';
+          return LanguagesLoader.of(context).translate("Password can not be empty");
         }
         return null;
       },
@@ -96,15 +97,15 @@ class _RegisterRouteState extends State<RegisterRoute> {
     return TextFormField(
       style: bodyText(),
       decoration: textFieldStyle(
-          labelTextStr: "Confirm password",
-          hintTextStr: "Your password goes here"
+          labelTextStr: LanguagesLoader.of(context).translate("Confirm password"),
+          hintTextStr: LanguagesLoader.of(context).translate("Your password goes here")
       ),
       obscureText: true,
       validator: (String value) {
         if (value.isEmpty) {
-          return 'Password can not be empty';
+          return LanguagesLoader.of(context).translate("Password can not be empty");
         } else if(value != _formData['password']){
-          return 'Passwords do not match';
+          return LanguagesLoader.of(context).translate("Passwords do not match");
         }
         return null;
       },
@@ -137,20 +138,20 @@ class _RegisterRouteState extends State<RegisterRoute> {
           Navigator.of(context).pop();
           // show message
           Fluttertoast.showToast(
-            msg: "Registered account",
+            msg: LanguagesLoader.of(context).translate("Registered account"),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
           );
         }
         else{
           Fluttertoast.showToast(
-            msg: "Something went wrong",
+            msg: LanguagesLoader.of(context).translate("Something went wrong"),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
           );
         }
       } else {
-        netLoader.showToast("Network connection is off");
+        netLoader.showToast(LanguagesLoader.of(context).translate("Network connection is off"));
       }
     }
   }

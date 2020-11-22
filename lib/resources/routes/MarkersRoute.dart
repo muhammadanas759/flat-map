@@ -22,6 +22,8 @@ class MarkersRoute extends StatefulWidget {
   _MarkersRouteState createState() => _MarkersRouteState();
 }
 
+// Putting language dictionaries seams done
+
 class _MarkersRouteState extends State<MarkersRoute> {
 
   IconsLoader _iconsLoader = IconsLoader();
@@ -246,7 +248,7 @@ class _MarkersRouteState extends State<MarkersRoute> {
                           children: <Widget>[
                             IconButton(
                               icon: Icon(Icons.location_searching),
-                              tooltip: 'Find marker',
+                              tooltip: LanguagesLoader.of(context).translate("Find marker"),
                               onPressed: () {
                                 // set selected marker id for map screen
                                 PrefService.setString('selected_marker', _id);
@@ -256,7 +258,7 @@ class _MarkersRouteState extends State<MarkersRoute> {
                             ),
                             IconButton(
                               icon: Icon(Icons.delete_forever),
-                              tooltip: 'Remove marker',
+                              tooltip: LanguagesLoader.of(context).translate("Remove marker"),
                               onPressed: () {
                                 // set up the AlertDialog
                                 raiseAlertDialogRemoveMarker(_id);

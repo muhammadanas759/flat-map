@@ -112,6 +112,13 @@
   "Marker description goes here": "Marker description goes here",
   "Please submit title and description and press enter": "Please submit title and description and press enter",
   "Added marker": "Added marker",
+  "Find marker": "Find marker",
+  "Remove marker": "Remove marker",
+  "Confirm password": "Confirm password",
+  "Passwords do not match": "Passwords do not match",
+  "Registered account": "Registered account",
+  "Something went wrong": "Something went wrong",
+
 
   "---------------": "new lines should be added after this line in order to add them to other dictionaries",
   "new line of text": "temptemptemptemp"
