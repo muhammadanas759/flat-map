@@ -55,5 +55,72 @@
   "Get your markers from Backup": "Cambiar los datos del usuario",
   "Change user data": "Change user data",
   "Erase account from system": "Borrar cuenta del sistema",
-  "Register": "Registrarse"
+  "Register": "Registrarse",
+
+
+  "Application repository" : "Application repository",
+  "Could not launch": "Could not launch",
+  "Server repository": "Server repository",
+  "Test report": "Test report",
+  "Opening test report": "Opening test report...",
+  "Bug report": "Bug report",
+  "Opening bug report": "Opening bug report...",
+  "rate_on_google": "Please rate our effort on Google Play Store!",
+
+  "Choose action": "Choose action",
+
+
+  "Old password": "Old password",
+  "provide_old_password": "Please provide your old password",
+  "New password": "New password",
+  "provide_new_password": "Please provide your new password",
+  "Repeat new password": "Repeat new password",
+  "repeat_new_password": "Please repeat your new password",
+  "Password changed successfully": "Password changed successfully",
+  "Network connection is off": "Network connection is off",
+  "Notification title": "Notification title",
+  "Notification description": "Notification description",
+  "Action parameters": "Action parameters",
+  "Action parameters saved": "Action parameters saved",
+
+  "Choose icon for community": "Choose icon for community",
+
+  "Category name": "Category name",
+  "please provide category for search": "please provide category for search",
+  "This field can not be empty": "This field can not be empty",
+  "No new category to search": "No new category to search",
+  "Geolocation is turned off": "Geolocation is turned off",
+  "All placemarks added successfully": "All placemarks added successfully",
+  "Find placemark": "Find placemark",
+  "Delete placemark from list": "Delete placemark from list",
+  "add_marker": "Add marker",
+  "Close form": "Close form",
+  "You need to log in": "You need to log in to use community options.",
+
+  "Please rewrite code above": "Please rewrite code above",
+  "Security codes do not match": "Security codes do not match",
+  "Account erased successfully": "Account erased successfully",
+  "Account removal": "Account removal",
+  "Your username goes here": "Your username goes here",
+  "Invalid username format": "Invalid username format",
+  "Password": "Password",
+  "Your password goes here": "Your password goes here",
+  "Password can not be empty": "Password can not be empty",
+
+  "Marker title": "Marker title",
+  "Marker title goes here": "Marker title goes here",
+  "Marker description": "Marker description",
+  "Marker description goes here": "Marker description goes here",
+  "Please submit title and description and press enter": "Please submit title and description and press enter",
+  "Added marker": "Added marker",
+  "Find marker": "Find marker",
+  "Remove marker": "Remove marker",
+  "Confirm password": "Confirm password",
+  "Passwords do not match": "Passwords do not match",
+  "Registered account": "Registered account",
+  "Something went wrong": "Something went wrong",
+
+
+  "---------------": "new lines should be added after this line in order to add them to other dictionaries",
+  "new line of text": "temptemptemptemp"
 }
