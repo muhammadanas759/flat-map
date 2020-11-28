@@ -63,6 +63,7 @@ class _MapRouteState extends State<MapRoute> {
     'description': "marker presenting chosen position",
     'range': 12,
     'actions': [],
+    'activation': 0
   };
 
   @override
@@ -78,11 +79,19 @@ class _MapRouteState extends State<MapRoute> {
 
   // ===========================================================================
   // -------------------- GOOGLE MAPS WIDGET SECTION ---------------------------
+
   // set custom map style
   void _setStyle(GoogleMapController controller) async {
     String value = await DefaultAssetBundle.of(context)
         .loadString('assets/map_style_$_preset.json');
     controller.setMapStyle(value);
+  }
+
+  // Changes the selected value on 'onChanged' click on each radio button
+  setSelectedRadio(int val) {
+    setState(() {
+      _formMarkerData['activation'] = val;
+    });
   }
 
   // Called when the Google Map widget is created.
@@ -240,6 +249,7 @@ class _MapRouteState extends State<MapRoute> {
       _formMarkerData['title'] = temp.title;
       _formMarkerData['description'] = temp.description;
       _formMarkerData['range'] = temp.range.toInt();
+      _formMarkerData['activation'] = temp.activation;
     }
 
     // update controllers
@@ -416,6 +426,7 @@ class _MapRouteState extends State<MapRoute> {
             description: _formMarkerData['description'].toString(),
             range: _formMarkerData['range'].toDouble(),
             actions: widget._markerLoader.getMarkerActions(id: _selectedMarkerId),
+            activation: _formMarkerData['activation']
           );
         });
 
@@ -493,6 +504,44 @@ class _MapRouteState extends State<MapRoute> {
               SizedBox(width: 10),
               // range counter
               _buildMarkerRangeField(),
+            ],
+          ),
+          SizedBox(height: 10),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                  LanguagesLoader.of(context).translate("Activate on:"),
+                  style: bodyText()
+              ),
+              // activate on entry or exit
+              Text(
+                LanguagesLoader.of(context).translate("entry"),
+                style: bodyText(),
+              ),
+              Radio(
+                value: 0,
+                groupValue: _formMarkerData['activation'],
+                activeColor: Colors.green,
+                onChanged: (val) {
+                  print("Radio $val");
+                  setSelectedRadio(val);
+                },
+              ),
+              Text(
+                LanguagesLoader.of(context).translate("exit"),
+                style: bodyText()
+              ),
+              Radio(
+                value: 1,
+                groupValue: _formMarkerData['activation'],
+                activeColor: Colors.green,
+                onChanged: (val) {
+                  print("Radio $val");
+                  setSelectedRadio(val);
+                },
+              ),
             ],
           ),
           SizedBox(height: 10),

@@ -118,8 +118,10 @@
   "Passwords do not match": "Passwords do not match",
   "Registered account": "Registered account",
   "Something went wrong": "Something went wrong",
-
+  "Activate on:": "Activate on:",
+  "entry": "entry",
+  "exit": "exit",
 
   "---------------": "new lines should be added after this line in order to add them to other dictionaries",
-  "new line of text": "temptemptemptemp"
+  "new line of text": "chwilowechwilowechwilowe"
 }

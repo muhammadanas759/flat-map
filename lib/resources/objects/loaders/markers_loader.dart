@@ -82,6 +82,7 @@ class MarkerLoader {
     await file.writeAsString(markerStorage);
 
     print("markers saved!");
+    print(_markersDescriptions);
   }
 
   // load markers from local storage
@@ -156,6 +157,7 @@ class MarkerLoader {
           description: markerData.description,
           range: markerData.range,
           actions: markerData.actions,
+          activation: markerData.activation,
       );
     });
   }
@@ -167,8 +169,14 @@ class MarkerLoader {
 
   // add or edit marker
   void addMarker({
-    String id, LatLng position, String icon,
-    String title, String description, double range, List<FlatMappAction> actions
+    String id,
+    LatLng position,
+    String icon,
+    String title,
+    String description,
+    double range,
+    List<FlatMappAction> actions,
+    int activation
   }){
 
     _markersDescriptions[id] = FlatMappMarker(
@@ -179,7 +187,8 @@ class MarkerLoader {
       title,
       description,
       icon,
-      actions
+      actions,
+      activation
     );
 
     iconsLoader.getMarkerImage(icon).then((iconBitmap){
@@ -243,6 +252,7 @@ class MarkerLoader {
       description: "",
       range: 12,
       actions: [],
+      activation: 0,
     );
   }
 

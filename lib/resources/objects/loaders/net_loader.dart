@@ -186,6 +186,7 @@ class NetLoader {
                 "title": value.title,
                 "icon": value.icon,
                 "description": value.description,
+                "activation": value.activation,
                 // TODO determine what action_detail means
                 // "action_detail": "none",
               });
@@ -263,6 +264,7 @@ class NetLoader {
                 description: marker['description'].toString(),
                 range: marker['_range'],
                 actions: toActionsList(List<dynamic>.from(marker['Action_Name'])),
+                activation: marker['activation']
               );
             });
 
@@ -395,6 +397,7 @@ class NetLoader {
             'position_y': place['location']['lng'],
             'name': place['name'],
             'radius': place['radius'],
+            'activation': 0,
           });
         });
 

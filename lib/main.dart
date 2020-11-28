@@ -37,18 +37,6 @@ final MarkerLoader _markerLoader = MarkerLoader();
 
 void _setUserPosition() async {
   // move temporary marker to user's location
-//  Geolocator().isLocationServiceEnabled().then((status) async {
-//    if (status == false) {
-//      print("GEOLOCATION MODULE IS TURNED OFF");
-//    } else {
-//      Position _position = await Geolocator()
-//          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-//      _markerLoader.addTemporaryMarker(_position.toLatLng());
-//      // send position to garbage collector
-//      _position = null;
-//    }
-//  });
-
   bool _geoEnabled = await Geolocator().isLocationServiceEnabled();
   if (_geoEnabled) {
     Position _position = await Geolocator()
@@ -56,6 +44,8 @@ void _setUserPosition() async {
     _markerLoader.addTemporaryMarker(_position.toLatLng());
     // send position to garbage collector
     _position = null;
+  } else {
+    print("GEOLOCATION MODULE IS TURNED OFF");
   }
 }
 
@@ -103,7 +93,7 @@ main() async {
     Permission.location.request();
   }
 
-  _setUserPosition();
+  await _setUserPosition();
 
   // disable device orientation changes and force portrait
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
