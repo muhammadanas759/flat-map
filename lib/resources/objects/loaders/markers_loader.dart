@@ -82,7 +82,6 @@ class MarkerLoader {
     await file.writeAsString(markerStorage);
 
     print("markers saved!");
-    print(_markersDescriptions);
   }
 
   // load markers from local storage
