@@ -671,6 +671,7 @@ class _MapRouteState extends State<MapRoute> {
           SlidingUpPanel(
             color: _preset == 'dark' ? Colors.black : Colors.white,
             minHeight: 30,
+            maxHeight: 590,
             padding: EdgeInsets.only(left: 30, right: 30,),
             borderRadius: radius,
             isDraggable: false,
