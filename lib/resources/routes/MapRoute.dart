@@ -652,7 +652,7 @@ class _MapRouteState extends State<MapRoute> {
 
       // GOOGLE MAPS
       PrefService.get('map_enabled') != true
-        ? textInfo('Map is disabled' ?? '')
+        ? textInfo(LanguagesLoader.of(context).translate("Map is disabled") ?? '')
         : Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -666,7 +666,7 @@ class _MapRouteState extends State<MapRoute> {
 
           // Map markers loading indicator
           if (_areMarkersLoading)
-            textInfo('Loading markers'),
+            textInfo(LanguagesLoader.of(context).translate("Loading markers")),
 
           SlidingUpPanel(
             color: _preset == 'dark' ? Colors.black : Colors.white,

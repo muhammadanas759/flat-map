@@ -123,6 +123,14 @@
   "entry": "entrada",
   "exit": "salida",
 
+  "light": "ligero",
+  "dark": "oscuro",
+  "General": "General",
+  "Start Page": "Página de inicio",
+  "Personalization": "Personalización",
+  "Change background theme": "Cambiar el tema de fondo",
+  "Map is disabled": "El mapa está deshabilitado",
+  "Loading markers": "Cargando marcadores",
 
   "---------------": "Se deben agregar nuevas líneas después de esta línea para agregarlas a otros diccionarios.",
   "new line of text": "temptemptemptemp"

@@ -24,7 +24,7 @@
         <!-- Add the following entry, with your API key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyB93PI4Rsye09vuY250w_q-rNG5ESbBAjw" />
+            android:value="AIzaSyAHHshCbnft9vqHHRTqGzbmD0sIa1G6iTE" />
 
         <service
             android:name=".FlatMappService"

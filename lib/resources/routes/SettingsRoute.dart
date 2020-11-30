@@ -1,3 +1,4 @@
+import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
 import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
@@ -20,22 +21,30 @@ class _SettingsRouteState extends State<SettingsRoute> {
   PreferencePage easyPreferences(){
     return PreferencePage([
 
-      PreferenceTitle('General', style: header()),
+      PreferenceTitle(
+          LanguagesLoader.of(context).translate("General"),
+          style: header()),
       DropdownPreference(
-        'Start Page',
+        LanguagesLoader.of(context).translate("Start Page"),
         'start_page',
         defaultVal: 'Map',
         values: ['Map', 'Markers', 'Profile', 'Community', 'Settings', 'About'],
       ),
 
-      PreferenceTitle('Personalization', style: header()),
+      // LanguagesLoader.of(context).getKey("light")
+
+      PreferenceTitle(
+          LanguagesLoader.of(context).translate("Personalization"),
+          style: header()),
       DropdownPreference(
-        'Change background theme',
+        LanguagesLoader.of(context).translate('Change background theme'),
         'ui_theme',
-        defaultVal: 'light',
-        values: ['light', 'dark'],
+        // defaultVal: LanguagesLoader.of(context).translate("light"),
+        // values: [LanguagesLoader.of(context).translate("light"), LanguagesLoader.of(context).translate("dark")],
+        defaultVal: "light",
+        values: ["light", "dark"],
         onChange: (value) {
-          if(value == 'light'){
+          if(value == "light"){
             DynamicTheme.of(context).setBrightness(Brightness.light);
           } else {
             DynamicTheme.of(context).setBrightness(Brightness.dark);

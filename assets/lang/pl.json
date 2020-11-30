@@ -85,7 +85,7 @@
   "Add marker": "Dodaj\nznacznik",
   "Save marker": "Zapisz\nznacznik",
   "Delete marker": "Usuń\nznacznik",
-  "Tap here to create or modify markers": "Tapnij tutaj żeby dodać albo zmodyfikować znacznik",
+  "Tap here to create or modify markers": "Tapnij tutaj by dodać lub zmienić znacznik",
   "Remove marker?": "Usunąć znacznik?",
   "Remove ALL markers?": "Usunąć wszystkie znaczniki?",
   "You are about to remove all markers from local storage": "Czy chcesz usunąc wszystkie znaczniki/nz pamięci telefonu?",
@@ -121,7 +121,14 @@
   "Activate on:": "Włącz przy:",
   "entry": "wejściu",
   "exit": "wyjściu",
-
+  "light": "jasny",
+  "dark": "ciemny",
+  "General": "Ogólne",
+  "Start Page": "Strona startowa",
+  "Personalization": "Personalizacja",
+  "Change background theme": "Zmień motyw tła",
+  "Map is disabled": "Mapa jest wyłączona",
+  "Loading markers": "Ładowanie markerów",
 
   "---------------": "nowe linie należy dodać po tej linii, aby dodać je do innych słowników",
   "new line of text": "chwilowechwilowechwilowe"

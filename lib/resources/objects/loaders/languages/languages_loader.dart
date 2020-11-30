@@ -31,4 +31,9 @@ class LanguagesLoader {
   String translate(String key) {
     return this._sentences[key];
   }
+
+  String getKey(String value) {
+    return this._sentences.keys.firstWhere(
+            (k) => this._sentences[k] == value, orElse: () => null);
+  }
 }

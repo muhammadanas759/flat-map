@@ -121,7 +121,15 @@
   "Activate on:": "Activate on:",
   "entry": "entry",
   "exit": "exit",
+  "light": "light",
+  "dark": "dark",
+  "General": "General",
+  "Start Page": "Start Page",
+  "Personalization": "Personalization",
+  "Change background theme": "Change background theme",
+  "Map is disabled": "Map is disabled",
+  "Loading markers": "Loading markers",
 
   "---------------": "new lines should be added after this line in order to add them to other dictionaries",
-  "new line of text": "chwilowechwilowechwilowe"
+  "new line of text": "chwilowechwilowechwilowe",
 }
