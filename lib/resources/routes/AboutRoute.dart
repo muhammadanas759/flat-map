@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:launch_review/launch_review.dart';
 
 // Putting language dictionaries seams done
 
@@ -145,21 +144,20 @@ class AboutRoute extends StatelessWidget {
               ),
               SizedBox(height: 10),
 
-              Container(
-                decoration: buttonFieldStyle(),
-                child: ListTile(
-                  title: Text(
-                    '${LanguagesLoader.of(context).translate("rate_on_google")}',
-                    style: bodyText(),
-                  ),
-                  trailing: Icon(Icons.star_border),
-                  onTap: (){
-                    // go to Google Play app review
-                    LaunchReview.launch();
-                  },
-                ),
-              ),
-              SizedBox(height: 10),
+              // Container(
+              //   decoration: buttonFieldStyle(),
+              //   child: ListTile(
+              //     title: Text(
+              //       '${LanguagesLoader.of(context).translate("rate_on_google")}',
+              //       style: bodyText(),
+              //     ),
+              //     trailing: Icon(Icons.star_border),
+              //     onTap: (){
+              //       // TODO go to Google Play app review
+              //     },
+              //   ),
+              // ),
+              // SizedBox(height: 10),
 
               ListTile(
                 title: Text(

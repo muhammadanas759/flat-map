@@ -98,7 +98,6 @@ class _CommunityRouteState extends State<CommunityRoute> {
       actions: widget._markerLoader.getMarkerActions(
         id: "temporary"
       ),
-      activation: 0
     );
   }
 

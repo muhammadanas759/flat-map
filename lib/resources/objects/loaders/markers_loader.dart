@@ -156,7 +156,6 @@ class MarkerLoader {
           description: markerData.description,
           range: markerData.range,
           actions: markerData.actions,
-          activation: markerData.activation,
       );
     });
   }
@@ -168,14 +167,8 @@ class MarkerLoader {
 
   // add or edit marker
   void addMarker({
-    String id,
-    LatLng position,
-    String icon,
-    String title,
-    String description,
-    double range,
-    List<FlatMappAction> actions,
-    int activation
+    String id, LatLng position, String icon,
+    String title, String description, double range, List<FlatMappAction> actions
   }){
 
     _markersDescriptions[id] = FlatMappMarker(
@@ -186,8 +179,7 @@ class MarkerLoader {
       title,
       description,
       icon,
-      actions,
-      activation
+      actions
     );
 
     iconsLoader.getMarkerImage(icon).then((iconBitmap){
@@ -251,7 +243,6 @@ class MarkerLoader {
       description: "",
       range: 12,
       actions: [],
-      activation: 0,
     );
   }
 

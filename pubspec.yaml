@@ -65,8 +65,6 @@ dependencies:
   # languages support
   flutter_localizations:
     sdk: flutter
-  # open app store in about section
-  launch_review: ^1.0.1
 
 dev_dependencies:
   flutter_driver:
