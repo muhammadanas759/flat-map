@@ -311,10 +311,11 @@ class _LogInRouteState extends State<LogInRoute> {
               break;
             case 2:
               // return to default screen
-              Navigator.popUntil(
-                context,
-                ModalRoute.withName(Navigator.defaultRouteName)
-              );
+              // Navigator.popUntil(
+              //   context,
+              //   ModalRoute.withName(Navigator.defaultRouteName)
+              // );
+              Navigator.of(context).popUntil((route) => route.isFirst);
               break;
           }
         }

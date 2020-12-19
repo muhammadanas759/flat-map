@@ -100,69 +100,69 @@ class _CommunityRouteState extends State<CommunityRoute> {
       ),
     );
   }
-
-  Widget _buildMarkerApproximateRangeField() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Tooltip(
-          message: LanguagesLoader.of(context).translate("marker range in meters"),
-          child: new Text(
-            LanguagesLoader.of(context).translate("Range:"),
-            style: bodyText(),
-          ),
-        ),
-        SizedBox(height: 20),
-        IconButton(
-          icon: Icon(Icons.remove),
-          onPressed: () {
-            if (_formCategoryData['range'] > 1) {
-              setState(() {
-                _formCategoryData['range'] -= 1;
-                _formRangeController.text = _formCategoryData['range'].toString();
-              });
-            }
-          },
-        ),
-        SizedBox(
-          width: 100,
-          child: TextFormField(
-            controller: _formRangeController,
-            onSaved: (String input) {
-              _formCategoryData['range'] = toDouble(input, 100);
-            },
-            onFieldSubmitted: (String value) {
-              _formCategoryData['range'] = value;
-              FocusScope.of(context).requestFocus(FocusNode());
-            },
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              // labelText: state.value.toString(),
-            ),
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              WhitelistingTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(7),
-            ],
-          ),
-        ),
-        Text(
-          " m",
-          style: bodyText(),
-        ),
-        IconButton(
-          icon: Icon(Icons.add),
-          onPressed: () {
-            setState(() {
-              _formCategoryData['range'] += 1;
-              _formRangeController.text = _formCategoryData['range'].toString();
-            });
-          },
-        ),
-      ],
-    );
-  }
+  //
+  // Widget _buildMarkerApproximateRangeField() {
+  //   return Row(
+  //     mainAxisSize: MainAxisSize.min,
+  //     children: <Widget>[
+  //       Tooltip(
+  //         message: LanguagesLoader.of(context).translate("marker range in meters"),
+  //         child: new Text(
+  //           LanguagesLoader.of(context).translate("Range:"),
+  //           style: bodyText(),
+  //         ),
+  //       ),
+  //       SizedBox(height: 20),
+  //       IconButton(
+  //         icon: Icon(Icons.remove),
+  //         onPressed: () {
+  //           if (_formCategoryData['range'] > 1) {
+  //             setState(() {
+  //               _formCategoryData['range'] -= 1;
+  //               _formRangeController.text = _formCategoryData['range'].toString();
+  //             });
+  //           }
+  //         },
+  //       ),
+  //       SizedBox(
+  //         width: 100,
+  //         child: TextFormField(
+  //           controller: _formRangeController,
+  //           onSaved: (String input) {
+  //             _formCategoryData['range'] = toDouble(input, 100);
+  //           },
+  //           onFieldSubmitted: (String value) {
+  //             _formCategoryData['range'] = value;
+  //             FocusScope.of(context).requestFocus(FocusNode());
+  //           },
+  //           textInputAction: TextInputAction.next,
+  //           decoration: InputDecoration(
+  //             border: OutlineInputBorder(),
+  //             // labelText: state.value.toString(),
+  //           ),
+  //           keyboardType: TextInputType.number,
+  //           inputFormatters: <TextInputFormatter>[
+  //             WhitelistingTextInputFormatter.digitsOnly,
+  //             LengthLimitingTextInputFormatter(7),
+  //           ],
+  //         ),
+  //       ),
+  //       Text(
+  //         " m",
+  //         style: bodyText(),
+  //       ),
+  //       IconButton(
+  //         icon: Icon(Icons.add),
+  //         onPressed: () {
+  //           setState(() {
+  //             _formCategoryData['range'] += 1;
+  //             _formRangeController.text = _formCategoryData['range'].toString();
+  //           });
+  //         },
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget _buildMarkerRangeField() {
     return Row(
@@ -227,29 +227,29 @@ class _CommunityRouteState extends State<CommunityRoute> {
     );
   }
 
-  Widget _buildApproximatedCheckboxField(){
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(width: 0.5),
-        borderRadius: BorderRadius.all(
-            Radius.circular(10.0) //         <--- border radius here
-        ),
-      ), //       <--- BoxDecoration here
-      child: CheckboxListTile(
-        title: Text(
-          LanguagesLoader.of(context).translate("Use >Google nearby< range"),
-          style: bodyText(),
-        ),
-        value: _formCategoryData['approximate'],
-        onChanged: (value) {
-          setState(() {
-            _formCategoryData['approximate'] = value;
-          });
-        },
-        controlAffinity: ListTileControlAffinity.trailing, //or leading
-      ),
-    );
-  }
+  // Widget _buildApproximatedCheckboxField(){
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //       border: Border.all(width: 0.5),
+  //       borderRadius: BorderRadius.all(
+  //           Radius.circular(10.0) //         <--- border radius here
+  //       ),
+  //     ), //       <--- BoxDecoration here
+  //     child: CheckboxListTile(
+  //       title: Text(
+  //         LanguagesLoader.of(context).translate("Use >Google nearby< range"),
+  //         style: bodyText(),
+  //       ),
+  //       value: _formCategoryData['approximate'],
+  //       onChanged: (value) {
+  //         setState(() {
+  //           _formCategoryData['approximate'] = value;
+  //         });
+  //       },
+  //       controlAffinity: ListTileControlAffinity.trailing, //or leading
+  //     ),
+  //   );
+  // }
 
   Widget _buildCategoryTextFieldAndButton() {
     return Form(
@@ -441,8 +441,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
 
   Widget _listPlaces(BuildContext context) {
     if (_placesDescriptions.length > 0){
-      return Expanded(
-        child:
+      return
         ListView.builder(
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
@@ -517,8 +516,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
               ),
             );
           },
-        ),
-      );
+        );
     } else {
       return ListTile(
         title: Text(
@@ -701,6 +699,24 @@ class _CommunityRouteState extends State<CommunityRoute> {
                       height: 400, // fixed height
                       child: _listPlaces(context),
                     ),
+
+                    // Container(
+                    //   child: SingleChildScrollView(
+                    //     child: Column(
+                    //       children: [
+                    //         _listPlaces(context)
+                    //       ],
+                    //     ),
+                    //   ),
+                    // )
+
+                    // Row(
+                    //   children: <Widget>[
+                    //     Flexible(child: _listPlaces(context),),
+                    //     // more widgets
+                    //   ],
+                    // ),
+
                   ],
                 ),
               ),
