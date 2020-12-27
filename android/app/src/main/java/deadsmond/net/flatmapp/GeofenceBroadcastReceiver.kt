@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
+import android.media.MediaPlayer
 import android.net.wifi.WifiManager
 import android.os.AsyncTask
 import android.os.Build
@@ -30,11 +31,12 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
             return
         }
         val pendingResult:PendingResult = goAsync()
-        Task(pendingResult, intent, context).execute(geofencingEvent.triggeringGeofences)
+        Task(pendingResult, intent, context).execute(geofencingEvent)
 
     }
 
-    class Task(var pendingResult: PendingResult, var intent: Intent, var context: Context) : AsyncTask<List<Geofence>, Void, Void>() {
+    class Task(var pendingResult: PendingResult, var intent: Intent, var context: Context)
+        : AsyncTask<GeofencingEvent, Void, Void>() {
 
         val TAG = "flutterBackground"
 
@@ -43,14 +45,15 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
             pendingResult.finish()
         }
 
-        override fun doInBackground(vararg p0: List<Geofence>?): Void? {
+        override fun doInBackground(vararg p0: GeofencingEvent?): Void? {
             try {
                 val notificationHelper = NotificationHelper(context)
                 val markerPath = context.filesDir.path + "/../app_flutter"
                 val markerFile = File(markerPath + "/marker_storage.json")
                 val markerMap = HashMap<String, ArrayList<Action>>()
-                Log.i(TAG, markerFile.readText())
-                for(geofence:Geofence in p0[0]!!)
+                val transition = p0[0]?.geofenceTransition
+                Log.i(TAG, markerFile.readText()) // Log to be erased later
+                for(geofence:Geofence in p0[0]?.triggeringGeofences!!)
                 {
                     val geo:Geofence = geofence
                     markerMap[geo.requestId] = ArrayList()
@@ -143,8 +146,10 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                         {
                             "notification" ->
                             {
-                                notificationHelper.sendHighPriorityNotification(action.params[0], action.params[1], MainActivity::class.java)
-                                Log.i(TAG, "called notification action. Title: ${action.params[0]}, body: ${action.params[1]}")
+                                notificationHelper.sendHighPriorityNotification(action.params[0],
+                                        action.params[1], MainActivity::class.java)
+                                Log.i(TAG, "Flatmapp called notification action. Title: " +
+                                        "${action.params[0]}, body: ${action.params[1]}")
                             }
 //                            "sound" ->
 //                            {
@@ -172,7 +177,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 //                            }
                             "wi-fi" ->
                             {
-                                Log.i(TAG, "called wifi action")
+                                Log.i(TAG, "Flatmapp called wifi action")
                                 if(action.params[0] != "")
                                 {
                                     when(action.params[0]) {
@@ -190,7 +195,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                             }
                             "bluetooth" ->
                             {
-                                Log.i(TAG, "called bluetooth action")
+                                Log.i(TAG, "Flatmapp called bluetooth action")
                                 if(action.params[0] != "")
                                 {
                                     when(action.params[0])
@@ -214,6 +219,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                             {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                                     mutePhone()
+                                    Log.i(TAG, "Flatmapp called mute phone action")
                                 }
                             }
                             "change alarm volume" ->
@@ -221,6 +227,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                                     try{
                                         setAlarmVolume(action.params[0].toDouble())
+                                        Log.i(TAG, "Flatmapp called change alarm volume" +
+                                                " action")
                                     }catch(e:Exception) {
                                         Log.i(TAG, e.toString())
                                     }
@@ -231,6 +239,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                                     try{
                                         setRingVolume(action.params[0].toDouble())
+                                        Log.i(TAG, "Flatmapp called change ringtone volume " +
+                                                "action")
                                     }catch(e:Exception) {
                                         Log.i(TAG, e.toString())
                                     }
@@ -241,6 +251,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                                     try{
                                         setMusicVolume(action.params[0].toDouble())
+                                        Log.i(TAG, "Flatmapp called change multimedia volume" +
+                                                " action")
                                     }catch(e:Exception) {
                                         Log.i(TAG, e.toString())
                                     }
@@ -248,7 +260,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                             }
                             else ->
                             {
-                                Log.i(TAG, "called not implemented action ${action.name}")
+                                Log.i(TAG, "FlatMapp called not implemented action ${action.name}")
                             }
                         }
                     }
@@ -359,6 +371,15 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
             }
         }
 
+        private fun playSound()
+        {
+            try{
+                MediaPlayer.create(context, R.raw.notification)?.start()
+            }catch (e:Exception)
+            {
+                Log.i(TAG, e.toString())
+            }
+        }
     }
 
 }
