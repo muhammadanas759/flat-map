@@ -48,7 +48,7 @@ android {
         applicationId "flatmapp.project"
         minSdkVersion 25
         targetSdkVersion 29
-        versionCode flutterVersionCode.toInteger() + 4
+        versionCode flutterVersionCode.toInteger() + 5
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

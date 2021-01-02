@@ -33,9 +33,6 @@ class _MapRouteState extends State<MapRoute> {
   // ===========================================================================
   // -------------------- INIT VARIABLES SECTION -------------------------------
 
-  // notifier on marker tap
-  // PrefService.setString('selected_marker', id);
-
   // google map controller
   final Completer<GoogleMapController> _mapController = Completer();
 

@@ -334,6 +334,9 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
       case "flight":
         return _noWidget(context, "Flight mode");
         break;
+      case "single sound":
+        return _noWidget(context, "Single sound");
+        break;
       case "mute":
         return _noWidget(context, "Mute");
         break;
@@ -409,17 +412,15 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
       drawer: sideBarMenu(context),
 
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.check),
-            // TODO add static translation
-            title: Text("Accept"),
+            title: Text(LanguagesLoader.of(context).translate("Accept")),
 //            title: Text("Accept"),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.keyboard_return),
-            // TODO add static translation
-            title: Text('Return'),
+            title: Text(LanguagesLoader.of(context).translate("Return")),
 //            title: Text('Return'),
           ),
         ],

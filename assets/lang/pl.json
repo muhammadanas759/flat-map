@@ -6,6 +6,7 @@
   "Settings": "Ustawienia",
   "About": "O aplikacji",
   "Log In": "Zaloguj",
+  "Use as guest": "Gość",
   "Log out": "Wyloguj",
   "Remove action?": "Usunąć akcję?",
   "You are about to remove action": "Za chwilę usuniesz tą akcję",
@@ -131,5 +132,6 @@
   "Loading markers": "Ładowanie markerów",
 
   "---------------": "nowe linie należy dodać po tej linii, aby dodać je do innych słowników",
-  "new line of text": "chwilowechwilowechwilowe"
+  "new line of text": "chwilowechwilowechwilowe",
+  "Return": "Return"
 }

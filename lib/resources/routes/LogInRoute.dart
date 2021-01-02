@@ -279,20 +279,19 @@ class _LogInRouteState extends State<LogInRoute> {
       SizedBox.shrink() :
       BottomNavigationBar(
         key: Key("login_button"),
-        items: const <BottomNavigationBarItem>[
-          // TODO bottom navigation bar can not contain translations
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.input),
-            title: Text("Log In"),
+            title: Text(LanguagesLoader.of(context).translate("Log In")),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.queue),
-            title: Text('Register'),
+            title: Text(LanguagesLoader.of(context).translate("Register")),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.cloud_off),
             title: Text(
-              'Use as guest'
+                LanguagesLoader.of(context).translate("Use as guest")
             ),
           ),
         ],

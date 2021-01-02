@@ -206,19 +206,18 @@ class _RegisterRouteState extends State<RegisterRoute> {
       PrefService.getString('token') != '' ?
       SizedBox.shrink() :
       BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          // TODO navigation bar can not contain translations
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.input),
-            title: Text('Log in'),
+            title: Text(LanguagesLoader.of(context).translate("Log In")),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.queue),
-            title: Text('Register'),
+            title: Text(LanguagesLoader.of(context).translate("Register")),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.cloud_off),
-            title: Text('Use as guest'),
+            title: Text(LanguagesLoader.of(context).translate("Use as guest")),
           ),
         ],
         currentIndex: _selectedIndex,
