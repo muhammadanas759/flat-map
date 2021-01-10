@@ -258,6 +258,17 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                                     }
                                 }
                             }
+                            "single sound" ->
+                            {
+                                try{
+                                    playSound()
+                                    Log.i(TAG, "Flatmapp called play single sound" +
+                                            " action")
+                                }catch(e:Exception) {
+                                    Log.i(TAG, e.toString())
+                                }
+
+                            }
                             else ->
                             {
                                 Log.i(TAG, "FlatMapp called not implemented action ${action.name}")

@@ -340,6 +340,8 @@ class _MapRouteState extends State<MapRoute> {
         IconButton(
           icon: Icon(Icons.remove),
           onPressed: () {
+            if (_formMarkerData['range'] is String) _formMarkerData['range'] = 
+                int.parse(_formMarkerData['range']);
             if (_formMarkerData['range'] > 1) {
               setState(() {
                 _formMarkerData['range'] -= 1;
@@ -379,6 +381,8 @@ class _MapRouteState extends State<MapRoute> {
           icon: Icon(Icons.add),
           onPressed: () {
             setState(() {
+              if(_formMarkerData['range'] is String) _formMarkerData['range'] =
+              int.parse(_formMarkerData['range']);
               _formMarkerData['range'] += 1;
               _formRangeController.text = _formMarkerData['range'].toString();
             });
@@ -458,26 +462,65 @@ class _MapRouteState extends State<MapRoute> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           SizedBox(height: 10),
+          Container(
+            child: Opacity(
+              opacity: 0.2,
+              child: IconButton(
+                icon: Icon(Icons.keyboard_arrow_down, size: 40),
+                color: (PrefService.get('ui_theme') == 'dark') ? Colors.white : Colors.black,
+                tooltip: 'Close form',
+                onPressed: (){
+//                  _saveMarker();
+                     setState(() {
+                       _closePanel(context);
+                     });
+                },
+              ),
+            ),
+            alignment: Alignment(0.0, 0.0),
+          ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Container(
-                child: Opacity(
-                  opacity: 0.2,
-                  child: IconButton(
-                    icon: Icon(Icons.keyboard_arrow_down, size: 40),
-                    color: (PrefService.get('ui_theme') == 'dark') ? Colors.white : Colors.black,
-                    tooltip: 'Close form',
-                    onPressed: (){
-                      setState(() {
-                        _closePanel(context);
-                      });
-                    },
+              children: <Widget>[
+                Expanded(
+                  child: new Container(
+                    margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                    child: ListTile(
+                        title: PrefService.getString("selected_marker") == 'temporary' ?
+                        Text(
+                            LanguagesLoader.of(context).translate("Add marker"),
+                            style: bodyText()
+                        ) :
+                        Text(
+                            LanguagesLoader.of(context).translate("Save marker"),
+                            style: bodyText()
+                        ),
+                        leading: Icon(Icons.bookmark_border),
+                        onTap: (){
+                          // submit form and add marker to dictionary
+                          _saveMarker();
+                        }
+                    ),
                   ),
                 ),
-                alignment: Alignment(0.0, 0.0),
-              ),
-            ],
+                PrefService.getString("selected_marker") == 'temporary' ?
+                SizedBox.shrink() :
+                Expanded(
+                  child: new Container(
+                    margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                    child: ListTile(
+                        title: Text(
+                            LanguagesLoader.of(context).translate("Delete marker"),
+                            style: bodyText()
+                        ),
+                        trailing: Icon(Icons.delete_forever),
+                        onTap: (){
+                          // set up the AlertDialog
+                          raiseAlertDialogRemoveMarker(_id);
+                        }
+                    ),
+                  ),
+                ),
+              ]
           ),
           SizedBox(height: 10),
           _buildMarkerNameField(context),
@@ -524,7 +567,6 @@ class _MapRouteState extends State<MapRoute> {
             context,
             PrefService.getString("selected_marker")
           ),
-
           Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -538,49 +580,49 @@ class _MapRouteState extends State<MapRoute> {
               ),
             ],
           ),
-          Row(
-              children: <Widget>[
-                Expanded(
-                  child: new Container(
-                    margin: const EdgeInsets.only(left: 10.0, right: 20.0),
-                    child: ListTile(
-                        title: PrefService.getString("selected_marker") == 'temporary' ?
-                        Text(
-                          LanguagesLoader.of(context).translate("Add marker"),
-                          style: bodyText()
-                        ) :
-                        Text(
-                            LanguagesLoader.of(context).translate("Save marker"),
-                            style: bodyText()
-                        ),
-                        leading: Icon(Icons.bookmark_border),
-                        onTap: (){
-                          // submit form and add marker to dictionary
-                          _saveMarker();
-                        }
-                    ),
-                  ),
-                ),
-                PrefService.getString("selected_marker") == 'temporary' ?
-                SizedBox.shrink() :
-                Expanded(
-                  child: new Container(
-                    margin: const EdgeInsets.only(left: 10.0, right: 20.0),
-                    child: ListTile(
-                        title: Text(
-                          LanguagesLoader.of(context).translate("Delete marker"),
-                          style: bodyText()
-                        ),
-                        trailing: Icon(Icons.delete_forever),
-                        onTap: (){
-                          // set up the AlertDialog
-                          raiseAlertDialogRemoveMarker(_id);
-                        }
-                    ),
-                  ),
-                ),
-              ]
-          ),
+//          Row(
+//              children: <Widget>[
+//                Expanded(
+//                  child: new Container(
+//                    margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+//                    child: ListTile(
+//                        title: PrefService.getString("selected_marker") == 'temporary' ?
+//                        Text(
+//                          LanguagesLoader.of(context).translate("Add marker"),
+//                          style: bodyText()
+//                        ) :
+//                        Text(
+//                            LanguagesLoader.of(context).translate("Save marker"),
+//                            style: bodyText()
+//                        ),
+//                        leading: Icon(Icons.bookmark_border),
+//                        onTap: (){
+//                          // submit form and add marker to dictionary
+//                          _saveMarker();
+//                        }
+//                    ),
+//                  ),
+//                ),
+//                PrefService.getString("selected_marker") == 'temporary' ?
+//                SizedBox.shrink() :
+//                Expanded(
+//                  child: new Container(
+//                    margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+//                    child: ListTile(
+//                        title: Text(
+//                          LanguagesLoader.of(context).translate("Delete marker"),
+//                          style: bodyText()
+//                        ),
+//                        trailing: Icon(Icons.delete_forever),
+//                        onTap: (){
+//                          // set up the AlertDialog
+//                          raiseAlertDialogRemoveMarker(_id);
+//                        }
+//                    ),
+//                  ),
+//                ),
+//              ]
+//          ),
         ],
       )
     );
