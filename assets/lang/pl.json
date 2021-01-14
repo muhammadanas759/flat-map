@@ -74,7 +74,7 @@
   "no places found": "nic nie znaleziono",
   "Close form": "Zamknij",
   "You need to log in": "Musisz być zalogowany",
-  "community_descrtiption_1": "Wybierz zakres wyszukiwania i kategorię miejsc, aby wyszukać miejsca w pobliżu w zadeklarowanym zakresie.",
+  "community_descrtiption_1": "Wybierz kategorię miejsc, do wyszukania w pobliżu.",
 
   "Please rewrite code above": "Przepisz kod",
   "Security codes do not match": "Kody bezpieczeństwa nie pasują",
@@ -133,5 +133,14 @@
 
   "---------------": "nowe linie należy dodać po tej linii, aby dodać je do innych słowników",
   "new line of text": "chwilowechwilowechwilowe",
-  "Return": "Return"
+  "Return": "Powrót",
+
+  "mute": "wycisz",
+  "change alarm volume": "zmień głośność alarmów",
+  "change ringtone volume": "zmień głośność dzwonków",
+  "change multimedia volume": "zmień głośność multimediów",
+  "bluetooth": "bluetooth",
+  "notification": "notyfikacja",
+  "wi-fi": "wi-fi",
+  "single sound": "pojedyńczy dźwięk"
 }

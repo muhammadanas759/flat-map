@@ -131,6 +131,15 @@
 
   "---------------": "Se deben agregar nuevas líneas después de esta línea para agregarlas a otros diccionarios.",
   "new line of text": "temptemptemptemp",
-  "Use as guest": "Use as guest",
-  "Return": "Return"
+  "Use as guest": "Usar como invitado",
+  "Return": "Regreso",
+
+  "mute": "mudo",
+  "change alarm volume": "cambiar el volumen de la alarma",
+  "change ringtone volume": "cambiar el volumen del tono de llamada",
+  "change multimedia volume": "cambiar el volumen multimedia",
+  "bluetooth": "bluetooth",
+  "notification": "notificación",
+  "wi-fi": "Wifi",
+  "single sound": "sonido único"
 }

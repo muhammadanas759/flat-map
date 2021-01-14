@@ -21,6 +21,18 @@ TextStyle bodyText({Color color}){
   }
 }
 
+TextStyle addMarkerText({Color color}){
+  if(color!=null){
+    return TextStyle(
+        fontSize: 16,
+        color: color
+    );
+  } else {
+    return TextStyle(
+    );
+  }
+}
+
 TextStyle footer(){
   return TextStyle(
     fontStyle: FontStyle.italic,

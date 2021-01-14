@@ -73,7 +73,7 @@
   "no places found": "no places found",
   "Close form": "Close form",
   "You need to log in": "You need to log in to use community options.",
-  "community_descrtiption_1": "Select range of search and category of places to look up for places nearby in declared range.",
+  "community_descrtiption_1": "Select category of places to look up nearby.",
 
   "Please rewrite code above": "Please rewrite code above",
   "Security codes do not match": "Security codes do not match",
@@ -133,5 +133,14 @@
   "---------------": "new lines should be added after this line in order to add them to other dictionaries",
   "new line of text": "chwilowechwilowechwilowe",
   "Use as guest": "Use as guest",
-  "Return": "Return"
+  "Return": "Return",
+
+  "mute": "mute",
+  "change alarm volume": "change alarm volume",
+  "change ringtone volume": "change ringtone volume",
+  "change multimedia volume": "change multimedia volume",
+  "bluetooth": "bluetooth",
+  "notification": "notification",
+  "wi-fi": "wi-fi",
+  "single sound": "single sound"
 }

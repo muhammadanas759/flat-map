@@ -36,7 +36,7 @@ class _ActionsRouteState extends State<ActionsRoute> {
               backgroundImage: AssetImage(_actionsLoader.actionsMap[key]),
             ),
             title: Text(
-              key,
+                LanguagesLoader.of(context).translate(key),
               style: bodyText()
             ),
             trailing: Icon(Icons.keyboard_arrow_right),

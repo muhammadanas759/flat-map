@@ -103,8 +103,6 @@ class MarkerLoader {
 //        _markersDescriptions = Map<String, FlatMappMarker>.from(
 //            json.decode(markerStorage)
 //        );
-
-        // TODO BARTEK sprawdź czy to rozwiąże problem
         // clear markers storage
         // removeAllMarkers();
 

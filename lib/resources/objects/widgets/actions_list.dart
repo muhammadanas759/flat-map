@@ -30,7 +30,8 @@ class ActionsList {
               LanguagesLoader.of(context).translate("Remove action?"),
           ),
           content: Text(
-              LanguagesLoader.of(context).translate("You are about to remove action") + ":\n" + description
+              LanguagesLoader.of(context).translate("You are about to remove action") +
+                  ":\n" + LanguagesLoader.of(context).translate(description)
           ),
           actions: [
             // set up the buttons
@@ -119,7 +120,7 @@ class ActionsList {
                 ),
               ),
               title: Text(
-                _actionsList[index].icon,
+                  LanguagesLoader.of(context).translate(_actionsList[index].icon),
                 style: bodyText()
               ),
               trailing: Icon(Icons.keyboard_arrow_down),

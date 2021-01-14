@@ -300,7 +300,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
   Widget _noWidget(BuildContext context, String actionname){
     return ListTile(
       title: Text(
-        '$actionname ' + LanguagesLoader.of(context).translate("[action] has no parameters"),
+          LanguagesLoader.of(context).translate(actionname) + " " + LanguagesLoader.of(context).translate("[action] has no parameters"),
         style: bodyText()
       ),
       trailing: Icon(Icons.not_interested),
@@ -331,14 +331,14 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
         break;
       case "wi-fi":
         return _wifiWidget();
-      case "flight":
-        return _noWidget(context, "Flight mode");
-        break;
+//      case "flight":
+//        return _noWidget(context, "flight mode");
+//        break;
       case "single sound":
-        return _noWidget(context, "Single sound");
+        return _noWidget(context, "single sound");
         break;
       case "mute":
-        return _noWidget(context, "Mute");
+        return _noWidget(context, "mute");
         break;
       default:
         return ListTile(
@@ -356,7 +356,7 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
       children: <Widget>[
         ListTile(
           title: Text(
-              _selected_action.name,
+              LanguagesLoader.of(context).translate(_selected_action.name),
             style: header()
           ),
           leading: CircleAvatar(

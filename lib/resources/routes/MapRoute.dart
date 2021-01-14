@@ -344,6 +344,7 @@ class _MapRouteState extends State<MapRoute> {
                 int.parse(_formMarkerData['range']);
             if (_formMarkerData['range'] > 1) {
               setState(() {
+                _formKey.currentState.save();
                 _formMarkerData['range'] -= 1;
                 _formRangeController.text = _formMarkerData['range'].toString();
               });
@@ -355,7 +356,7 @@ class _MapRouteState extends State<MapRoute> {
           child: TextFormField(
             controller: _formRangeController,
             onSaved: (String input) {
-              _formMarkerData['range'] = toDouble(input, 12);
+              _formMarkerData['range'] = int.parse(input);
             },
             onFieldSubmitted: (String value) {
               _formMarkerData['range'] = value;
@@ -381,6 +382,7 @@ class _MapRouteState extends State<MapRoute> {
           icon: Icon(Icons.add),
           onPressed: () {
             setState(() {
+              _formKey.currentState.save();
               if(_formMarkerData['range'] is String) _formMarkerData['range'] =
               int.parse(_formMarkerData['range']);
               _formMarkerData['range'] += 1;
@@ -481,41 +483,44 @@ class _MapRouteState extends State<MapRoute> {
           ),
           Row(
               children: <Widget>[
-                Expanded(
-                  child: new Container(
-                    margin: const EdgeInsets.only(left: 10.0, right: 20.0),
-                    child: ListTile(
-                        title: PrefService.getString("selected_marker") == 'temporary' ?
-                        Text(
-                            LanguagesLoader.of(context).translate("Add marker"),
-                            style: bodyText()
-                        ) :
-                        Text(
-                            LanguagesLoader.of(context).translate("Save marker"),
-                            style: bodyText()
-                        ),
-                        leading: Icon(Icons.bookmark_border),
-                        onTap: (){
-                          // submit form and add marker to dictionary
-                          _saveMarker();
-                        }
-                    ),
-                  ),
-                ),
                 PrefService.getString("selected_marker") == 'temporary' ?
                 SizedBox.shrink() :
                 Expanded(
                   child: new Container(
+                    decoration: buttonFieldStyle(),
                     margin: const EdgeInsets.only(left: 10.0, right: 20.0),
                     child: ListTile(
                         title: Text(
                             LanguagesLoader.of(context).translate("Delete marker"),
                             style: bodyText()
                         ),
-                        trailing: Icon(Icons.delete_forever),
+//                        trailing: Icon(Icons.delete_forever),
                         onTap: (){
                           // set up the AlertDialog
                           raiseAlertDialogRemoveMarker(_id);
+                        }
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: new Container(
+                    decoration: buttonFieldStyle(),
+                    margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                    child: ListTile(
+                        title: PrefService.getString("selected_marker") == 'temporary' ?
+                        Text(
+                            LanguagesLoader.of(context).translate("Add marker"),
+                            style: bodyText(),
+                            textAlign: TextAlign.center
+                        ) :
+                        Text(
+                            LanguagesLoader.of(context).translate("Save marker"),
+                            style: bodyText()
+                        ),
+//                        leading: Icon(Icons.bookmark_border),
+                        onTap: (){
+                          // submit form and add marker to dictionary
+                          _saveMarker();
                         }
                     ),
                   ),
@@ -679,7 +684,7 @@ class _MapRouteState extends State<MapRoute> {
               ),
             ),
             collapsed: InkWell(
-              onTap: () { _mapLongPress(LatLng(0, 0)); },
+              onTap: () { _mapLongPress(LatLng(0, 0));},
               child: Container(
                 decoration: BoxDecoration(
                   color: _preset == 'dark' ? Colors.black : Colors.white,

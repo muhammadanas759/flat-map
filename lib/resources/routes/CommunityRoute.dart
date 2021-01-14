@@ -179,6 +179,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
         IconButton(
           icon: Icon(Icons.remove),
           onPressed: () {
+            _formKey2.currentState.save();
             if (_formCategoryData['range'] > 1) {
               setState(() {
                 _formCategoryData['range'] -= 1;
@@ -192,10 +193,10 @@ class _CommunityRouteState extends State<CommunityRoute> {
           child: TextFormField(
             controller: _formRangeController,
             onSaved: (String input) {
-              _formCategoryData['range'] = toDouble(input, 100);
+              _formCategoryData['range'] = int.parse(input);
             },
             onFieldSubmitted: (String input) {
-              _formCategoryData['range'] = toDouble(input, 100);
+              _formCategoryData['range'] = int.parse(input);
               FocusScope.of(context).requestFocus(FocusNode());
             },
             textInputAction: TextInputAction.next,
@@ -218,6 +219,7 @@ class _CommunityRouteState extends State<CommunityRoute> {
           icon: Icon(Icons.add),
           onPressed: () {
             setState(() {
+              _formKey2.currentState.save();
               _formCategoryData['range'] += 1;
               _formRangeController.text = _formCategoryData['range'].toString();
             });
@@ -302,12 +304,12 @@ class _CommunityRouteState extends State<CommunityRoute> {
                 trailing: Icon(Icons.search),
                 onTap: (){
                   if (_formKey.currentState.validate()) {
-                    if (_last_search != _formCategoryData['category']){
-                      // send request
+//                    if (_last_search != _formCategoryData['category']){
+//                      // send request
                       sendCategoryRequest();
-                    } else {
-                      netLoader.showToast(LanguagesLoader.of(context).translate("No new category to search"));
-                    }
+//                    } else {
+//                      netLoader.showToast(LanguagesLoader.of(context).translate("No new category to search"));
+//                    }
                   } else {
                     print("field didn't pass validation");
                   }
