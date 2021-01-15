@@ -33,6 +33,9 @@ class LanguagesLoader {
   }
 
   String getKey(String value) {
+    print("loading key for: " + value);
+    print("key: " + this._sentences.keys.firstWhere(
+            (k) => this._sentences[k] == value, orElse: () => null));
     return this._sentences.keys.firstWhere(
             (k) => this._sentences[k] == value, orElse: () => null);
   }

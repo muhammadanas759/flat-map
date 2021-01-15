@@ -35,7 +35,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
           'Settings',
           'About'
         ],
-        // onChange: (String value) async {
+        // onChange: (String value) {
         //   value = LanguagesLoader.of(context).getKey(value);
         // }
       ),
@@ -48,11 +48,20 @@ class _SettingsRouteState extends State<SettingsRoute> {
       DropdownPreference(
         LanguagesLoader.of(context).translate('Change background theme'),
         'ui_theme',
+
         // defaultVal: LanguagesLoader.of(context).translate("light"),
-        // values: [LanguagesLoader.of(context).translate("light"), LanguagesLoader.of(context).translate("dark")],
+        // values: [
+        //   LanguagesLoader.of(context).translate("light"),
+        //   LanguagesLoader.of(context).translate("dark")
+        // ],
+
         defaultVal: "light",
-        values: ["light", "dark"],
+        values: [
+          "light",
+          "dark"
+        ],
         onChange: (value) {
+          // if(value == LanguagesLoader.of(context).getKey("light")){
           if(value == "light"){
             DynamicTheme.of(context).setBrightness(Brightness.light);
           } else {

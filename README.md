@@ -54,6 +54,8 @@ samples, guidance on mobile development, and a full API reference.
 
 ### Build an app bundle
 
+First, raise versionCode in `android/app/src/build.gradle` by 1
+
 From the command line:
 
 Run `flutter build appbundle`

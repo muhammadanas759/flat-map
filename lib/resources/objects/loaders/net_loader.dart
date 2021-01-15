@@ -117,7 +117,7 @@ class NetLoader {
     );
     // verify response
     analyseResponse(_response);
-    return List<dynamic>.from(json.decode(_response.body));
+    return List<dynamic>.from(json.decode(utf8.decode(_response.bodyBytes)));
   }
 
   Future<http.Response> _deleteToServer({String endpoint}) async {
@@ -160,7 +160,6 @@ class NetLoader {
   }
 
   Future<void> postBackup(BuildContext context, MarkerLoader markerLoader) async {
-    if(PrefService.get("cloud_enabled") == true) {
       bool connected = await checkNetworkConnection();
       if(connected){
         try {
@@ -209,9 +208,6 @@ class NetLoader {
       } else {
         showToast("Network connection is off");
       }
-    } else {
-      showToast("Cloud save is not enabled in Settings - advanced");
-    }
   }
 
   // parse list from backup to marker actions list
@@ -235,7 +231,6 @@ class NetLoader {
 
   // odczyt znaczników z bazy
   Future<void> getBackup(BuildContext context, MarkerLoader markerLoader) async {
-    if(PrefService.get("cloud_enabled") == true){
       bool connected = await checkNetworkConnection();
       if(connected){
         try{
@@ -284,9 +279,6 @@ class NetLoader {
       } else {
         showToast("Network connection is off");
       }
-    } else {
-      showToast("Cloud save is not enabled in Settings - advanced");
-    }
   }
 
   Future<http.Response> changePassword(Map<String, dynamic> content) async {
