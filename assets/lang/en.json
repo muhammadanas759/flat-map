@@ -130,8 +130,6 @@
   "Map is disabled": "Map is disabled",
   "Loading markers": "Loading markers",
 
-  "---------------": "new lines should be added after this line in order to add them to other dictionaries",
-  "new line of text": "chwilowechwilowechwilowe",
   "Use as guest": "Use as guest",
   "Return": "Return",
 
@@ -142,5 +140,13 @@
   "bluetooth": "bluetooth",
   "notification": "notification",
   "wi-fi": "wi-fi",
-  "single sound": "single sound"
+  "single sound": "single sound",
+
+  "---------------": "new lines should be added after this line in order to add them to other dictionaries",
+  "new line of text": "chwilowechwilowechwilowe",
+
+  "Licence header": "Licence agreement",
+  "Licence text": "By accepting this agreement, you allow FlatMapp to: \n1. collect location data to enable activation of set tags to send notifications,\n2. manage wi-fi, bluetooth and/or phone volume even when the application is closed or not used.\nApp can not be used without previous acceptance of this agreement.",
+  "Licence accept": "Accept licence",
+  "Licence dismiss": "Close app"
 }

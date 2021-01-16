@@ -1,24 +1,24 @@
 import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
-import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
+import 'package:flatmapp/resources/objects/widgets/licence_alert.dart';
+import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // Putting language dictionaries seams done
 
 class AboutRoute extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
+    // show licence agreement
+    Future.delayed(Duration.zero, () => showLicenceAgreement(context));
     return Scaffold(
       appBar: appBar(),
-      body:
-      Padding(
+      body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView(
           children: ListTile.divideTiles(
@@ -49,14 +49,16 @@ class AboutRoute extends StatelessWidget {
 
               ListTile(
                 title: Linkify(
-                  text: "${LanguagesLoader.of(context).translate("Application repository")}: \nhttps://github.com/AdamLewicki/flatmapp_app",
+                  text:
+                      "${LanguagesLoader.of(context).translate("Application repository")}: \nhttps://github.com/AdamLewicki/flatmapp_app",
                   onOpen: (link) async {
                     if (await canLaunch(link.url)) {
                       await launch(link.url);
                     } else {
                       // show message
                       Fluttertoast.showToast(
-                        msg: '${LanguagesLoader.of(context).translate("Could not launch")} $link',
+                        msg:
+                            '${LanguagesLoader.of(context).translate("Could not launch")} $link',
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.BOTTOM,
                       );
@@ -71,14 +73,16 @@ class AboutRoute extends StatelessWidget {
 
               ListTile(
                 title: Linkify(
-                  text: "${LanguagesLoader.of(context).translate("Server repository")}: \nhttps://github.com/AdamLewicki/flatmapp_server",
+                  text:
+                      "${LanguagesLoader.of(context).translate("Server repository")}: \nhttps://github.com/AdamLewicki/flatmapp_server",
                   onOpen: (link) async {
                     if (await canLaunch(link.url)) {
                       await launch(link.url);
                     } else {
                       // show message
                       Fluttertoast.showToast(
-                        msg: '${LanguagesLoader.of(context).translate("Could not launch")} $link',
+                        msg:
+                            '${LanguagesLoader.of(context).translate("Could not launch")} $link',
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.BOTTOM,
                       );
@@ -153,7 +157,7 @@ class AboutRoute extends StatelessWidget {
                     style: bodyText(),
                   ),
                   trailing: Icon(Icons.star_border),
-                  onTap: (){
+                  onTap: () {
                     // go to Google Play app review
                     LaunchReview.launch();
                   },

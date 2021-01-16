@@ -1,9 +1,8 @@
 import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
-import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
+import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -12,13 +11,11 @@ import 'package:preferences/preferences.dart';
 // Putting language dictionaries seams done
 
 class ChangePasswordRoute extends StatefulWidget {
-
   @override
   _ChangePasswordRouteState createState() => _ChangePasswordRouteState();
 }
 
 class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
-
   // internet service
   NetLoader netLoader = NetLoader();
 
@@ -29,22 +26,26 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
     'new_password2': '',
   };
   final focusPasswordOld = FocusNode();
-  final focusPasswordNew1= FocusNode();
+  final focusPasswordNew1 = FocusNode();
   final focusPasswordNew2 = FocusNode();
 
   Widget _buildPasswordField(context,
-      {String label, String hint, String form_var, FocusNode focus_current, FocusNode focus_next}) {
+      {String label,
+      String hint,
+      String form_var,
+      FocusNode focus_current,
+      FocusNode focus_next}) {
     return TextFormField(
       style: bodyText(),
       decoration: textFieldStyle(
-          labelTextStr: label,
-          hintTextStr: hint,
+        labelTextStr: label,
+        hintTextStr: hint,
       ),
       obscureText: true,
       validator: (String value) {
         if (form_var == "new_password2" && value != _formData['new_password']) {
           return 'Passwords do not match';
-        } else if(form_var == "new_password"){
+        } else if (form_var == "new_password") {
           _formData['new_password'] = value;
         }
         return null;
@@ -55,7 +56,7 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
       textInputAction: TextInputAction.next,
       focusNode: focus_current,
       onFieldSubmitted: (v) {
-        if(focus_next != null){
+        if (focus_next != null) {
           FocusScope.of(context).requestFocus(focus_next);
         } else {
           FocusScope.of(context).unfocus();
@@ -64,7 +65,7 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
     );
   }
 
-  Widget _changePasswordForm(){
+  Widget _changePasswordForm() {
     return Form(
         key: _formKey,
         child: Column(
@@ -73,27 +74,28 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
             SizedBox(height: 20),
             _buildPasswordField(context,
                 label: LanguagesLoader.of(context).translate("Old password"),
-                hint: LanguagesLoader.of(context).translate("provide_old_password"),
+                hint: LanguagesLoader.of(context)
+                    .translate("provide_old_password"),
                 form_var: "old_password",
                 focus_current: focusPasswordOld,
-                focus_next: focusPasswordNew1
-            ),
+                focus_next: focusPasswordNew1),
             SizedBox(height: 20),
             _buildPasswordField(context,
                 label: LanguagesLoader.of(context).translate("New password"),
-                hint: LanguagesLoader.of(context).translate("provide_new_password"),
+                hint: LanguagesLoader.of(context)
+                    .translate("provide_new_password"),
                 form_var: "new_password",
                 focus_current: focusPasswordNew1,
-                focus_next: focusPasswordNew2
-            ),
+                focus_next: focusPasswordNew2),
             SizedBox(height: 20),
             _buildPasswordField(context,
-                label: LanguagesLoader.of(context).translate("Repeat new password"),
-                hint: LanguagesLoader.of(context).translate("repeat_new_password"),
+                label: LanguagesLoader.of(context)
+                    .translate("Repeat new password"),
+                hint: LanguagesLoader.of(context)
+                    .translate("repeat_new_password"),
                 form_var: "new_password2",
                 focus_current: focusPasswordNew2,
-                focus_next: null
-            ),
+                focus_next: null),
             SizedBox(height: 20),
             Row(
               children: <Widget>[
@@ -104,7 +106,7 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
                       style: bodyText(),
                     ),
                     leading: Icon(Icons.check),
-                    onTap: (){
+                    onTap: () {
                       _submitForm();
                     },
                   ),
@@ -118,7 +120,7 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
                       textAlign: TextAlign.right,
                     ),
                     trailing: Icon(Icons.close),
-                    onTap: (){
+                    onTap: () {
                       Navigator.of(context).pop();
                     },
                   ),
@@ -126,8 +128,7 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
               ],
             ),
           ],
-        )
-    );
+        ));
   }
 
   Future<void> _submitForm() async {
@@ -137,9 +138,9 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
 
       // send new password to server and get the response
       bool connected = await netLoader.checkNetworkConnection();
-      if(connected){
+      if (connected) {
         http.Response _response = await netLoader.changePassword(_formData);
-        if(200 <= _response.statusCode && _response.statusCode < 300){
+        if (200 <= _response.statusCode && _response.statusCode < 300) {
           // remove token
           PrefService.setString("token", "");
           // move back
@@ -148,13 +149,15 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
           Navigator.pushNamed(context, '/login');
           // show message
           Fluttertoast.showToast(
-            msg: LanguagesLoader.of(context).translate("Password changed successfully"),
+            msg: LanguagesLoader.of(context)
+                .translate("Password changed successfully"),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
           );
         }
       } else {
-        netLoader.showToast(LanguagesLoader.of(context).translate("Network connection is off"));
+        netLoader.showToast(
+            LanguagesLoader.of(context).translate("Network connection is off"));
       }
     }
   }
@@ -162,10 +165,11 @@ class _ChangePasswordRouteState extends State<ChangePasswordRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(title: LanguagesLoader.of(context).translate("Change password")),
+      appBar: appBar(
+          title: LanguagesLoader.of(context).translate("Change password")),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child:  _changePasswordForm(),
+        child: _changePasswordForm(),
       ),
       drawer: sideBarMenu(context),
     );

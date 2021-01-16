@@ -1,18 +1,16 @@
+import 'dart:math';
+
 import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/net_loader.dart';
-import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
+import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
-import 'dart:math';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:http/http.dart' as http;
 
 class EraseAccountRoute extends StatefulWidget {
-
   @override
   _EraseAccountRouteState createState() => _EraseAccountRouteState();
 }
@@ -20,7 +18,6 @@ class EraseAccountRoute extends StatefulWidget {
 // Putting language dictionaries seams done
 
 class _EraseAccountRouteState extends State<EraseAccountRoute> {
-
   // internet service
   NetLoader netLoader = NetLoader();
 
@@ -35,7 +32,7 @@ class _EraseAccountRouteState extends State<EraseAccountRoute> {
     return (rng.nextInt(900000) + 100000).toString();
   }
 
-  Widget _eraseAccountForm(){
+  Widget _eraseAccountForm() {
     _formData['test_value'] = _randomCode();
     return Form(
         key: _formKey,
@@ -58,11 +55,13 @@ class _EraseAccountRouteState extends State<EraseAccountRoute> {
               ],
               style: bodyText(),
               decoration: textFieldStyle(
-                labelTextStr: LanguagesLoader.of(context).translate("Please rewrite code above"),
+                labelTextStr: LanguagesLoader.of(context)
+                    .translate("Please rewrite code above"),
               ),
               validator: (String value) {
                 if (value != _formData['test_value']) {
-                  return LanguagesLoader.of(context).translate("Security codes do not match");
+                  return LanguagesLoader.of(context)
+                      .translate("Security codes do not match");
                 }
                 return null;
               },
@@ -77,11 +76,12 @@ class _EraseAccountRouteState extends State<EraseAccountRoute> {
                 Expanded(
                   child: ListTile(
                     title: Text(
-                      LanguagesLoader.of(context).translate("Erase the account"),
+                      LanguagesLoader.of(context)
+                          .translate("Erase the account"),
                       style: bodyText(),
                     ),
                     leading: Icon(Icons.cloud_off),
-                    onTap: (){
+                    onTap: () {
                       setState(() {
                         _submitForm();
                       });
@@ -97,7 +97,7 @@ class _EraseAccountRouteState extends State<EraseAccountRoute> {
                       textAlign: TextAlign.right,
                     ),
                     trailing: Icon(Icons.keyboard_return),
-                    onTap: (){
+                    onTap: () {
                       Navigator.of(context).pop();
                     },
                   ),
@@ -105,31 +105,32 @@ class _EraseAccountRouteState extends State<EraseAccountRoute> {
               ],
             ),
           ],
-        )
-    );
+        ));
   }
 
   Future<void> _submitForm() async {
     // validate form
     if (_formKey.currentState.validate()) {
       bool connected = await netLoader.checkNetworkConnection();
-      if(connected){
+      if (connected) {
         // send request to the server
         http.Response _response = await netLoader.removeAccount();
-        if(200 <= _response.statusCode && _response.statusCode < 300){
+        if (200 <= _response.statusCode && _response.statusCode < 300) {
           // move back
           Navigator.of(context).pop();
           // move to map
           Navigator.pushNamed(context, '/map');
           // show message
           Fluttertoast.showToast(
-            msg: LanguagesLoader.of(context).translate("Account erased successfully"),
+            msg: LanguagesLoader.of(context)
+                .translate("Account erased successfully"),
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
           );
         }
       } else {
-        netLoader.showToast(LanguagesLoader.of(context).translate("Network connection is off"));
+        netLoader.showToast(
+            LanguagesLoader.of(context).translate("Network connection is off"));
       }
     }
   }
@@ -137,10 +138,11 @@ class _EraseAccountRouteState extends State<EraseAccountRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(title: LanguagesLoader.of(context).translate("Account removal")),
+      appBar: appBar(
+          title: LanguagesLoader.of(context).translate("Account removal")),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child:  _eraseAccountForm(),
+        child: _eraseAccountForm(),
       ),
       drawer: sideBarMenu(context),
     );

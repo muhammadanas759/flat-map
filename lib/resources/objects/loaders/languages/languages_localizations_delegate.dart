@@ -1,14 +1,17 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+
 import 'languages_loader.dart';
 
-
-class LanguagesLocalizationsDelegate extends LocalizationsDelegate<LanguagesLoader> {
+class LanguagesLocalizationsDelegate
+    extends LocalizationsDelegate<LanguagesLoader> {
   const LanguagesLocalizationsDelegate();
 
   // TODO add all languages available here
   @override
-  bool isSupported(Locale locale) => ['pl', 'en', 'es'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      ['pl', 'en', 'es'].contains(locale.languageCode);
 
   @override
   Future<LanguagesLoader> load(Locale locale) async {

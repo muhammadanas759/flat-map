@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 
-
-AppBar appBar({String title = "Flatmapp"}){
+AppBar appBar({String title = "Flatmapp"}) {
   return new AppBar(
     title: Text(title),
     backgroundColor: Color(0xFF4CAF50),

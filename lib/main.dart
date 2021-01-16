@@ -1,33 +1,28 @@
+import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:flatmapp/resources/extensions.dart';
 import 'package:flatmapp/resources/objects/loaders/languages/languages_localizations_delegate.dart';
+import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
+import 'package:flatmapp/resources/routes/AboutRoute.dart';
 import 'package:flatmapp/resources/routes/ActionParametersRoute.dart';
 import 'package:flatmapp/resources/routes/ActionsRoute.dart';
 import 'package:flatmapp/resources/routes/ChangePasswordRoute.dart';
+import 'package:flatmapp/resources/routes/CommunityIconsRoute.dart';
+import 'package:flatmapp/resources/routes/CommunityRoute.dart';
 import 'package:flatmapp/resources/routes/EraseAccountRoute.dart';
+import 'package:flatmapp/resources/routes/IconsRoute.dart';
 import 'package:flatmapp/resources/routes/LogInRoute.dart';
 import 'package:flatmapp/resources/routes/MapRoute.dart';
 import 'package:flatmapp/resources/routes/MarkersRoute.dart';
 import 'package:flatmapp/resources/routes/ProfileRoute.dart';
-import 'package:flatmapp/resources/routes/IconsRoute.dart';
-import 'package:flatmapp/resources/routes/CommunityRoute.dart';
-import 'package:flatmapp/resources/routes/CommunityIconsRoute.dart';
 import 'package:flatmapp/resources/routes/RegisterRoute.dart';
 import 'package:flatmapp/resources/routes/SettingsRoute.dart';
-import 'package:flatmapp/resources/routes/AboutRoute.dart';
-import 'package:flatmapp/resources/extensions.dart';
-
-import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
-
 import 'package:flutter/material.dart';
-import 'package:global_configuration/global_configuration.dart';
-import 'package:preferences/preferences.dart';
-import 'package:dynamic_theme/dynamic_theme.dart';
-
 import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:geolocator/geolocator.dart';
-
 import 'package:flutter\_localizations/flutter\_localizations.dart';
-
+import 'package:geolocator/geolocator.dart';
+import 'package:global_configuration/global_configuration.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:preferences/preferences.dart';
 
 // store chosen starting route
 String initScreen;
@@ -79,20 +74,53 @@ main() async {
     'token': '',
     'login': '',
     'isolate_spawned': false,
-    'community_icon': 'default'
+    'community_icon': 'default',
+    'licence_accepted': false
   });
 
   // get start page
   initScreen = PrefService.getString('start_page');
-  switch(initScreen) {
-    case 'Map': {initScreen = '/map';} break;
-    case 'Markers': {initScreen = '/markers';} break;
-    case 'Profile': {initScreen = '/profile';} break;
-    case 'Community': {initScreen = '/community';} break;
-    case 'Settings': {initScreen = '/settings';} break;
-    case 'About': {initScreen = '/about';} break;
-    case 'Log In': {initScreen = '/login';} break;
-    default: { throw Exception('wrong start_page value: $initScreen'); } break;
+  switch (initScreen) {
+    case 'Map':
+      {
+        initScreen = '/map';
+      }
+      break;
+    case 'Markers':
+      {
+        initScreen = '/markers';
+      }
+      break;
+    case 'Profile':
+      {
+        initScreen = '/profile';
+      }
+      break;
+    case 'Community':
+      {
+        initScreen = '/community';
+      }
+      break;
+    case 'Settings':
+      {
+        initScreen = '/settings';
+      }
+      break;
+    case 'About':
+      {
+        initScreen = '/about';
+      }
+      break;
+    case 'Log In':
+      {
+        initScreen = '/login';
+      }
+      break;
+    default:
+      {
+        throw Exception('wrong start_page value: $initScreen');
+      }
+      break;
   }
 
   await _markerLoader.loadMarkers();
@@ -110,62 +138,64 @@ main() async {
       .then((_) {
     runApp(new MyApp());
   });
-  // runApp(MyApp());
+
+  //runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
+    // load app
     return new DynamicTheme(
-      defaultBrightness: Brightness.light,
-      data: (brightness) => new ThemeData(
-        brightness: brightness,
-        accentColor: Colors.green
-      ),
-      themedWidgetBuilder: (context, theme){
-        return MaterialApp(
-          title: 'FlatMApp',
-          debugShowCheckedModeBanner: false,
-          theme: theme,
-          initialRoute: initScreen,
-          routes: {
-            // When navigating to the "/name" route, build the NameRoute widget.
-            '/map': (context) => MapRoute(_markerLoader),
-            '/profile': (context) => ProfileRoute(_markerLoader),
-            '/community': (context) => CommunityRoute(_markerLoader),
-            '/settings': (context) => SettingsRoute(),
-            '/about': (context) => AboutRoute(),
-            '/login': (context) => LogInRoute(),
-            '/icons': (context) => IconsRoute(),
-            '/community_icons': (context) => CommunityIconsRoute(),
-            '/actions': (context) => ActionsRoute(_markerLoader),
-            '/change_password': (context) => ChangePasswordRoute(),
-            '/erase_account': (context) => EraseAccountRoute(),
-            '/register': (context) => RegisterRoute(),
-            '/action_parameters': (context) => ActionParametersRoute(_markerLoader),
-            '/markers': (context) => MarkersRoute(_markerLoader),
-          },
-          // TODO add all languages available here
-          supportedLocales: [
-            const Locale('pl', 'PL'),
-            const Locale('en', 'US'),
-            const Locale('es', 'ES'),
-          ],
-          localizationsDelegates: [
-            const LanguagesLocalizationsDelegate(),
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate
-          ],
-          localeResolutionCallback: (Locale locale, Iterable<Locale> supportedLocales) {
-            for (Locale supportedLocale in supportedLocales) {
-              if (supportedLocale.languageCode == locale.languageCode || supportedLocale.countryCode == locale.countryCode) {
-                return supportedLocale;
+        defaultBrightness: Brightness.light,
+        data: (brightness) =>
+            new ThemeData(brightness: brightness, accentColor: Colors.green),
+        themedWidgetBuilder: (context, theme) {
+          return MaterialApp(
+            title: 'FlatMApp',
+            debugShowCheckedModeBanner: false,
+            theme: theme,
+            initialRoute: initScreen,
+            routes: {
+              // When navigating to the "/name" route, build the NameRoute widget.
+              '/map': (context) => MapRoute(_markerLoader),
+              '/profile': (context) => ProfileRoute(_markerLoader),
+              '/community': (context) => CommunityRoute(_markerLoader),
+              '/settings': (context) => SettingsRoute(),
+              '/about': (context) => AboutRoute(),
+              '/login': (context) => LogInRoute(),
+              '/icons': (context) => IconsRoute(),
+              '/community_icons': (context) => CommunityIconsRoute(),
+              '/actions': (context) => ActionsRoute(_markerLoader),
+              '/change_password': (context) => ChangePasswordRoute(),
+              '/erase_account': (context) => EraseAccountRoute(),
+              '/register': (context) => RegisterRoute(),
+              '/action_parameters': (context) =>
+                  ActionParametersRoute(_markerLoader),
+              '/markers': (context) => MarkersRoute(_markerLoader),
+            },
+            // TODO add all languages available here
+            supportedLocales: [
+              const Locale('pl', 'PL'),
+              const Locale('en', 'US'),
+              const Locale('es', 'ES'),
+            ],
+            localizationsDelegates: [
+              const LanguagesLocalizationsDelegate(),
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate
+            ],
+            localeResolutionCallback:
+                (Locale locale, Iterable<Locale> supportedLocales) {
+              for (Locale supportedLocale in supportedLocales) {
+                if (supportedLocale.languageCode == locale.languageCode ||
+                    supportedLocale.countryCode == locale.countryCode) {
+                  return supportedLocale;
+                }
               }
-            }
-            return supportedLocales.first;
-          },
-        );
-      }
-    );
+              return supportedLocales.first;
+            },
+          );
+        });
   }
 }

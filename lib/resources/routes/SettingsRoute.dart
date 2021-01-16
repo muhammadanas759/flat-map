@@ -1,12 +1,11 @@
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
-import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
+import 'package:flatmapp/resources/objects/widgets/licence_alert.dart';
+import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
-
 import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
-import 'package:dynamic_theme/dynamic_theme.dart';
-
 
 class SettingsRoute extends StatefulWidget {
   @override
@@ -14,27 +13,15 @@ class SettingsRoute extends StatefulWidget {
 }
 
 class _SettingsRouteState extends State<SettingsRoute> {
-
-
-
-  PreferencePage easyPreferences(){
+  PreferencePage easyPreferences() {
     return PreferencePage([
-
-      PreferenceTitle(
-          LanguagesLoader.of(context).translate("General"),
+      PreferenceTitle(LanguagesLoader.of(context).translate("General"),
           style: header()),
       DropdownPreference(
         LanguagesLoader.of(context).translate("Start Page"),
         'start_page',
         defaultVal: 'Map',
-        values: [
-          'Map',
-          'Markers',
-          'Profile',
-          'Community',
-          'Settings',
-          'About'
-        ],
+        values: ['Map', 'Markers', 'Profile', 'Community', 'Settings', 'About'],
         // onChange: (String value) {
         //   value = LanguagesLoader.of(context).getKey(value);
         // }
@@ -42,8 +29,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
 
       // LanguagesLoader.of(context).getKey("light")
 
-      PreferenceTitle(
-          LanguagesLoader.of(context).translate("Personalization"),
+      PreferenceTitle(LanguagesLoader.of(context).translate("Personalization"),
           style: header()),
       DropdownPreference(
         LanguagesLoader.of(context).translate('Change background theme'),
@@ -56,13 +42,10 @@ class _SettingsRouteState extends State<SettingsRoute> {
         // ],
 
         defaultVal: "light",
-        values: [
-          "light",
-          "dark"
-        ],
+        values: ["light", "dark"],
         onChange: (value) {
           // if(value == LanguagesLoader.of(context).getKey("light")){
-          if(value == "light"){
+          if (value == "light") {
             DynamicTheme.of(context).setBrightness(Brightness.light);
           } else {
             DynamicTheme.of(context).setBrightness(Brightness.dark);
@@ -108,17 +91,16 @@ class _SettingsRouteState extends State<SettingsRoute> {
       //     },
       //   ),
       // ], '!advanced_enabled'), // Use ! to get reversed boolean values
-
     ]);
   }
 
   @override
   Widget build(BuildContext context) {
+    // show licence agreement
+    Future.delayed(Duration.zero, () => showLicenceAgreement(context));
     return Scaffold(
       appBar: appBar(),
-      body:
-
-      easyPreferences(),
+      body: easyPreferences(),
 
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),

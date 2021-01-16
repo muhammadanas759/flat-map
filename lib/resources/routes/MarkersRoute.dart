@@ -2,21 +2,18 @@ import 'package:flatmapp/resources/objects/loaders/icons_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/languages/languages_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/markers_loader.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_marker.dart';
-import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/app_bar.dart';
+import 'package:flatmapp/resources/objects/widgets/side_bar_menu.dart';
 import 'package:flatmapp/resources/objects/widgets/text_styles.dart';
-
 import 'package:flutter/material.dart';
 import 'package:preferences/preferences.dart';
 
-
 // ignore: must_be_immutable
 class MarkersRoute extends StatefulWidget {
-
   // data loader
   MarkerLoader _markerLoader = MarkerLoader();
 
-  MarkersRoute(this._markerLoader, {Key key}): super(key: key);
+  MarkersRoute(this._markerLoader, {Key key}) : super(key: key);
 
   @override
   _MarkersRouteState createState() => _MarkersRouteState();
@@ -25,7 +22,6 @@ class MarkersRoute extends StatefulWidget {
 // Putting language dictionaries seams done
 
 class _MarkersRouteState extends State<MarkersRoute> {
-
   IconsLoader _iconsLoader = IconsLoader();
 
   @override
@@ -36,7 +32,6 @@ class _MarkersRouteState extends State<MarkersRoute> {
   // ---------------------------------------------------------------------------
   // ==================  ALERT DIALOGS =========================================
   Future<void> raiseAlertDialogRemoveMarker(String id) async {
-
     FlatMappMarker _marker = widget._markerLoader.getMarkerDescription(id);
 
     return showDialog<void>(
@@ -45,30 +40,25 @@ class _MarkersRouteState extends State<MarkersRoute> {
       builder: (BuildContext context) {
         return AlertDialog(
             title: Text(
-                LanguagesLoader.of(context).translate("Remove marker?"),
+              LanguagesLoader.of(context).translate("Remove marker?"),
             ),
-            content: Text(
-              LanguagesLoader.of(context).translate("You are about to remove marker") +
-              "\n"
-              "${_marker.title}\n"
-              "${_marker.description}"
-            ),
+            content: Text(LanguagesLoader.of(context)
+                    .translate("You are about to remove marker") +
+                "\n"
+                    "${_marker.title}\n"
+                    "${_marker.description}"),
             actions: [
               // set up the buttons
               FlatButton(
-                child: Text(
-                  LanguagesLoader.of(context).translate("No")
-                ),
-                onPressed:  () {
+                child: Text(LanguagesLoader.of(context).translate("No")),
+                onPressed: () {
                   // dismiss alert
                   Navigator.of(context).pop();
                 },
               ),
               FlatButton(
-                child: Text(
-                    LanguagesLoader.of(context).translate("Yes")
-                ),
-                onPressed:  () {
+                child: Text(LanguagesLoader.of(context).translate("Yes")),
+                onPressed: () {
                   // remove marker
                   widget._markerLoader.removeMarker(id: id);
                   // save markers state to file
@@ -79,8 +69,7 @@ class _MarkersRouteState extends State<MarkersRoute> {
                   setState(() {});
                 },
               ),
-            ]
-        );
+            ]);
       },
     );
   }
@@ -92,25 +81,22 @@ class _MarkersRouteState extends State<MarkersRoute> {
       builder: (BuildContext context) {
         return AlertDialog(
             title: Text(
-              LanguagesLoader.of(context).translate("Remove ALL markers?")
-            ),
-            content: Text(
-              LanguagesLoader.of(context).translate("You are about to remove all markers from local storage")
-            ),
+                LanguagesLoader.of(context).translate("Remove ALL markers?")),
+            content: Text(LanguagesLoader.of(context).translate(
+                "You are about to remove all markers from local storage")),
             actions: [
               // set up the buttons
               FlatButton(
-                child: Text(
-                  LanguagesLoader.of(context).translate("No")
-                ),
-                onPressed:  () {
+                child: Text(LanguagesLoader.of(context).translate("No")),
+                onPressed: () {
                   // dismiss alert
                   Navigator.of(context).pop();
                 },
               ),
               FlatButton(
-                child: Text(LanguagesLoader.of(context).translate("Remove all markers")),
-                onPressed:  () {
+                child: Text(LanguagesLoader.of(context)
+                    .translate("Remove all markers")),
+                onPressed: () {
                   // remove all markers
                   setState(() {
                     widget._markerLoader.removeAllMarkers();
@@ -119,8 +105,7 @@ class _MarkersRouteState extends State<MarkersRoute> {
                   Navigator.of(context).pop();
                 },
               ),
-            ]
-        );
+            ]);
       },
     );
   }
@@ -129,7 +114,7 @@ class _MarkersRouteState extends State<MarkersRoute> {
   // ---------------------------------------------------------------------------
   // ======================= COLUMNS ===========================================
 
-  Widget _markersColumn(){
+  Widget _markersColumn() {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -140,12 +125,12 @@ class _MarkersRouteState extends State<MarkersRoute> {
               child: ListTile(
                 title: Text(
                     LanguagesLoader.of(context).translate("Active markers:") +
-                    ' #' + (
-                        widget._markerLoader.getDescriptionsKeys().length - 1 > 0 ?
-                        '${widget._markerLoader.getDescriptionsKeys().length - 1}' : '0'
-                    ),
-                    style: bodyText()
-                ),
+                        ' #' +
+                        (widget._markerLoader.getDescriptionsKeys().length - 1 >
+                                0
+                            ? '${widget._markerLoader.getDescriptionsKeys().length - 1}'
+                            : '0'),
+                    style: bodyText()),
                 leading: Icon(Icons.bookmark_border),
               ),
             ),
@@ -153,14 +138,14 @@ class _MarkersRouteState extends State<MarkersRoute> {
               child: Container(
                 decoration: buttonFieldStyle(),
                 child: Tooltip(
-                  message: LanguagesLoader.of(context).translate("Remove all markers"),
+                  message: LanguagesLoader.of(context)
+                      .translate("Remove all markers"),
                   child: ListTile(
                     title: Text(
-                      LanguagesLoader.of(context).translate("Remove all"),
-                      style: bodyText()
-                    ),
+                        LanguagesLoader.of(context).translate("Remove all"),
+                        style: bodyText()),
                     trailing: Icon(Icons.delete_forever),
-                    onTap: (){
+                    onTap: () {
                       // remove all markers with alert dialog
                       _raiseAlertDialogRemoveAllMarkers(context);
                     },
@@ -185,19 +170,19 @@ class _MarkersRouteState extends State<MarkersRoute> {
   }
 
   Widget _listMarkers(BuildContext context) {
-    List<String> _markersDescriptionsKeys = widget._markerLoader.getDescriptionsKeys();
+    List<String> _markersDescriptionsKeys =
+        widget._markerLoader.getDescriptionsKeys();
 
     // ActionsList _actionsList = ActionsList(widget._markerLoader);
 
-    if (_markersDescriptionsKeys.length > 0){
+    if (_markersDescriptionsKeys.length > 0) {
       return Expanded(
-        child:
-        ListView.builder(
+        child: ListView.builder(
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           itemCount: _markersDescriptionsKeys.length + 1,
           itemBuilder: (context, index) {
-            if (index == _markersDescriptionsKeys.length){
+            if (index == _markersDescriptionsKeys.length) {
               // add last element - card "add marker"
               // return Container( //                           <-- Card widget
               //   child: Opacity(
@@ -220,24 +205,23 @@ class _MarkersRouteState extends State<MarkersRoute> {
             } else {
               // marker data for card
               String _id = _markersDescriptionsKeys.elementAt(index);
-              FlatMappMarker _marker = widget._markerLoader.getMarkerDescription(_id);
+              FlatMappMarker _marker =
+                  widget._markerLoader.getMarkerDescription(_id);
 
               // don't add temporary marker to the list
-              if(_id == 'temporary'){
+              if (_id == 'temporary') {
                 return SizedBox.shrink();
               } else {
                 // add marker marker expandable card:
-                return  Card(
+                return Card(
                   child: Padding(
                     padding: EdgeInsets.only(
-                        top: 5.0, left: 10.0, right: 10.0, bottom: 0.0
-                    ),
+                        top: 5.0, left: 10.0, right: 10.0, bottom: 0.0),
                     child: ExpansionTile(
                       leading: CircleAvatar(
                         backgroundColor: Colors.white,
                         backgroundImage: AssetImage(
-                            _iconsLoader.markerImageLocal[_marker.icon]
-                        ),
+                            _iconsLoader.markerImageLocal[_marker.icon]),
                       ),
                       title: Text(_marker.title, style: bodyText()),
                       subtitle: Text(_marker.description, style: footer()),
@@ -248,7 +232,8 @@ class _MarkersRouteState extends State<MarkersRoute> {
                           children: <Widget>[
                             IconButton(
                               icon: Icon(Icons.location_searching),
-                              tooltip: LanguagesLoader.of(context).translate("Find marker"),
+                              tooltip: LanguagesLoader.of(context)
+                                  .translate("Find marker"),
                               onPressed: () {
                                 // set selected marker id for map screen
                                 PrefService.setString('selected_marker', _id);
@@ -258,7 +243,8 @@ class _MarkersRouteState extends State<MarkersRoute> {
                             ),
                             IconButton(
                               icon: Icon(Icons.delete_forever),
-                              tooltip: LanguagesLoader.of(context).translate("Remove marker"),
+                              tooltip: LanguagesLoader.of(context)
+                                  .translate("Remove marker"),
                               onPressed: () {
                                 // set up the AlertDialog
                                 raiseAlertDialogRemoveMarker(_id);
@@ -279,10 +265,8 @@ class _MarkersRouteState extends State<MarkersRoute> {
       );
     } else {
       return ListTile(
-        title: Text(
-            LanguagesLoader.of(context).translate("no markers found"),
-            style: footer()
-        ),
+        title: Text(LanguagesLoader.of(context).translate("no markers found"),
+            style: footer()),
         leading: Icon(Icons.error_outline),
       );
     }
@@ -294,7 +278,7 @@ class _MarkersRouteState extends State<MarkersRoute> {
       appBar: appBar(),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child:  _markersColumn(),
+        child: _markersColumn(),
       ),
       // SIDE PANEL MENU
       drawer: sideBarMenu(context),

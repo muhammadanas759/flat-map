@@ -1,19 +1,16 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flatmapp/resources/objects/loaders/geofence_loader.dart';
 import 'package:flatmapp/resources/objects/loaders/icons_loader.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_action.dart';
 import 'package:flatmapp/resources/objects/models/flatmapp_marker.dart';
-
-import 'dart:convert';
-import 'dart:io';
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:path_provider/path_provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:preferences/preferences.dart';
-
 
 class MarkerLoader {
   // ===========================================================================
@@ -26,7 +23,7 @@ class MarkerLoader {
   Map<String, Marker> googleMarkers = <String, Marker>{};
 
   // zones set
-  Map<String, Circle> zones  = <String, Circle>{};
+  Map<String, Circle> zones = <String, Circle>{};
 
   // time of last modification
   DateTime _markersLastModification = DateTime.now();
@@ -51,7 +48,7 @@ class MarkerLoader {
     }
   }
 
-  Future updateMarkersOnFileChange() async{
+  Future updateMarkersOnFileChange() async {
     String path = await getFilePath();
     try {
       // check if there was a change in markers
@@ -59,12 +56,12 @@ class MarkerLoader {
         _markersLastModification = File(path).lastModifiedSync();
         this.loadMarkers();
       }
-    } on FileSystemException catch(e) {
+    } on FileSystemException catch (e) {
       print(e);
     }
   }
 
-  void _repairFile(String path){
+  void _repairFile(String path) {
     // clear file
     File(path).writeAsString('');
     // add temporary marker
@@ -73,7 +70,6 @@ class MarkerLoader {
 
   // save markers to local storage
   void saveMarkers() async {
-
     // save markersDescription
     final path_ = await getFilePath();
     final file = new File(path_);
@@ -89,13 +85,12 @@ class MarkerLoader {
     String path = await getFilePath();
 
     // if marker storage does exist
-    if (await File(path).exists()){
-
+    if (await File(path).exists()) {
       // get storage content
       final file = File(path);
       String markerStorage = await file.readAsString();
 
-      try{
+      try {
 //        save it to map: throws
 //        type '_InternalLinkedHashMap<String, dynamic>'
 //        is not a subtype of type 'FlatMappMarker'.
@@ -106,11 +101,10 @@ class MarkerLoader {
         // clear markers storage
         // removeAllMarkers();
 
-        Map<String, dynamic> jsonObj = Map<String, dynamic>.from(
-          json.decode(markerStorage)
-        );
+        Map<String, dynamic> jsonObj =
+            Map<String, dynamic>.from(json.decode(markerStorage));
 
-        if(jsonObj.isNotEmpty){
+        if (jsonObj.isNotEmpty) {
           jsonObj.forEach((key, dynamic value) {
             _markersDescriptions[key] = FlatMappMarker.fromJson(value);
           });
@@ -135,52 +129,43 @@ class MarkerLoader {
   }
 
   // translate descriptions to google map markers and zones
-  void _descriptionsToObjects(){
+  void _descriptionsToObjects() {
     // for each marker description
     _markersDescriptions.forEach((String markerID, FlatMappMarker markerData) {
-
       String id = markerID;
-      LatLng position = LatLng(
-          markerData.position_x,
-          markerData.position_y
-      );
+      LatLng position = LatLng(markerData.position_x, markerData.position_y);
 
       // add marker
       addMarker(
-          id: id,
-          position: position,
-          icon: markerData.icon,
-          title: markerData.title,
-          description: markerData.description,
-          range: markerData.range,
-          actions: markerData.actions,
+        id: id,
+        position: position,
+        icon: markerData.icon,
+        title: markerData.title,
+        description: markerData.description,
+        range: markerData.range,
+        actions: markerData.actions,
       );
     });
   }
 
   // generate unique id for markers
-  String generateId(){
+  String generateId() {
     return UniqueKey().toString();
   }
 
   // add or edit marker
-  void addMarker({
-    String id, LatLng position, String icon,
-    String title, String description, double range, List<FlatMappAction> actions
-  }){
+  void addMarker(
+      {String id,
+      LatLng position,
+      String icon,
+      String title,
+      String description,
+      double range,
+      List<FlatMappAction> actions}) {
+    _markersDescriptions[id] = FlatMappMarker(position.latitude,
+        position.longitude, range, -420, title, description, icon, actions);
 
-    _markersDescriptions[id] = FlatMappMarker(
-      position.latitude,
-      position.longitude,
-      range,
-      -420,
-      title,
-      description,
-      icon,
-      actions
-    );
-
-    iconsLoader.getMarkerImage(icon).then((iconBitmap){
+    iconsLoader.getMarkerImage(icon).then((iconBitmap) {
       googleMarkers[id] = Marker(
           markerId: MarkerId(id),
           position: position,
@@ -193,8 +178,7 @@ class MarkerLoader {
           infoWindow: InfoWindow(
             title: title,
             snippet: description,
-          )
-      );
+          ));
 
       // add zone
       zones[id] = Circle(
@@ -210,18 +194,19 @@ class MarkerLoader {
     // save markers
     saveMarkers();
 
-    if(id != "temporary") {
-      GeofenceLoader.addGeofence("$id;${position.latitude};${position.longitude};${range}");
+    if (id != "temporary") {
+      GeofenceLoader.addGeofence(
+          "$id;${position.latitude};${position.longitude};${range}");
     }
   }
 
-  void removeMarker({String id}){
+  void removeMarker({String id}) {
     _markersDescriptions.remove(id);
     googleMarkers.remove(id);
     zones.remove(id);
-    if(id != "temporary") GeofenceLoader.deleteGeofence(id);
+    if (id != "temporary") GeofenceLoader.deleteGeofence(id);
 
-    if(PrefService.get('selected_marker') == id){
+    if (PrefService.get('selected_marker') == id) {
       PrefService.setString('selected_marker', 'temporary');
     }
   }
@@ -231,8 +216,8 @@ class MarkerLoader {
     _markersDescriptions = content;
     saveMarkers();
   }
-  
-  void addTemporaryMarker(LatLng position){
+
+  void addTemporaryMarker(LatLng position) {
     addMarker(
       id: "temporary",
       position: position,
@@ -244,57 +229,58 @@ class MarkerLoader {
     );
   }
 
-  FlatMappMarker getMarkerDescription(String id){
+  FlatMappMarker getMarkerDescription(String id) {
     return _markersDescriptions[id];
   }
 
-  Map<String, FlatMappMarker> getMarkersDescriptions(){
+  Map<String, FlatMappMarker> getMarkersDescriptions() {
     return _markersDescriptions;
   }
 
-  Marker getGoogleMarker({String id}){
+  Marker getGoogleMarker({String id}) {
     return googleMarkers[id];
   }
 
-  List<String> getDescriptionsKeys(){
+  List<String> getDescriptionsKeys() {
     return _markersDescriptions.keys.toList();
   }
 
-  double getRange({String id}){
+  double getRange({String id}) {
     return zones[id].radius;
   }
 
-  List<FlatMappAction> getMarkerActions({String id}){
+  List<FlatMappAction> getMarkerActions({String id}) {
     return _markersDescriptions[id].actions;
   }
 
-  FlatMappAction getMarkerActionSingle({String marker_id, int action_position}){
+  FlatMappAction getMarkerActionSingle(
+      {String marker_id, int action_position}) {
     return _markersDescriptions[marker_id].actions[action_position];
   }
 
-  void setMarkerActionSingle({
-    String marker_id,
-    int action_position,
-    Map<String, dynamic> action_parameters
-  }) {
+  void setMarkerActionSingle(
+      {String marker_id,
+      int action_position,
+      Map<String, dynamic> action_parameters}) {
     _markersDescriptions[marker_id].actions[action_position].parameters =
         action_parameters;
   }
 
   void addMarkerAction({String id, FlatMappAction action}) {
-    if(_markersDescriptions[id].actions == null){
+    if (_markersDescriptions[id].actions == null) {
       _markersDescriptions[id].actions = [];
     }
 
     // update action position
-    action.action_position = (_markersDescriptions[id].actions.length + 1).toDouble();
+    action.action_position =
+        (_markersDescriptions[id].actions.length + 1).toDouble();
 
     _markersDescriptions[id].actions.add(action);
     saveMarkers();
   }
 
   void removeMarkerAction({String id, int index}) {
-    if(_markersDescriptions[id].actions[index] != null){
+    if (_markersDescriptions[id].actions[index] != null) {
       _markersDescriptions[id].actions.removeAt(index);
     } else {
       print("no action to remove at index $index from marker $id");

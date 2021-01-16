@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-
 class LanguagesLoader {
   LanguagesLoader(this.locale);
 
@@ -17,7 +16,8 @@ class LanguagesLoader {
   Map<String, String> _sentences;
 
   Future<bool> load() async {
-    String data = await rootBundle.loadString('assets/lang/${this.locale.languageCode}.json');
+    String data = await rootBundle
+        .loadString('assets/lang/${this.locale.languageCode}.json');
     Map<String, dynamic> _result = json.decode(data);
 
     this._sentences = new Map();
@@ -34,9 +34,12 @@ class LanguagesLoader {
 
   String getKey(String value) {
     print("loading key for: " + value);
-    print("key: " + this._sentences.keys.firstWhere(
-            (k) => this._sentences[k] == value, orElse: () => null));
-    return this._sentences.keys.firstWhere(
-            (k) => this._sentences[k] == value, orElse: () => null);
+    print("key: " +
+        this._sentences.keys.firstWhere((k) => this._sentences[k] == value,
+            orElse: () => null));
+    return this
+        ._sentences
+        .keys
+        .firstWhere((k) => this._sentences[k] == value, orElse: () => null);
   }
 }
