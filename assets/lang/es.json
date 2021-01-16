@@ -133,6 +133,7 @@
   "Return": "Regreso",
 
   "mute": "mudo",
+  "unmute": "reactivar",
   "change alarm volume": "cambiar el volumen de la alarma",
   "change ringtone volume": "cambiar el volumen del tono de llamada",
   "change multimedia volume": "cambiar el volumen multimedia",

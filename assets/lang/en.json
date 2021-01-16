@@ -134,6 +134,7 @@
   "Return": "Return",
 
   "mute": "mute",
+  "unmute": "unmute",
   "change alarm volume": "change alarm volume",
   "change ringtone volume": "change ringtone volume",
   "change multimedia volume": "change multimedia volume",
