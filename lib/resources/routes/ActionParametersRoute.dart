@@ -340,6 +340,9 @@ class _ActionParametersRouteState extends State<ActionParametersRoute> {
       case "mute":
         return _noWidget(context, "mute");
         break;
+      case "unmute":
+        return _noWidget(context, "unmute");
+        break;
       default:
         return ListTile(
           title: Text(

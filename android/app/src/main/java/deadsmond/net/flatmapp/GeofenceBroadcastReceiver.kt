@@ -222,6 +222,13 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                                     Log.i(TAG, "Flatmapp called mute phone action")
                                 }
                             }
+                            "unmute" ->
+                            {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                                    unmutePhone()
+                                    Log.i(TAG, "Flatmapp called unmute phone action")
+                                }
+                            }
                             "change alarm volume" ->
                             {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -289,7 +296,18 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         {
             try{
                 val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-                audioManager.setStreamVolume(AudioManager.STREAM_RING, 0, 0)
+                audioManager.ringerMode = AudioManager.RINGER_MODE_SILENT;
+            }catch(e:SecurityException){
+                Log.i(TAG, e.toString())
+            }
+        }
+
+        @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+        private fun unmutePhone()
+        {
+            try{
+                val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                audioManager.ringerMode = AudioManager.RINGER_MODE_NORMAL;
             }catch(e:SecurityException){
                 Log.i(TAG, e.toString())
             }

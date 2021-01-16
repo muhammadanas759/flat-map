@@ -5,6 +5,7 @@ class ActionsLoader {
 
   final Map<String, String> actionsMap = {
     'mute':             'assets/actions/speaker.png',
+    'unmute':              'assets/actions/speaker.png',
     'change alarm volume':        'assets/actions/speaker.png',
     'change ringtone volume':     'assets/actions/speaker.png',
     'change multimedia volume':   'assets/actions/speaker.png',
